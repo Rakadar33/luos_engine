@@ -1,0 +1,7 @@
+Voir ici :
+
+
+https://testdriven.io/blog/fastapi-crud/
+https://fastapi.tiangolo.com/async/
+https://gist.github.com/subfuzion/08c5d85437d5d4f00e58
+
