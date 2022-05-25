@@ -1,0 +1,26 @@
+
+
+
+scenar
+
+* Conf
+  - Parameters.py
+  - node_config.h
+* APP
+* Script python
+
+
+- scenars
+   - Timestamp
+   - Delivery_Platform.py
+   - Detection
+   - test_detect.py
+   - Inspector
+   - Jupyter
+
+
+
+GHA
+param1 test name
+param2 branche
+readme

@@ -1,0 +1,9 @@
+
+
+
+
+
+    - USB ON/OFF
+    - Alim ON/OFF
+
+
