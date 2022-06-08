@@ -2,7 +2,6 @@
 import os
 import sys
 import logging.config
-import json
 import pprint as pp
 from pathlib import Path
 from termcolor import colored
@@ -25,10 +24,10 @@ def singleton(orig_cls):
 
 
 @singleton
-class LoggerEngine:
+class loggerEngine:
     # LEVEL Order : DEBUG,INFO,WARNING,ERROR,CRITICAL
     # Default LEVEL =  WARNING (ie show only WARNING + ERROR + CRITICAL)
-    default_log_config = os.path.join(os.path.dirname(__file__), 'LoggerEngine.json')
+    default_log_config = os.path.join(os.path.dirname(__file__), 'logger_engine.json')
 
 
     def __init__(self, log_config=default_log_config):
@@ -80,3 +79,12 @@ class LoggerEngine:
     def colored_print(self, message, color="yellow"):
         # Availabled colors : grey,  red,  green,  yellow,  blue,  magenta,  cyan,  white
         self.logger.info(colored(f"\n{message}",color))
+
+# ----------------------
+# Logger Initialisation
+# ----------------------
+def log_init():
+    global log
+    #log_file = os.path.join(os.path.dirname(__file__), 'logging_configuration.json')
+    log = loggerEngine(os.path.join(os.path.dirname(__file__), 'logging_configuration.json'))
+    log.logger.info("Start logging")
