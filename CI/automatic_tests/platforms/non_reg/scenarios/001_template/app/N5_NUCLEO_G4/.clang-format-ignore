@@ -1,0 +1,25 @@
+# Files
+./.*
+*.json
+*/.vscode
+*/.pio
+.github
+
+# Examples
+./examples/projects/**/**/src
+./examples/projects/**/**/inc
+./examples/projects/**/**/include
+./Examples/hardware
+./examples/projects/l0/distance/lib/distance/VL53L0X_1.0.2
+./examples/projects/l0/imu/lib/Imu/motion_driver_6.12
+./examples/projects/l0/load/lib/load/HX711
+./examples/projects/l0/dxl/lib/dxl/Dynamixel_Servo
+./examples/projects/l0/button_freertos/lib/FreeRTOS/Source
+./examples/projects/l0/demo/**/src
+./examples/projects/l0/demo/**/inc
+./examples/projects/l0/demo/**/include
+
+
+# Third party libs
+./tool_services/gate/TinyJSON/tiny-json.h
+./tool_services/gate/TinyJSON/tiny-json.c

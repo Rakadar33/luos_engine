@@ -1,16 +1,14 @@
 # coding:utf-8
+import sys
 import copy
 from pathlib import Path
+sys.path.append(f"{Path(__file__).parents[4]}\\tools")
+from pytest_luos.config.settings import *
 
-
-# ----------------------
 # For Debug
-# ----------------------
-BREAKPOINT = "OFF"   # Put value to "ON" to activate breakpoint() method
+DEBUG_MODE = "OFF" # ON to activate breakpoint() method
 
-# ----------------------
 # Platform parameters
-# ----------------------
 gate_Port = "/dev/ttyUSB"
 
 config_F0 = {"environment": "NUCLEO-F042K6",
@@ -47,10 +45,10 @@ config_Gate_DFU = {"environment": "l0",
 
 config_Gate = config_Gate_STLINK
 
-# ----------------------
+
 # Expected values
-# ----------------------
 detection_number = 10
+
 expected_topology = {'Gate':      ['gate', 'Pipe'],
                      'Inspector': ['inspector', 'Pipe1'],
                      'G4':        ['led_mod', 'button_mod'],

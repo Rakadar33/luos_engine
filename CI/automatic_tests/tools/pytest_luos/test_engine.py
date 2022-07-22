@@ -1,32 +1,20 @@
-# -*- coding: utf-8 -*-
+# coding:utf-8
 import time
-from multiprocessing import cpu_count
-from termcolor import colored
-#from platformio import fs
-#from platformio.platform.factory import PlatformFactory
-#from platformio.project.config import ProjectConfig
-#from Parameters import *
 from subprocess import Popen, PIPE
-import pytest_luos.hub_controller as HUB
-import pytest_luos.luos_controller as LUOS
-import pytest_luos.mcu_controller as MCU
-
-class LuosPytest:
-    def __init__(self):
-        self.engine = Engine()
-        self.luos = LUOS.LuosControl()
-        self.mcu = MCU.McuControl()
-        self.basic_hub = HUB.HubControl("default")
-        self.prog_hub = HUB.HubControl("capable_robot")
+from tools.pytest_luos.termcolor import colored
+from tools.pytest_luos.config.settings import *
 
 class Engine:
+    def __init__(self):
+        self.error_counter = 0
+        self.debug= False
+        
     def assert_step(self, obtained, expected, message="", stop_on_failure=False):
         try:
             assert(obtained == expected)
         except:
-            log.logger.info(colored("\n[Step KO]", "red"))
-            log.logger.critical(
-                f"\n[Step KO]\t{message} : \"{obtained}\" instead of \"{expected}\"")
+            ci_log.logger.info(colored("\n[Step KO]", "red"))
+            ci_log.logger.critical(colored(f"\n[Step KO]\t{message} : \"{obtained}\" instead of \"{expected}\"", "magenta"))
             pass
 
             if(stop_on_failure):
@@ -37,66 +25,66 @@ class Engine:
                 pass
 
     def test_result(self):
-        log.phase_print("End of test")
+        ci_log.phase_log("End of test")
         if(self.error_counter == 0):
-            log.logger.info("\n\t--> Test is OK")
+            ci_log.logger.info(colored("\n\n\n\t\t[SUCCEED]\t*** Test is OK ***\n\n", "green"))
             error = 0
         elif (self.error_counter == -1):
-            log.logger.warning("\n\t--> Error in test architecture")
-            self.assert_step("Error in test architecture", "OK")
+            ci_log.logger.info(colored("\n\n\n\t\t[UNEXPECTED ERROR]\t*** The test scenario doesn\'t handle this error ***\n\n", "magenta"))
+            self.assert_step("[UNEXPECTED ERROR] the test scenario doesn\'t handle this error", "OK")
             error = -1
         else:
-            log.logger.critical(
-                f"\n\t--> Test is KO : {self.error_counter} step(s) KO")
+            if self.error_counter == 1:
+                ci_log.logger.critical(colored(f"\n\n\n\t\t[FAILED]\t*** Test is KO: {self.error_counter} step is KO ***\n\n", "magenta"))
+            else:
+                ci_log.logger.critical(colored(f"\n\n\n\t\t[FAILED]\t*** Test is KO: {self.error_counter} steps are KO ***\n\n", "magenta"))
             error = -2
-        log.logger.info(
-            f"\n\nLogs are available in file :\n{log.get_log_filename()}\n\n")
+        sep= 30*"*" 
+        ci_log.logger.info(colored(f"\n\n{sep}\nLogs are available in file:\n{sep}\n{ci_log.get_log_filename()}\n\n", "blue"))
         return error
 
     # Tools functions
-    def teardown_step(cmd, message=""):
-        log.phase_print(f"Teardown : {message}")
+    def teardown_step(self, cmd, message=""):
+        ci_log.phase_log(f"Teardown : {message}")
         try:
             cmd
         except:
-            log.logger.error(message, "Teardown Step KO")
+            ci_log.logger.error(message, "Teardown Step KO")
             pass
 
-    def debug_breakpoint(force_breakpoint=False, message=''):
-        if (BREAKPOINT == "ON") or (force_breakpoint == True):
-            log.logger.info(f"\n\t*** BREAKPOINT ***  {message}")
+    def debug_breakpoint(self, force_breakpoint=False, message=''):
+        if (self.debug == "ON") or (force_breakpoint == True):
+            ci_log.logger.info(f"\n\t*** BREAKPOINT ***  {message}")
             time.sleep(0.1)
             input("\n")
 
-    def FATAL(msg="Fatal Error for Debug"):
-        log.logger.critical(msg)
+    def FATAL(self, msg="Fatal Error for Debug"):
+        ci_log.logger.critical(colored(msg, "magenta"))
         assert("FATAL" == msg)
 
-
-class Tools:
-    def __init__(self):
-        pass
-
-    def run_command(self, cmd, verbose=False):
-        #cmd += ' 2>&1'
-        process = Popen(cmd, stderr=PIPE, stdout=PIPE, shell=True)
-        output, errors = process.communicate()
-
-        # if process.returncode or errors:
-        if process.returncode:
-            #TODO LOG
-            # log.logger.info(f"Return code : {process.returncode}")
-            #log.logger.info(f"Error : {errors}")
-            result = "ERROR"
+    def debug_state(self, enable):
+        if enable:
+            self.debug= True
         else:
-            result = str(output)[2:-1]
-            result = result.split("\\n")
+            self.debug= False
 
-        if verbose == True:
-            #TODO LOG            
-            #log.logger.info(f"--> Run command: {cmd}\n")
-            #log.logger.info("--> Command returns: ")
-            for line in result:
-                #log.logger.info(line)
-                pass
-        return result
+# Misc functions
+def run_command(cmd, verbose=False, timeout=20):
+    #cmd += ' 2>&1'
+    process = Popen(cmd, stderr=PIPE, stdout=PIPE, shell=True)
+    output, errors = process.communicate(timeout=timeout)
+    if process.returncode:
+        ci_log.logger.info(f"Return code : {process.returncode}")
+        ci_log.logger.info(f"Error : {errors}")
+        result = "ERROR"
+    else:
+        result = str(output)[2:-1]
+        result = result.split("\\n")
+
+    if verbose == True:
+        ci_log.logger.info(f"--> Run command: {cmd}\n")
+        ci_log.logger.info("--> Command returns: ")
+        for line in result:
+            ci_log.logger.info(line)
+            pass
+    return result

@@ -1,31 +1,30 @@
 # -*- coding: utf-8 -*-
 import argparse
+import os
 import sys
 import time
 import subprocess
+from pathlib import Path
 
 
 def luos_test(args):
     print('\nParameters\n--------------\n')
     print(f'Platform:\t {args.platform}')
     print(f'Scenario:\t {args.test}')
-    print(f'Scenario parameters:\t {args.parameters}')
+    print(f'Scenario parameters:\t {args.parameters}\n')
 
-    script_file=f"platforms\\{args.platform}\\{args.test}\\scenario.py"
-    
+    command=f"python3 platforms\\{args.platform}\\{args.test}\\scenario.py"
     if args.parameters:
         for param in args.parameters:
-            script_file+=f" {param}"            
-        print(f'\n\t**** Running: \r{script_file} ****\n\n')
-        subprocess.call(f"python {script_file}", shell=True)        
-    else:
-        print(f'\n\t**** Running: \r{script_file} ****\n\n')
-        subprocess.call(f"python {script_file}", shell=True)
+            command+=f" {param}"            
+    #print(f'\n\t**** Running: \r{command} ****\n\n')
+    subprocess.run(command, shell=True)
 
 
 def get_test_status(args):
     print(f'Get status for test {args.id}')
-    print('[TODO] Feature Get Status')
+    print(f"[TODO] Feature Get Status")
+    pass
 
 
 def ci_options():

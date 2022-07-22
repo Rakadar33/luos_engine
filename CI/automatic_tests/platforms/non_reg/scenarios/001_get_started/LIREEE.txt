@@ -1,0 +1,33 @@
+
+
+
+Scenario 1:  Get started
+ - Detection 
+ - Confs :
+         Gate = Node1  - Get Started (Node 2)
+         Gate = Node3  - Get Started (Node 4)
+         Gate = Node2  - Get Started (Node 5)
+         Gate = Node4  - Get Started (Node 1)
+         Gate = Node5  - Get Started (Node 3)
+
+--------------------------
+Etapes :
+--------------------------
+
+0- Clone get started
+A- Conf 1
+    1) Conf 1 :
+    - Prendre les templates
+       * modif node_config.h
+       * modif IT.h
+    - modif dans pio.ini : lien node_config.h
+    - modif main.c
+        * Node x : Get started => Gate/Pipe + Led (commenter blinker)
+        * Node y : Get started => Blinker         (commenter Gate/Pipe + Led) 
+    2) Compile/Flash
+    3) Verif detection (topo)
+
+B- Conf 2
+etc...
+
+
