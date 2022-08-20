@@ -54,7 +54,7 @@ jobs:
 
      - name: Run build-wrapper
        run: |
-         build-wrapper-linux-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }} platformio run -t clean
+         build-wrapper-linux-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }} platformio run -t clean -d test\_resources
      - name: Run sonar-scanner
        env:
          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
