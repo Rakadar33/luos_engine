@@ -1,11 +1,8 @@
 name: Code checker
 
 on:
-  pull_request:
-    types:
-      - review_requested
-  push:
-
+  workflow_dispatch:
+  
 concurrency: 
   group: dev-build-${{ github.head_ref || github.ref_name }}
   cancel-in-progress: true
