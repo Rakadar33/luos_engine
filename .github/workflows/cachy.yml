@@ -1,41 +1,56 @@
-name: Caching with npm
-on: workflow_dispatch
+name: Cachy
+on:
+  workflow_dispatch:
+
+concurrency: 
+  group: dev-build-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash
+
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  unit-tests:
+    name: Unit tests
+    runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Check out Luos repository
+        uses: actions/checkout@v3
 
       - name: Cache node modules
-        id: cache-npm
+        id: ci-cache-python
         uses: actions/cache@v3
         env:
-          cache-name: cache-node-modules
+          cache-name: cache-py
         with:
-          # npm cache files are stored in `~/.npm` on Linux/macOS
-          path: ~/.npm
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          path: /ci_cache
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/library.json') }}
           restore-keys: |
             ${{ runner.os }}-build-${{ env.cache-name }}-
             ${{ runner.os }}-build-
             ${{ runner.os }}-
 
-      - if: ${{ steps.cache-npm.outputs.cache-hit == 'true' }}
+      - if: ${{ steps.ci-cache-python.outputs.cache-hit == 'true' }}
         name: Cache Hit
         run: echo 'CACHE HIT'
 
-      - if: ${{ steps.cache-npm.outputs.cache-hit != 'true' }}
-        name: List the state of node modules
+      - if: ${{ steps.ci-cache-python.outputs.cache-hit != 'true' }}
+        name: Cache Miss
         continue-on-error: true
-        run: |
-            npm list
-            echo 'CACHE MISS'
+        run: echo 'CACHE MISS'
             
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10.5"
+
       - name: Install dependencies
-        run: npm install
+        run: |
+          python -m pip install --upgrade pip
+          pip install wheel
+          pip install platformio
 
-      - name: Build
-        run: npm build
-
-      - name: Test
-        run: npm test
+      - name: Dummy step
+        run: |
+          platformio run -t clean -d examples/projects/l0/led
