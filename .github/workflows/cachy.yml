@@ -1,7 +1,7 @@
 name: Cachy
 on:
   workflow_dispatch:
-  # TODO JGA -- A REMETTRE :
+  # TODO JGA - A REMETTRE :
   # on:
   #   pull_request:
   #     types:
@@ -48,7 +48,8 @@ jobs:
       - name: Hit
       - if: ${{ steps.ci-cache-dependencies.outputs.cache-hit == 'true' }}
         name: Cache Hit
-        run: echo '!!!!!!! DEBUG CACHE HIT !!!!!!!!!!!!!!!!!'
+        run: |
+           echo '!!!!!!! DEBUG CACHE HIT !!!!!!!!!!!!!!!!!'
 
   unit-tests:
     needs: [cache-dependencies]  
