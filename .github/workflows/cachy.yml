@@ -1,7 +1,7 @@
 name: Cachy
 on:
   workflow_dispatch:
-  # TODO JGA - A REMETTRE :
+  # TODO JGA -- A REMETTRE :
   # on:
   #   pull_request:
   #     types:
