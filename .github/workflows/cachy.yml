@@ -79,13 +79,16 @@ jobs:
     name: Code format
     runs-on: ubuntu-latest
     steps:
-      - name: Cache dependencies
+      - name: Cache multiple paths
         id: dependancies-setup
-        uses: actions/cache@v3
+        uses: ylemkimon/cache-restore@v2
         env:
           cache-name: name-dependancies-setup
         with:
-          path: ~/
+          path: |
+            ~/.cache/pip
+            ccc
+            ddd
           key: ${{ runner.os }}-cache-${{ env.cache-name }}-${{ hashFiles('./library.json') }}
 
       - name: Check for code format
@@ -117,13 +120,16 @@ jobs:
       #- name: Check out Luos repository
       #  uses: actions/checkout@v3
 
-      - name: Cache dependencies
+      - name: Cache multiple paths
         id: dependancies-setup
-        uses: actions/cache@v3
+        uses: ylemkimon/cache-restore@v2
         env:
           cache-name: name-dependancies-setup
         with:
-          path: ~/
+          path: |
+            ~/.cache/pip
+            ccc
+            ddd
           key: ${{ runner.os }}-cache-${{ env.cache-name }}-${{ hashFiles('./library.json') }}
 
       - name: Run PlatformIO
