@@ -1,4 +1,4 @@
-name: Cachy
+name: Cachy Bouzouk
 on:
   workflow_dispatch:
   # TODO JGA - A REMETTRE :
@@ -38,7 +38,6 @@ jobs:
       #    path: ~/
       #    key: ${{ runner.os }}-cache-${{ env.cache-name }}-${{ hashFiles('./library.json') }}
 
-
       - name: Get npm cache directory
         id: npm-cache
         run: |
@@ -77,10 +76,6 @@ jobs:
           pip install wheel
           pip install platformio
           npm install -g clang-format@1.5.0
-
-  code-format:
-      - name: Check for code format
-        run: python .github/workflows/run-clang-format.py -r .
 
   examples-build:
     needs: cache-dependencies
