@@ -29,13 +29,29 @@ jobs:
       - name: Check out Luos repository
         uses: actions/checkout@v3
 
-      - name: Cache dependencies
+      #- name: Cache dependencies
+      #  id: dependancies-setup
+      #  uses: actions/cache@v3
+      #  env:
+      #    cache-name: name-dependancies-setup
+      #  with:
+      #    path: ~/
+      #    key: ${{ runner.os }}-cache-${{ env.cache-name }}-${{ hashFiles('./library.json') }}
+
+
+      #Ubuntu: ~/.cache/pip
+      #Windows: ~\AppData\Local\pip\Cache
+      #macOS: ~/Library/Caches/pip
+      - name: Cache multiple paths
         id: dependancies-setup
-        uses: actions/cache@v3
+        uses: ylemkimon/cache-restore@v2
         env:
           cache-name: name-dependancies-setup
         with:
-          path: ~/
+          path: |
+            ~/.cache/pip
+            ccc
+            ddd
           key: ${{ runner.os }}-cache-${{ env.cache-name }}-${{ hashFiles('./library.json') }}
 
       - if: ${{ steps.dependancies-setup.outputs.cache-hit != 'true' }}
@@ -57,29 +73,6 @@ jobs:
           pip install wheel
           pip install platformio
           npm install -g clang-format@1.5.0
-
-  unit-tests:
-    needs: cache-dependencies
-    name: Unit tests
-    runs-on: windows-latest
-    steps:
-      - name: Cache dependencies
-        id: dependancies-setup
-        uses: actions/cache@v3
-        env:
-          cache-name: name-dependancies-setup
-        with:
-          path: ~/
-          key: ${{ runner.os }}-cache-${{ env.cache-name }}-${{ hashFiles('./library.json') }}
-
-      - name: Run PlatformIO Unit Tests
-        run: |
-          # Clean all projects
-          platformio run -t clean -c ./test/_resources/platformio.ini
-
-          # Run Unit tests
-          # TODO JGA - A REMETTRE :
-          # platformio test -c ./test/_resources/platformio.ini  -vvv
 
   code-format:
     needs: cache-dependencies
