@@ -33,14 +33,13 @@ jobs:
         id: dependancies-setup
         uses: actions/cache@v3
         env:
-          cache-name: cache-dependancies-setup
+          cache-name: name-dependancies-setup
         with:
-          path: /dependencies_cache
-          #key: ${{ runner.os }}-cache-${{ env.cache-name }}-${{ hashFiles('**/library.json') }}
+          path: /
           key: ${{ runner.os }}-cache-${{ env.cache-name }}-${{ hashFiles('./library.json') }}
-          #restore-keys: |
-          #  ${{ runner.os }}-cache-${{ env.cache-name }}
-
+          restore-keys: |
+            ${{ runner.os }}-cache-${{ env.cache-name }}
+      
       - if: ${{ steps.dependancies-setup.outputs.cache-hit == 'true' }}
         name: Cache Hit
         run: |
