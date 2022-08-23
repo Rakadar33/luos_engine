@@ -57,8 +57,8 @@ jobs:
             ~/.cache/pip
             ${{ steps.npm-cache.outputs.dir }}
           key: ${{ runner.os }}-cache-${{ env.cache-name }}-${{ hashFiles('./library.json') }}
-          restore-keys: |
-            ${{ runner.os }}-cache-${{ env.cache-name }}
+          #restore-keys: |
+          #  ${{ runner.os }}-cache-${{ env.cache-name }}
 
       - if: ${{ steps.dependancies-setup.outputs.cache-hit != 'true' }}
         name: Set up Python
@@ -85,22 +85,6 @@ jobs:
     name: Check for code format
     runs-on: ubuntu-latest  
     steps:
-      - name: Check out Luos repository
-        uses: actions/checkout@v3
-
-      - name: Cache multiple paths
-        id: dependancies-setup
-        uses: actions/cache@v3
-        env:
-          cache-name: name-dependancies-setup
-        with:
-          path: |
-            ~/.cache/pip
-            ${{ steps.npm-cache.outputs.dir }}
-          key: ${{ runner.os }}-cache-${{ env.cache-name }}-${{ hashFiles('./library.json') }}
-          restore-keys: |
-            ${{ runner.os }}-cache-${{ env.cache-name }}
-
       - name: aaaaaaaaaaaa
         run: python .github/workflows/run-clang-format.py -r .
 
@@ -109,22 +93,6 @@ jobs:
     name: Examples build
     runs-on: ubuntu-latest
     steps:
-      - name: Check out Luos repository
-        uses: actions/checkout@v3
-
-      - name: Cache multiple paths
-        id: dependancies-setup
-        uses: actions/cache@v3
-        env:
-          cache-name: name-dependancies-setup
-        with:
-          path: |
-            ~/.cache/pip
-            ${{ steps.npm-cache.outputs.dir }}
-          key: ${{ runner.os }}-cache-${{ env.cache-name }}-${{ hashFiles('./library.json') }}
-          restore-keys: |
-            ${{ runner.os }}-cache-${{ env.cache-name }}
-
       - name: Run PlatformIO
         run: platformio run -d examples/projects/NUCLEO-L073RZ/button
 
