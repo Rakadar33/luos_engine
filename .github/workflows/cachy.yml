@@ -78,9 +78,13 @@ jobs:
           pip install platformio
           npm install -g clang-format@1.5.0
 
+
   code-format:
+    needs: cache-dependencies
     name: Check for code format
+    runs-on: ubuntu-latest
     steps:
+      - name: aaaaaaaaaaaa
         run: python .github/workflows/run-clang-format.py -r .
 
   examples-build:
