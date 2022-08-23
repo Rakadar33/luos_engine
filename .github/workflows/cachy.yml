@@ -114,7 +114,7 @@ jobs:
         #os: [macos-latest, windows-latest, ubuntu-latest]
         os: [ubuntu-latest]
 
-      steps:
+    steps:
       - name: Check out Luos repository
         uses: actions/checkout@v3
 
