@@ -17,10 +17,6 @@ defaults:
     shell: bash
 
 jobs:
-- uses: actions/checkout@v2
-- name: Cache Nuget
-  uses: actions/cache@v1
-
   cache-dependencies:
     name: cache dep
     runs-on: ${{ matrix.os }}  
