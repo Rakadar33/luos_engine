@@ -46,6 +46,14 @@ jobs:
            echo 'Cache hit : dependencies are already installed'
            exit 0
 
+      - if: ${{ steps.ci-cache-dependencies.outputs.cache-hit != 'true' }}
+        name: debug
+        run: |
+           echo 'Cache Miss DEBUG !!!!!!!!!!!!!!!!!!!'
+           pwd
+           cat library.json
+
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
