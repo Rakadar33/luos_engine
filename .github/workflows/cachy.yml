@@ -1,105 +1,158 @@
-name: Cachy
-on:
-  workflow_dispatch:
+name: Code checker
 
-concurrency: 
+# TODO JGA - A REMETTRE :
+# on:
+#   pull_request:
+#     types:
+#       - review_requested
+#   push:
+ on:
+   workflow_dispatch:
+
+concurrency:
   group: dev-build-${{ github.head_ref || github.ref_name }}
   cancel-in-progress: true
 
 defaults:
   run:
-    shell: bash
+    shell: 
 
 jobs:
+  cache-dependencies:
+    name: Unit tests  
+    runs-on: ${{ matrix.os }}  
+    strategy:
+      matrix:
+        os: [macos-latest, windows-latest, ubuntu-latest]
+
+      steps:
+      - name: Cache dependencies
+        id: ci-cache-dependencies
+        uses: actions/cache@v3
+        env:
+          cache-name: cache-py
+          with:
+          path: /dependencies_cache
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/library.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+
+      - name: Install dependencies
+      - if: ${{ steps.checker-cache-dependencies.outputs.cache-hit != 'true' }}
+        run: |
+          python -m pip install --upgrade pip
+          pip install wheel
+          pip install platformio
+          npm install -g clang-format@1.5.0
+          echo 'CACHE MISS !!!!!!!!!!!!!!!!!'
+
+      - if: ${{ steps.ci-cache-dependencies.outputs.cache-hit == 'true' }}
+        name: Cache Hit
+        run: echo 'CACHE HIT !!!!!!!!!!!!!!!!!!!!!'
+
   unit-tests:
+    needs: [cache-dependencies]  
     name: Unit tests
     runs-on: windows-latest
     steps:
       - name: Check out Luos repository
         uses: actions/checkout@v3
 
-      - name: Cache node modules
-        id: ci-cache-python
-        uses: actions/cache@v3
-        env:
-          cache-name: cache-py
-        with:
-          path: /ci_cache
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/library.json') }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
-
-      - if: ${{ steps.ci-cache-python.outputs.cache-hit == 'true' }}
-        name: Cache Hit
-        run: echo 'CACHE HIT'
-
-      - if: ${{ steps.ci-cache-python.outputs.cache-hit != 'true' }}
-        name: Cache Miss
-        continue-on-error: true
-        run: echo 'CACHE MISS'
-            
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: "3.10.5"
 
-      - name: Install dependencies
+      - name: Run PlatformIO Unit Tests
         run: |
-          python -m pip install --upgrade pip
-          pip install wheel
-          pip install platformio
+          # Clean all projects
+          platformio run -t clean -c ./test/_resources/platformio.ini
 
-      - name: Dummy step
-        run: |
-          platformio run -t clean -d examples/projects/l0/led
-          
-  t1_cache:
+          # Run Unit tests
+          # TODO JGA - A REMETTRE :
+          # platformio test -c ./test/_resources/platformio.ini  -vvv
+
+  code-format:
+    needs: [cache-dependencies]  
+    name: Code format
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: Cache pip
-        uses: actions/cache@v3
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
-      - name: Cache PlatformIO
-        uses: actions/cache@v3
-        with:
-          path: ~/.platformio
-          key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
+      - name: Check out Luos repository
+        uses: actions/checkout@v3
+
       - name: Set up Python
-        uses: actions/setup-python@v3
-      - name: Install PlatformIO
-        run: |
-          python -m pip install --upgrade pip
-          pip install --upgrade platformio
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10.5"
+
+      - name: Set up Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: Check for code format
+        run: python .github/workflows/run-clang-format.py -r .
+
+  examples-build:
+    needs: [cache-dependencies]  
+    name: Examples build
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        # TODO JGA - A REMETTRE :
+        #project_folders: [examples/projects/l0,
+        #                  examples/projects/Arduino,
+        #                  examples/projects/NUCLEO-L432KC,
+        #                  examples/projects/STM32F4-discovery,
+        #                  examples/projects/NUCLEO-F401RE,
+        #                  examples/projects/NUCLEO-F410RB,
+        #                  examples/projects/NUCLEO-G431KB,
+        #                  examples/projects/NUCLEO-G474RE,
+        #                  examples/projects/NUCLEO-F072RB,
+        #                  ]      
+        project_folders: [examples/projects/NUCLEO-L073RZ]
+        # TODO JGA - A REMETTRE :
+        #os: [macos-latest, windows-latest, ubuntu-latest]
+        os: [ubuntu-latest]
+
+      steps:
+      - name: Check out Luos repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10.5"
+
       - name: Run PlatformIO
-        run: platformio run -t clean -d ./examples/projects/l0/led
-  t2_cache:
+        run: |
+          for d in ${{ matrix.project_folders }}/*/
+          do
+            # Parse all folder
+            if [ -f "$d/platformio.ini" ]
+            then
+              # This is a PIO project compile it
+              echo "Compiling : $d"
+              platformio run -d $d
+            else
+              # This folder could contain other projects, continue digging
+              for dd in $d*/
+              do
+                # Parse all folder
+                if [ -f "$dd/platformio.ini" ]
+                then
+                  # This is a PIO project compile it
+                  echo "Compiling : $d"
+                  platformio run -d $dd
+                fi
+              done
+            fi
+          done
+          # ******** missing bootloader CI ********
+
+  build-success:
+    name: Build success
+    needs: examples-build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: Cache pip
-        uses: actions/cache@v3
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
-      - name: Cache PlatformIO
-        uses: actions/cache@v3
-        with:
-          path: ~/.platformio
-          key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
-      - name: Set up Python
-        uses: actions/setup-python@v3
-      - name: Install PlatformIO
-        run: |
-          python -m pip install --upgrade pip
-          pip install --upgrade platformio
-      - name: Run PlatformIO
-        run: platformio run -t clean -d ./examples/projects/l0/button
+    - run: echo "Build succeed!"
