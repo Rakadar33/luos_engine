@@ -33,7 +33,7 @@ jobs:
         id: ci-cache-dependencies
         uses: actions/cache@v3
         env:
-          cache-name: cache-dep
+          cache-name: dependancies_setup
         with:
           path: /dependencies_cache
           #key: ${{ runner.os }}-cache-${{ env.cache-name }}-${{ hashFiles('**/library.json') }}
@@ -41,13 +41,13 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-cache-${{ env.cache-name }}-
 
-      - if: ${{ steps.ci-cache-dependencies.outputs.cache-hit == 'true' }}
+      - if: ${{ steps.dependancies_setup.outputs.cache-hit == 'true' }}
         name: Cache Hit
         run: |
            echo 'Cache hit : dependencies are already installed'
            exit 0
 
-      - if: ${{ steps.ci-cache-dependencies.outputs.cache-hit != 'true' }}
+      - if: ${{ steps.dependancies_setup.outputs.cache-hit != 'true' }}
         name: debug
         run: |
            echo 'Cache Miss DEBUG !!!!!!!!!!!!!!!!!!!'
