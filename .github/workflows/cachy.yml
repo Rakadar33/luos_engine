@@ -35,7 +35,8 @@ jobs:
           cache-name: cache-dep
         with:
           path: /dependencies_cache
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/library.json') }}
+          #key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/library.json') }}
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('luos_engine/library.json') }}
           restore-keys: |
             ${{ runner.os }}-cache-${{ env.cache-name }}-
 
