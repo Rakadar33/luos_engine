@@ -1,14 +1,12 @@
-name: Code checker
-
- on:
-   workflow_dispatch:
-
-# TODO JGA - A REMETTRE :
-# on:
-#   pull_request:
-#     types:
-#       - review_requested
-#   push:
+name: AAAAA
+on:
+  workflow_dispatch:
+  # TODO JGA - A REMETTRE :
+  # on:
+  #   pull_request:
+  #     types:
+  #       - review_requested
+  #   push:
 
 concurrency:
   group: dev-build-${{ github.head_ref || github.ref_name }}
@@ -16,23 +14,23 @@ concurrency:
 
 defaults:
   run:
-    shell: 
+    shell: bash
 
 jobs:
   cache-dependencies:
-    name: Unit tests  
+    name: cache dep
     runs-on: ${{ matrix.os }}  
     strategy:
       matrix:
         os: [macos-latest, windows-latest, ubuntu-latest]
 
-      steps:
+    steps:
       - name: Cache dependencies
         id: ci-cache-dependencies
         uses: actions/cache@v3
         env:
           cache-name: cache-py
-          with:
+        with:
           path: /dependencies_cache
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/library.json') }}
           restore-keys: |
