@@ -49,7 +49,7 @@ jobs:
       #macOS: ~/Library/Caches/pip
       - name: Cache dependancies
         id: dependancies-setup
-        uses: ylemkimon/cache-restore@v2
+        uses: actions/cache@v3
         env:
           cache-name: name-dependancies-setup
         with:
@@ -87,7 +87,7 @@ jobs:
     steps:
       - name: Cache multiple paths
         id: dependancies-setup
-        uses: ylemkimon/cache-restore@v2
+        uses: actions/cache@v3
         env:
           cache-name: name-dependancies-setup
         with:
@@ -108,7 +108,7 @@ jobs:
     steps:
       - name: Cache multiple paths
         id: dependancies-setup
-        uses: ylemkimon/cache-restore@v2
+        uses: actions/cache@v3
         env:
           cache-name: name-dependancies-setup
         with:
