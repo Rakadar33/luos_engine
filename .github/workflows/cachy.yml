@@ -25,6 +25,9 @@ jobs:
         os: [macos-latest, windows-latest, ubuntu-latest]
 
     steps:
+      - name: Check out Luos repository
+        uses: actions/checkout@v3
+
       - name: Cache dependencies
         id: ci-cache-dependencies
         uses: actions/cache@v3
