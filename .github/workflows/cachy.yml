@@ -36,6 +36,11 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-build-${{ env.cache-name }}-
 
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10.5"
+
       - if: ${{ steps.checker-cache-dependencies.outputs.cache-hit != 'true' }}
         name: Install dependencies
         run: |
