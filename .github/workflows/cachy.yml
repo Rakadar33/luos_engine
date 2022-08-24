@@ -98,9 +98,9 @@ jobs:
           whoami
           pwd
           ls -ll ~/
-          ls -ll /home/runner/
-          ls -ll /home/runner/.local/bin/
-          ls -ll /home/runner/.platformio
+          ls -ll /home/runner/runners
+          #ls -ll /home/runner/.local/bin/
+          #ls -ll /home/runner/.platformio
           
       - name: Run PlatformIO
         run: /home/runner/.local/bin/platformio run -d examples/projects/NUCLEO-L073RZ/button
