@@ -103,7 +103,9 @@ jobs:
           #ls -ll /home/runner/.platformio
           
       - name: Run PlatformIO
-        run: /home/runner/.local/bin/platformio run -d examples/projects/NUCLEO-L073RZ/button
+        run: |
+            which platformio
+            platformio run -d examples/projects/NUCLEO-L073RZ/button
 
   build-success:
     name: Build success
