@@ -17,82 +17,7 @@ defaults:
     shell: bash
 
 jobs:
-  cache-dependencies:
-    name: Cache dependencies
-    runs-on: ${{ matrix.os }}  
-    strategy:
-      matrix:
-        #os: [macos-latest, windows-latest, ubuntu-latest]
-        os: [ubuntu-latest]
-
-    steps:
-      - name: Check out Luos repository
-        uses: actions/checkout@v3
-
-      #- name: Cache dependencies
-      #  id: dependancies-setup
-      #  uses: actions/cache@v3
-      #  env:
-      #    cache-name: name-dependancies-setup
-      #  with:
-      #    path: ~/
-      #    key: ${{ runner.os }}-cache-${{ env.cache-name }}-${{ hashFiles('./library.json') }}
-
-
-      - name: Get npm cache directory
-        id: npm-cache
-        run: |
-          echo "::set-output name=dir::$(npm config get cache)"
-
-      #Ubuntu: ~/.cache/pip
-      #Windows: ~\AppData\Local\pip\Cache
-      #macOS: ~/Library/Caches/pip
-      - name: Cache dependancies
-        id: dependancies-setup
-        uses: actions/cache@v3
-        env:
-          cache-name: name-dependancies-setup
-        with:
-          path: |
-            ~/.cache/pip
-            ${{ steps.npm-cache.outputs.dir }}
-          key: ${{ runner.os }}-cache-${{ env.cache-name }}-${{ hashFiles('./library.json') }}
-          #restore-keys: |
-          #  ${{ runner.os }}-cache-${{ env.cache-name }}
-
-      - if: ${{ steps.dependancies-setup.outputs.cache-hit != 'true' }}
-        name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.10.5"
-
-      - if: ${{ steps.dependancies-setup.outputs.cache-hit != 'true' }}
-        name : Cache Python
-        id: cache-python
-        uses: 'actions/cache@v3'
-        with:
-          path: ${{ env.pythonLocation }}/lib/python3.10/site-packages/*
-          key: ${{ runner.os }}-python-${{ hashFiles('./library.json') }}
-          #restore-keys: |
-            #${{ runner.os }}-pip-
-            #${{ runner.os }}-
-
-      - if: ${{ steps.dependancies-setup.outputs.cache-hit != 'true' }}
-        name: Set up Node
-        uses: actions/setup-node@v2
-        with:
-          node-version: '14'
-
-      - if: ${{ steps.dependancies-setup.outputs.cache-hit != 'true' }}
-        name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install wheel
-          pip install platformio
-          npm install -g clang-format@1.5.0
-
   code-format:
-    needs: cache-dependencies
     name: Check for code format
     runs-on: ubuntu-latest  
     steps:
@@ -105,23 +30,46 @@ jobs:
           node-version: '14'
 
       - name: Cache dependancies
-        id: dependancies-setup
+        id: format-dependancies-setup
         uses: actions/cache@v3
         env:
-          cache-name: name-dependancies-setup
+          cache-name: format-dependancies-setup
         with:
           path: |
             ~/.cache/pip
             ${{ steps.npm-cache.outputs.dir }}
           key: ${{ runner.os }}-cache-${{ env.cache-name }}-${{ hashFiles('./library.json') }}
-          #restore-keys: |
-          #  ${{ runner.os }}-cache-${{ env.cache-name }}
+
+      - if: ${{ format-steps.dependancies-setup.outputs.cache-hit != 'true' }}
+        name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10.5"
+
+      #- if: ${{ steps.format-dependancies-setup.outputs.cache-hit != 'true' }}
+        #name : Cache Python
+        #id: cache-python
+        #uses: 'actions/cache@v3'
+        #with:
+          #path: ${{ env.pythonLocation }}/lib/python3.10/site-packages/*
+          #key: ${{ runner.os }}-python-${{ hashFiles('./library.json') }}
+
+      - if: ${{ steps.format-dependancies-setup.outputs.cache-hit != 'true' }}
+        name: Set up Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - if: ${{ steps.format-dependancies-setup.outputs.cache-hit != 'true' }}
+        name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          npm install -g clang-format@1.5.0
 
       - name: Check for code format
         run: python .github/workflows/run-clang-format.py -r .
 
   examples-build:
-    needs: cache-dependencies
     name: Examples build
     runs-on: ubuntu-latest
     steps:
@@ -129,16 +77,36 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Cache dependancies
-        id: dependancies-setup
+        id: build-dependancies-setup
         uses: actions/cache@v3
         env:
-          cache-name: name-dependancies-setup
+          cache-name: format-dependancies-setup
         with:
           path: |
             ~/.cache/pip
           key: ${{ runner.os }}-cache-${{ env.cache-name }}-${{ hashFiles('./library.json') }}
-          #restore-keys: |
-          #  ${{ runner.os }}-cache-${{ env.cache-name }}
+
+      - if: ${{ steps.build-dependancies-setup.outputs.cache-hit != 'true' }}
+        name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10.5"
+
+      #- if: ${{ steps.build-dependancies-setup.outputs.cache-hit != 'true' }}
+        #name : Cache Python
+        #id: cache-python
+        #uses: 'actions/cache@v3'
+        #with:
+          #path: ${{ env.pythonLocation }}/lib/python3.10/site-packages/*
+          #key: ${{ runner.os }}-python-${{ hashFiles('./library.json') }}
+
+      - if: ${{ steps.format-dependancies-setup.outputs.cache-hit != 'true' }}
+        name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install wheel
+          pip install platformio
+ 
       - name: Run PlatformIO
         run: platformio run -d examples/projects/NUCLEO-L073RZ/button
 
