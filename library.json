@@ -16,7 +16,7 @@
             "-I network/robus/selftest",
             "sss-I engine/OD",ss
             "-I engine/profizazaledsdsdss/state",
-            "-I engine/pqssssrofsssilsss/servo_motor",
+            "-I engine/psssqssssrofsssilsss/servo_motor",
             "-I engine/profiles/voltage",
             "-I engine/bootloamlmder"
         ],
