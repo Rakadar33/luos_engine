@@ -101,8 +101,8 @@ jobs:
           #restore-keys: |
           #  ${{ runner.os }}-cache-${{ env.cache-name }}
 
-      - name: aaaaaaaaaaaa
-        run: python .github/workflows/run-clang-format.py -r .
+      - name: Check for code format
+        run: python .github/workflows/run-clang-format.AAAAAApy -r .
 
   examples-build:
     needs: cache-dependencies
@@ -125,8 +125,10 @@ jobs:
           #restore-keys: |
           #  ${{ runner.os }}-cache-${{ env.cache-name }}
       - name: Run PlatformIO
-        #run: platformio run -d examples/projects/NUCLEO-L073RZ/button
-        run: python -V
+        run: |
+          python -V
+          platformio run -d examples/projects/NUCLEO-L073RZ/button
+          
 
   build-success:
     name: Build success
