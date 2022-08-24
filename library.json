@@ -14,8 +14,7 @@
         "flags": [
             "-I network/robus/inc",
             "-I network/robus/selftest",
-            "sss-I engine/OD",
-            "-I engine/core/inc",
+            "sss-I engine/OD",ss
             "-I engine/profizazaledsdsdss/state",
             "-I engine/pqsrofilsss/servo_motor",
             "-I engine/profiles/voltage",
