@@ -46,13 +46,13 @@ jobs:
         with:
           python-version: "3.10.5"
 
-      #- if: ${{ steps.format-dependancies-setup.outputs.cache-hit != 'true' }}
-        #name : Cache Python
-        #id: cache-python
-        #uses: 'actions/cache@v3'
-        #with:
-          #path: ${{ env.pythonLocation }}/lib/python3.10/site-packages/*
-          #key: ${{ runner.os }}-python-${{ hashFiles('./library.json') }}
+      - if: ${{ steps.format-dependancies-setup.outputs.cache-hit != 'true' }}
+        name : Cache Python
+        id: cache-python
+        uses: 'actions/cache@v3'
+        with:
+          path: ${{ env.pythonLocation }}/lib/python3.10/site-packages/*
+          key: ${{ runner.os }}-python-${{ hashFiles('./library.json') }}
 
       - if: ${{ steps.format-dependancies-setup.outputs.cache-hit != 'true' }}
         name: Set up Node
@@ -92,13 +92,13 @@ jobs:
         with:
           python-version: "3.10.5"
 
-      #- if: ${{ steps.build-dependancies-setup.outputs.cache-hit != 'true' }}
-        #name : Cache Python
-        #id: cache-python
-        #uses: 'actions/cache@v3'
-        #with:
-          #path: ${{ env.pythonLocation }}/lib/python3.10/site-packages/*
-          #key: ${{ runner.os }}-python-${{ hashFiles('./library.json') }}
+      - if: ${{ steps.format-dependancies-setup.outputs.cache-hit != 'true' }}
+        name : Cache Python
+        id: cache-python
+        uses: 'actions/cache@v3'
+        with:
+          path: ${{ env.pythonLocation }}/lib/python3.10/site-packages/*
+          key: ${{ runner.os }}-python-${{ hashFiles('./library.json') }}
 
       - if: ${{ steps.build-dependancies-setup.outputs.cache-hit != 'true' }}
         name: Install dependencies
