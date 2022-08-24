@@ -39,7 +39,7 @@ jobs:
             ~/.cache/pip
             ${{ steps.npm-cache.outputs.dir }}
             ${{ env.pythonLocation }}/lib/python3.10/site-packages/*
-          key: ${{ runner.os }}-cache-${{ env.cache-name }}-${{ hashFiles('./library.json') }}
+          key: ${{ runner.os }}-format-${{ env.cache-name }}-${{ hashFiles('./library.json') }}
 
       - if: ${{ steps.format-dependancies-setup.outputs.cache-hit != 'true' }}
         name: Set up Node
@@ -73,7 +73,7 @@ jobs:
             ~/.cache/pip
             ${{ env.pythonLocation }}/lib/python3.10/site-packages/*
             ~/.platformio            
-          key: ${{ runner.os }}-cache-${{ env.cache-name }}-${{ hashFiles('./library.json') }}
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('./library.json') }}
 
       - if: ${{ steps.build-dependancies-setup.outputs.cache-hit != 'true' }}
         name: Set up Python
