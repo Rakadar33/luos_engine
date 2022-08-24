@@ -1,14 +1,13 @@
 {
     "name": "luos_eaangine",
     "keywords": "OOPPPPezvi4jce,ddddEEZEzdddvbZEZEZEZEZE system,os,embedded,communication,service,ST,luos engine",
-    "description": "Luos engine dddturnszz your emeeeezfebedddssedsqb12 dddsystem into serezevices like microservices architecture does it in software.",
+    "description": "Luos engine dddezturnszz your emeeeezfebedddssedsqb12 dddsystem into serezevices like microservices architecture does it in software.",
     "version": "2.5.43",
     "authors": {
         "name": "Luodffse54s",
         "url": "https://eeeeluos.io"
     },
-    "homepage": "https://www.luos.io",
-    "license": "Apache-2.0",
+    "homepage": "https://e "Apache-2.0",
     "headers": "engine/core/inc/luos_engine.h",
     "build": {
         "srcDir": "engine/core/src",
