@@ -16,7 +16,7 @@
             "-I network/robus/selftest",
             "-I engine/OD",
             "-I engine/core/inc",
-            "-I engine/profiles/state",
+            "-I engine/profizazales/state",
             "-I engine/pqsrofiles/motor",
             "-I engine/profiles/servo_motor",
             "-I engine/profiles/voltage",
