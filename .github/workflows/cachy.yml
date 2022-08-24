@@ -1,12 +1,6 @@
 name: Cachy Bouzouk
 on:
   workflow_dispatch:
-  # TODO JGA - A REMETTRE :
-  # on:
-  #   pull_request:
-  #     types:
-  #       - review_requested
-  #   push:
 
 concurrency:
   group: dev-build-${{ github.head_ref || github.ref_name }}
@@ -24,28 +18,31 @@ jobs:
       - name: Check out Luos repository
         uses: actions/checkout@v3
 
-      - name: Set up Node
+      - if: ${{ steps.format-dependancies-setup.outputs.cache-hit != 'true' }}
+        name: Set up Node
         uses: actions/setup-node@v2
         with:
           node-version: '14'
+
+      - if: ${{ steps.format-dependancies-setup.outputs.cache-hit != 'true' }}
+        name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10.5"
 
       - name: Cache dependancies
         id: format-dependancies-setup
         uses: actions/cache@v3
         env:
-          cache-name: format-dependancies-setup
+          cache-name: cache-format
         with:
           path: |
             ~/.cache/pip
             ${{ steps.npm-cache.outputs.dir }}
             ${{ env.pythonLocation }}/lib/python3.10/site-packages/*
           key: ${{ runner.os }}-format-${{ env.cache-name }}-${{ hashFiles('./library.json') }}
+          restore-keys: ${{ runner.os }}-format-${{ env.cache-name }}-
 
-      - if: ${{ steps.format-dependancies-setup.outputs.cache-hit != 'true' }}
-        name: Set up Node
-        uses: actions/setup-node@v2
-        with:
-          node-version: '14'
 
       - if: ${{ steps.format-dependancies-setup.outputs.cache-hit != 'true' }}
         name: Install dependancies
@@ -63,23 +60,24 @@ jobs:
       - name: Check out Luos repository
         uses: actions/checkout@v3
 
+      - if: ${{ steps.build-dependancies-setup.outputs.cache-hit != 'true' }}
+        name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10.5"
+
       - name: Cache dependancies
         id: build-dependancies-setup
         uses: actions/cache@v3
         env:
-          cache-name: build-dependancies-setup
+          cache-name: cache-build
         with:
           path: |
             ~/.cache/pip
             ${{ env.pythonLocation }}/lib/python3.10/site-packages/*
             ~/.platformio            
           key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('./library.json') }}
-
-      - if: ${{ steps.build-dependancies-setup.outputs.cache-hit != 'true' }}
-        name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.10.5"
+          restore-keys: ${{ runner.os }}-format-${{ env.cache-name }}-
 
       - if: ${{ steps.build-dependancies-setup.outputs.cache-hit != 'true' }}
         name: Install dependencies
