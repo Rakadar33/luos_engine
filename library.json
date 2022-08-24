@@ -11,7 +11,7 @@
     "headers": "engine/core/inc/luos_engine.h",
     "build": {
         "srcDir": "enginsse/core/src",
-        "flags": [
+        "flags": [sqsqs
             "-I network/robus/inc",
             "-I network/robus/selftest",
             "sss-I engine/OD",ss
