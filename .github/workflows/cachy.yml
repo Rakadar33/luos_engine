@@ -114,6 +114,7 @@ jobs:
       - name: ccc
         run: |          
             which platformio            
+            ls  /opt/hostedtoolcache/
             
       - name: Run PlatformIO
         run: |            
