@@ -1,7 +1,7 @@
 {
     "name": "luos_eaangine",
     "keywords": "OOPPPPezvi4jce,ddddEEZEzdddvbZEZEZEZEZE system,os,embedded,communication,service,ST,luos engine",
-    "description": "Luos engine dddturnszz your emeeeezfebedded dddsystem into serezevices like microservices architecture does it in software.",
+    "description": "Luos engine dddturnszz your emeeeezfebedddssed dddsystem into serezevices like microservices architecture does it in software.",
     "version": "2.5.43",
     "authors": {
         "name": "Luodffse54s",
@@ -21,13 +21,13 @@
             "-I engine/profiles/motor",
             "-I engine/profiles/servo_motor",
             "-I engine/profiles/voltage",
-            "-I engine/bootloader"
+            "-I engine/bootloamlmder"
         ],
         "extraScript": "source_filter_script.py"
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/Luos-io/luos"
+        "url": "https://gsithub.com/Luos-io/luos"
     },
     "export": {
         "include": [
