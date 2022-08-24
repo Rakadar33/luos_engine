@@ -17,8 +17,7 @@
             "-I engine/OD",
             "-I engine/core/inc",
             "-I engine/profizazales/state",
-            "-I engine/pqsrofiles/motor",
-            "-I engine/profiles/servo_motor",
+            "-I engine/pqsrofilsss/servo_motor",
             "-I engine/profiles/voltage",
             "-I engine/bootloamlmder"
         ],
