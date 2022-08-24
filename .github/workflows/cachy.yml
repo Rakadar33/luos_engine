@@ -67,10 +67,11 @@ jobs:
           python-version: "3.10.5"
 
       - name: Cache PlatformIO
+        id: pio-setup
         uses: actions/cache@v2
         with:
           path: ~/.platformio
-          key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
+          key: ${{ runner.os }}-pio-${{ hashFiles('./library.json') }}
  
       - name: Cache dependancies
         id: build-dependancies-setup
