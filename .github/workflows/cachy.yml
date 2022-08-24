@@ -98,12 +98,12 @@ jobs:
           whoami
           pwd
           ls -ll ~/
-          ls -ll /home/runners/
-          ls -ll /home/runners/.local/bin/
-          ls -ll /home/runners/.platformio
+          ls -ll /home/runner/
+          ls -ll /home/runner/.local/bin/
+          ls -ll /home/runner/.platformio
           
       - name: Run PlatformIO
-        run: /home/runners/.local/bin/platformio run -d examples/projects/NUCLEO-L073RZ/button
+        run: /home/runner/.local/bin/platformio run -d examples/projects/NUCLEO-L073RZ/button
 
   build-success:
     name: Build success
