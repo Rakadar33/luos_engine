@@ -67,6 +67,17 @@ jobs:
           python-version: "3.10.5"
 
       - if: ${{ steps.dependancies-setup.outputs.cache-hit != 'true' }}
+        name : Cache Python
+        id: cache-python
+        uses: 'actions/cache@v3'
+        with:
+          path: ${{ env.pythonLocation }}/lib/python3.10/site-packages/*
+          key: ${{ runner.os }}-python-${{ hashFiles('./library.json') }}
+          #restore-keys: |
+            #${{ runner.os }}-pip-
+            #${{ runner.os }}-
+
+      - if: ${{ steps.dependancies-setup.outputs.cache-hit != 'true' }}
         name: Set up Node
         uses: actions/setup-node@v2
         with:
