@@ -68,10 +68,10 @@ jobs:
 
       - name: Cache PlatformIO
         id: pio-setup
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ~/.platformio
-          key: ${{ runner.os }}-pio-${{ hashFiles('./library.json') }}
+          key: ${{ runner.os }}-cache-pio-${{ hashFiles('./library.json') }}
  
       - name: Cache dependancies
         id: build-dependancies-setup
@@ -95,7 +95,12 @@ jobs:
           #TODO : ajouter les packages pour board + les dependances des py
 
       - name: Run PlatformIO
-        run: platformio run -d examples/projects/NUCLEO-L073RZ/button
+        run: | 
+          whoami
+          pwd
+          ls -ll ~/
+          find ~/ -name .platformio
+          #platformio run -d examples/projects/NUCLEO-L073RZ/button
 
   build-success:
     name: Build success
