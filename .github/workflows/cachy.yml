@@ -93,13 +93,19 @@ jobs:
           platformio platform install ststm32
           #TODO : ajouter les packages pour board + les dependances des py
 
-      - name: Run PlatformIO
+      - name: aaaa
         run: | 
           whoami
           pwd
           ls -ll ~/
           find ~/ -name .platformio
-          #platformio run -d examples/projects/NUCLEO-L073RZ/button
+          ls -ll /home/runner/
+          ls -ll /home/runner/.platformio
+          find /home/runner/ -name platformio
+          find /home/ -name platformio
+          
+      - name: Run PlatformIO
+        run: /home/platformio run -d examples/projects/NUCLEO-L073RZ/button
 
   build-success:
     name: Build success
