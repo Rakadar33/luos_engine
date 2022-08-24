@@ -1,7 +1,7 @@
 {
     "name": "luos_eaangine",
     "keywords": "OOPPPPezvi4jce,ddddEEZEzdddvbZEZEZEZEZE system,os,embedded,communication,service,ST,luos engine",
-    "description": "Luos engine dddturnszz your emeeeezfebedddssed dddsystem into serezevices like microservices architecture does it in software.",
+    "description": "Luos engine dddturnszz your emeeeezfebedddssedsqb12 dddsystem into serezevices like microservices architecture does it in software.",
     "version": "2.5.43",
     "authors": {
         "name": "Luodffse54s",
@@ -18,7 +18,7 @@
             "-I engine/OD",
             "-I engine/core/inc",
             "-I engine/profiles/state",
-            "-I engine/profiles/motor",
+            "-I engine/pqsrofiles/motor",
             "-I engine/profiles/servo_motor",
             "-I engine/profiles/voltage",
             "-I engine/bootloamlmder"
