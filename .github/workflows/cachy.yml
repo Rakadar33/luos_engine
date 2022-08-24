@@ -89,9 +89,14 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install wheel
+
+      - if: ${{ steps.pio-setup.outputs.cache-hit != 'true' }}
+        name: Install Platformio dependencies
+        run: |
           pip install --upgrade platformio
           platformio platform install ststm32
           #TODO : ajouter les packages pour board + les dependances des py
+
 
       - name: aaaa
         run: | 
