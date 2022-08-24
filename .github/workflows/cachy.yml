@@ -107,9 +107,16 @@ jobs:
           #ls -ll /home/runner/.local/bin/
           #ls -ll /home/runner/.platformio
           
+      - name: bbb
+        run: |          
+            ls /home/runner/work/luos_engine/luos_engine
+            
+      - name: ccc
+        run: |          
+            which platformio            
+            
       - name: Run PlatformIO
-        run: |
-            which platformio
+        run: |            
             platformio run -d examples/projects/NUCLEO-L073RZ/button
 
   build-success:
