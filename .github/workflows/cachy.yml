@@ -92,7 +92,9 @@ jobs:
           pip install --upgrade platformio
           platformio platform install ststm32
           #TODO : ajouter les packages pour board + les dependances des py
-          
+
+      - name: Run PlatformIO
+        run: platformio run -d examples/projects/NUCLEO-L073RZ/button
 
   build-success:
     name: Build success
