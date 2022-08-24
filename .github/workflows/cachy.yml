@@ -125,7 +125,8 @@ jobs:
           #restore-keys: |
           #  ${{ runner.os }}-cache-${{ env.cache-name }}
       - name: Run PlatformIO
-        run: platformio run -d examples/projects/NUCLEO-L073RZ/button
+        #run: platformio run -d examples/projects/NUCLEO-L073RZ/button
+        run: python -V
 
   build-success:
     name: Build success
