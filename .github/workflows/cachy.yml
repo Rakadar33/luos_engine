@@ -18,18 +18,6 @@ jobs:
       - name: Check out Luos repository
         uses: actions/checkout@v3
 
-      - if: ${{ steps.format-dependancies-setup.outputs.cache-hit != 'true' }}
-        name: Set up Node
-        uses: actions/setup-node@v2
-        with:
-          node-version: '14'
-
-      - if: ${{ steps.format-dependancies-setup.outputs.cache-hit != 'true' }}
-        name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.10.5"
-
       - name: Cache dependancies
         id: format-dependancies-setup
         uses: actions/cache@v3
@@ -43,6 +31,17 @@ jobs:
           key: ${{ runner.os }}-format-${{ env.cache-name }}-${{ hashFiles('./library.json') }}
           restore-keys: ${{ runner.os }}-format-${{ env.cache-name }}-
 
+      - if: ${{ steps.format-dependancies-setup.outputs.cache-hit != 'true' }}
+        name: Set up Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - if: ${{ steps.format-dependancies-setup.outputs.cache-hit != 'true' }}
+        name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10.5"
 
       - if: ${{ steps.format-dependancies-setup.outputs.cache-hit != 'true' }}
         name: Install dependancies
@@ -60,12 +59,6 @@ jobs:
       - name: Check out Luos repository
         uses: actions/checkout@v3
 
-      - if: ${{ steps.build-dependancies-setup.outputs.cache-hit != 'true' }}
-        name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.10.5"
-
       - name: Cache PlatformIO
         id: pio-setup
         uses: actions/cache@v3
@@ -73,7 +66,7 @@ jobs:
           path: ~/.platformio
           key: ${{ runner.os }}-cache-pio-${{ hashFiles('./library.json') }}
  
-      - name: Cache dependancies
+      - name: Cache Python
         id: build-dependancies-setup
         uses: actions/cache@v3
         env:
@@ -84,6 +77,12 @@ jobs:
             ${{ env.pythonLocation }}/lib/python3.10/site-packages/*
           key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('./library.json') }}
           restore-keys: ${{ runner.os }}-format-${{ env.cache-name }}-
+
+      - if: ${{ steps.build-dependancies-setup.outputs.cache-hit != 'true' }}
+        name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10.5"
 
       - if: ${{ steps.build-dependancies-setup.outputs.cache-hit != 'true' }}
         name: Install dependencies
