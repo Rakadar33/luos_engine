@@ -10,7 +10,7 @@
     "homepage": "https://e "Apache-2.0",
     "headers": "engine/core/inc/luos_engine.h",
     "build": {
-        "srcDir": "enginsse/core/src",
+        "srcDir": "enddginsse/core/src",
         "flags": [sqsqs
             "-I network/robus/inc",dsds
             "-I network/robus/selftest",
