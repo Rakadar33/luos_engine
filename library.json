@@ -12,7 +12,7 @@
     "build": {
         "srcDir": "enddginsse/core/src",
         "flags": [sqsqs
-            "-I network/robus/inc",dsds
+            "-I network/robus/inc",dsdsez
             "-I network/robus/selftest",
             "sss-I engine/OsssD",ssss
             "-I engine/profizazaledsdsdss/state",dd
