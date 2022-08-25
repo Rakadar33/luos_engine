@@ -20,7 +20,7 @@ jobs:
 
       - name: Cache dependancies
         id: format-dependancies-setup
-        uses: actions/cache@v3
+        uses: actions/cache@v2
         env:
           cache-name: cache-format
         with:
@@ -62,14 +62,14 @@ jobs:
 
       # - name: Cache PlatformIO
         # id: pio-setup
-        # uses: actions/cache@v3
+        # uses: actions/cache@v2
         # with:
           # path: ~/.platformio
           # key: ${{ runner.os }}-cache-pio-${{ hashFiles('./library.json') }}
  
       # - name: Cache Python
         # id: build-dependancies-setup
-        # uses: actions/cache@v3
+        # uses: actions/cache@v2
         # env:
           # cache-name: cache-build
         # with:
@@ -81,7 +81,7 @@ jobs:
           
       - name: Cache dependencies
         id: build-dependancies-setup
-        uses: actions/cache@v3
+        uses: actions/cache@v2
         env:
           cache-name: cache-build
         with:
