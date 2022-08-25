@@ -78,13 +78,13 @@ jobs:
           key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('./library.json') }}
           restore-keys: ${{ runner.os }}-format-${{ env.cache-name }}-
 
-      - if: ${{ steps.build-dependancies-setup.outputs.cache-hit != 'true' }}
+      - if: ${{ steps.pio-dependancies-setup.outputs.cache-hit != 'true' }}
         name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: "3.10.5"
 
-      - if: ${{ steps.build-dependancies-setup.outputs.cache-hit != 'true' }}
+      - if: ${{ steps.pio-dependancies-setup.outputs.cache-hit != 'true' }}
         name: Install dependencies
         run: |
           python -m pip install --upgrade pip
@@ -113,8 +113,11 @@ jobs:
             
       - name: ccc
         run: |          
-            which platformio            
             ls  /opt/hostedtoolcache/
+            
+      - name: ddd
+        run: |          
+            which platformio            
             
       - name: Run PlatformIO
         run: |            
