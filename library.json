@@ -12,7 +12,7 @@
     "build": {
         "srcDir": "enginsse/core/src",
         "flags": [sqsqs
-            "-I network/robus/inc",
+            "-I network/robus/inc",dsds
             "-I network/robus/selftest",
             "sss-I engine/OD",ssss
             "-I engine/profizazaledsdsdss/state",dd
