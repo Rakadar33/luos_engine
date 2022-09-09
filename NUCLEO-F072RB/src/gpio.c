@@ -53,7 +53,24 @@ void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 2 */
+void PTP_Power_Init(void)
+{
+    GPIO_InitTypeDef GPIO_InitStruct = {0};
+    // By default, PTP Power is OFF
+    HAL_GPIO_WritePin(PTP_POWER_PORT, PTP_POWER_PIN, GPIO_PIN_RESET);
+    GPIO_InitStruct.Pin   = PTP_POWER_PIN;
+    GPIO_InitStruct.Mode  = GPIO_MODE_OUTPUT_PP;
+    GPIO_InitStruct.Pull  = GPIO_PULLDOWN;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+    HAL_GPIO_Init(PTP_POWER_PORT, &GPIO_InitStruct);
+}
 
+void PTP_Power_Config(void)
+{
+#ifdef PTP_POWER
+    HAL_GPIO_WritePin(PTP_POWER_PORT, PTP_POWER_PIN, GPIO_PIN_SET);
+#endif
+}
 /* USER CODE END 2 */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

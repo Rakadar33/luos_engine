@@ -37,8 +37,11 @@ extern "C" {
 
 void MX_GPIO_Init(void);
 
-/* USER CODE BEGIN Prototypes */
 
+/* USER CODE BEGIN Prototypes */
+void Unused_PTP_config(void);
+void PTP_Power_Init(void);
+void PTP_Power_Config(void);
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus

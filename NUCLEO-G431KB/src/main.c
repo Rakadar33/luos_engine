@@ -90,11 +90,30 @@ int main(void)
     /* Initialize all configured peripherals */
     MX_GPIO_Init();
     /* USER CODE BEGIN 2 */
+    
+    //Unused_PTP_config();
+    //PTP_Power_Init();    
+    //PTP_Power_Config();     
+
     Luos_Init();
-    Led_Init();
-    Pipe_Init();
-    Gate_Init();
-    Blinker_Init();
+
+    PTP_Power_Init();
+    PTP_Power_Config(); 
+    /*Unused_PTP_config();    
+    uint16_t a;
+    for(a=0;a<10;a++)
+    {
+        HAL_GPIO_WritePin(PTP_D_PORT, PTP_D, GPIO_PIN_RESET);
+        HAL_GPIO_WritePin(PTP_D_PORT, PTP_D, GPIO_PIN_SET);
+        HAL_GPIO_WritePin(PTP_D_PORT, PTP_D, GPIO_PIN_RESET);
+        HAL_GPIO_WritePin(PTP_D_PORT, PTP_D, GPIO_PIN_SET);    
+    }
+    HAL_GPIO_WritePin(PTP_D_PORT, PTP_D, GPIO_PIN_RESET);*/
+
+    //Led_Init();
+    //Pipe_Init();
+    //Gate_Init();
+//    Blinker_Init();
     /* USER CODE END 2 */
 
     /* Infinite loop */
@@ -105,10 +124,10 @@ int main(void)
 
         /* USER CODE BEGIN 3 */
         Luos_Loop();
-        Led_Loop();
-        Pipe_Loop();
-        Gate_Loop();
-        Blinker_Loop();
+        //Led_Loop();
+        //Pipe_Loop();
+        //Gate_Loop();
+//        Blinker_Loop();
     }
     /* USER CODE END 3 */
 }

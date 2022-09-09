@@ -57,11 +57,56 @@ void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_PULLDOWN;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(LED_GPIO_Port, &GPIO_InitStruct);
-
 }
 
+
+void Unused_PTP_config(void)
+{
 /* USER CODE BEGIN 2 */
 
+// REMETTRE !!!
+
+//#if !defined(PTP_CONFIG_D) && !defined(PTP_CONFIG_AD) && !defined(PTP_CONFIG_BD) && !defined(PTP_CONFIG_CD)
+  /*If PTP D is unused, disable the line*/
+  GPIO_InitTypeDef GPIO_InitStruct = {0};  
+  GPIO_InitStruct.Pin = PTP_D;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  //GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_OD;
+  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(PTP_D_PORT, &GPIO_InitStruct);
+
+  /*Configure GPIO pin Output Level */
+  uint16_t a;
+  for(a=0;a<10;a++)
+  {
+    HAL_GPIO_WritePin(PTP_D_PORT, PTP_D, GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(PTP_D_PORT, PTP_D, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(PTP_D_PORT, PTP_D, GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(PTP_D_PORT, PTP_D, GPIO_PIN_SET);    
+  }
+//#endif
+}
+
+void PTP_Power_Init(void)
+{
+    GPIO_InitTypeDef GPIO_InitStruct = {0};
+    // By default, PTP Power is OFF
+    HAL_GPIO_WritePin(PTP_POWER_PORT, PTP_POWER_PIN, GPIO_PIN_RESET);
+
+    GPIO_InitStruct.Pin   = PTP_POWER_PIN;
+    GPIO_InitStruct.Mode  = GPIO_MODE_OUTPUT_PP;
+    GPIO_InitStruct.Pull  = GPIO_PULLDOWN;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+    HAL_GPIO_Init(PTP_POWER_PORT, &GPIO_InitStruct);
+}
+
+void PTP_Power_Config(void)
+{
+#ifdef PTP_POWER
+    HAL_GPIO_WritePin(PTP_POWER_PORT, PTP_POWER_PIN, GPIO_PIN_SET);
+#endif
+}
 /* USER CODE END 2 */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

@@ -23,7 +23,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "blinker.h"
+//#include "blinker.h"
 #include "gate.h"
 #include "led.h"
 #include "luos_engine.h"
@@ -85,7 +85,6 @@ int main(void)
     SystemClock_Config();
 
     /* USER CODE BEGIN SysInit */
-
     /* USER CODE END SysInit */
 
     /* Initialize all configured peripherals */
@@ -95,7 +94,9 @@ int main(void)
     Led_Init();
     Pipe_Init();
     Gate_Init();
-    Blinker_Init();
+//    PTP_Power_Init();
+//    PTP_Power_Config();    
+    //Blinker_Init();
     /* USER CODE END 2 */
 
     /* Infinite loop */
@@ -106,7 +107,7 @@ int main(void)
         Led_Loop();
         Pipe_Loop();
         Gate_Loop();
-        Blinker_Loop();
+        //Blinker_Loop();
         /* USER CODE END WHILE */
 
         /* USER CODE BEGIN 3 */
