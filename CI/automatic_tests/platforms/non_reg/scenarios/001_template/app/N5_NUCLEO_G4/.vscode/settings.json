@@ -1,7 +1,0 @@
-{
-    "files.associations": {
-        "gpio.h": "c",
-        "button.h": "c",
-        "luos_hal.h": "c"
-    }
-}
