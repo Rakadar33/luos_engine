@@ -32,12 +32,27 @@ def setup_nodes(scenario, config, upload="OFF"):
     platform.engine.debug_state(DEBUG_MODE)    
     #platform.mcu.start_Node(config_Gate)  #FOR DEBUG
 
+    nodes = config.split("_")
     if upload == "ON":
-        nodes = config.split("_")
+        ci_log.phase_log('Flash nodes')
         for mcu in nodes:
             ci_log.phase_log(f"[Flash] {mcu}")
             mcu = eval(f"config_{mcu}")
             assert(platform.mcu.flash_Node(mcu))
+
+    # Power ON nodes
+    excluded_nodes= [x for x in range(1,5)]
+    for mcu in nodes:
+        number= int(mcu[1])
+        if number < 5:
+            platform.mcu.powerUp_Node(number)
+            excluded_nodes.remove(number)
+        time.sleep(0.1)
+    # Power OFF unused nodes 
+    for mcu in range(1,5):
+        if mcu in excluded_nodes:
+            platform.mcu.powerDown_Node(mcu)
+            time.sleep(0.1)
 
     # Search for a Gate
     connected_ports = platform.mcu.available_serial_ports()

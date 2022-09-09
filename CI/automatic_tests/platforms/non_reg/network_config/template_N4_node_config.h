@@ -52,9 +52,8 @@
  *    NBR_PORT              |              2             | PTP Branch number Max 8
  *    NBR_RETRY             |              10            | Send Retry number in case of NACK or collision
  ******************************************************************************/
-
-#define MAX_SERVICE_NUMBER 1
-#define MAX_MSG_NB         5
+#define MAX_SERVICE_NUMBER 5
+#define MAX_MSG_NB         40
 
 /*******************************************************************************
  * LUOS HAL LIBRARY DEFINITION
@@ -130,7 +129,6 @@
  *****************************************************************************/
 
 // PTP definitions
-
 #define PTP_POWER_PIN  GPIO_PIN_0
 #define PTP_POWER_PORT GPIOA
 #define PTP_A          GPIO_PIN_4
@@ -146,7 +144,6 @@
 #define PTP_C_IRQ      EXTI3_IRQn
 #define PTP_D_IRQ      EXTI9_5_IRQn
 #define PTP_NO_IRQ     EXTI1_IRQn
-
 
 // PTP_CONFIG_UNKNOWN below is modified by Luos CI python tool :
 #define PTP_CONFIG_UNKNOWN // DO NOT EDIT THIS LINE !!!!!!!!!!!!!!!!!!!!!!!

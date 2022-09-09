@@ -110,12 +110,8 @@ void SysTick_Handler(void)
 /* For the available peripheral interrupt handler names,                      */
 /* please refer to the startup file (startup_stm32f4xx.s).                    */
 /******************************************************************************/
-void EXTI4_IRQHandler(void)
+void EXTI9_5_IRQHandler(void)
 {
-    //DEBUG
-    static uint8_t dbg = 0;
-    dbg++;
-
 #ifdef PTP_DISABLED
     return;
 #endif
@@ -125,12 +121,8 @@ void EXTI4_IRQHandler(void)
 #endif
 }
 
-void EXTI9_5_IRQHandler(void)
+void EXTI4_IRQHandler(void)
 {
-    //DEBUG
-    static uint8_t dbg = 0;
-    dbg++;
-
 #ifdef PTP_DISABLED
     return;
 #endif
@@ -146,10 +138,6 @@ void EXTI9_5_IRQHandler(void)
 
 void EXTI15_10_IRQHandler(void)
 {
-    //DEBUG
-    static uint8_t dbg = 0;
-    dbg++;
-
 #ifdef PTP_DISABLED
     return;
 #endif
@@ -178,9 +166,5 @@ void EXTI15_10_IRQHandler(void)
 
 void EXTI3_IRQHandler(void)
 {
-    //DEBUG
-    static uint8_t dbg = 0;
-    dbg++;
 }
-
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

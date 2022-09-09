@@ -147,7 +147,6 @@
 #define PTP_D_IRQ      EXTI15_10_IRQn
 #define PTP_NO_IRQ     EXTI3_IRQn
 
-
 // PTP_CONFIG_UNKNOWN below is modified by Luos CI python tool :
 #define PTP_CONFIG_UNKNOWN // DO NOT EDIT THIS LINE !!!!!!!!!!!!!!!!!!!!!!!
 
@@ -267,6 +266,5 @@
 #define PTPB_PORT PTP_D_PORT
 #define PTPB_IRQ  PTP_D_IRQ
 #endif
-
 
 #endif /* _NODE_CONFIG_H_ */

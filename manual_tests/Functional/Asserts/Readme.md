@@ -1,4 +1,4 @@
-﻿# Assert Test Description : 
+# Assert Test Description : 
 
 ## Functionality tested
 

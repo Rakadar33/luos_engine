@@ -78,7 +78,6 @@ void EXTI4_15_IRQHandler(void)
 #endif
 
     uint32_t pending = EXTI->PR;
-
     if (pending & PTPA_PIN)
     {
         HAL_GPIO_EXTI_IRQHandler(PTPA_PIN);
@@ -94,8 +93,5 @@ void EXTI4_15_IRQHandler(void)
 
 void EXTI2_3_IRQHandler(void)
 {
-    //DEBUG
-    static uint8_t dbg = 0;
-    dbg++;
 }
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

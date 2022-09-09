@@ -33,24 +33,12 @@
  *******************************************************************************/
 
 /*******************************************************************************
- * FLASH CONFIGURATION FOR APP WITH BOOTLOADER
- ********************************************************************************
- *    Define                | Default Value              | Description
- *    :---------------------|------------------------------------------------------
- *    BOOT_START_ADDRESS    | FLASH_BASE = 0x8000000     | Start address of Bootloader in flash
- *    SHARED_MEMORY_ADDRESS | 0x0800C000                 | Start address of shared memory to save boot flag
- *    APP_START_ADDRESS     | 0x0800C800                 | Start address of application with bootloader
- *    APP_END_ADDRESS       | FLASH_END                  | End address of application with bootloader
- ******************************************************************************/
-
-/*******************************************************************************
  * OTHER GATE PARAMETERS
  *******************************************************************************
  *    Define                    | Default Value              | Description
  *    :-------------------------|------------------------------------------------------
  *    INIT_TIME                 |              150           | Wait init time before first detection
  * ******************************************************************************/
-
 #define INIT_TIME 150
 
 /*******************************************************************************
@@ -58,15 +46,14 @@
  *******************************************************************************
  *    Define                | Default Value              | Description
  *    :---------------------|------------------------------------------------------
- *    MAX_SERVICE_NUMBER    |              5             | Service number in the
- *node MSG_BUFFER_SIZE       | 3*SIZE_MSG_MAX (405 Bytes) | Size in byte of the
- *Luos buffer TX and RX MAX_MSG_NB            |   2*MAX_SERVICE_NUMBER   |
- *Message number in Luos buffer NBR_PORT              |              2 | PTP
- *Branch number Max 8 NBR_RETRY             |              10            | Send
- *Retry number in case of NACK or collision
+ *    MAX_SERVICE_NUMBER    |              5             | Service number in the node
+ *    MSG_BUFFER_SIZE       | 3*SIZE_MSG_MAX (405 Bytes) | Size in byte of the Luos buffer TX and RX
+ *    MAX_MSG_NB            |   2*MAX_SERVICE_NUMBER   | Message number in Luos buffer
+ *    NBR_PORT              |              2             | PTP Branch number Max 8
+ *    NBR_RETRY             |              10            | Send Retry number in case of NACK or collision
  ******************************************************************************/
-#define MAX_SERVICE_NUMBER 2
-#define MSG_BUFFER_SIZE    1024
+#define MAX_SERVICE_NUMBER 5
+#define MAX_MSG_NB         40
 
 /*******************************************************************************
  * LUOS HAL LIBRARY DEFINITION
@@ -139,7 +126,7 @@ special config)
  *****************************************************************************/
 
 // PTP definitions
-#define PTP_POWER_PIN  GPIO_PIN_0
+#define PTP_POWER_PIN  GPIO_PIN_8
 #define PTP_POWER_PORT GPIOA
 #define PTP_A          GPIO_PIN_4
 #define PTP_A_PORT     GPIOB
@@ -170,7 +157,6 @@ special config)
 #define PTPA_IRQ  PTP_NO_IRQ
 #define PTPB_IRQ  PTP_NO_IRQ
 #define PTP_DISABLED
-
 #else
 // Node is connected, the breakout boards must be powered on
 #define PTP_POWER
@@ -275,4 +261,5 @@ special config)
 #define PTPB_PORT PTP_D_PORT
 #define PTPB_IRQ  PTP_D_IRQ
 #endif
+
 #endif /* _NODE_CONFIG_H_ */

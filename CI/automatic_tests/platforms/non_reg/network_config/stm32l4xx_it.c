@@ -113,10 +113,6 @@ void SysTick_Handler(void)
 
 void EXTI4_IRQHandler(void)
 {
-    //DEBUG
-    static uint8_t dbg = 0;
-    dbg++;
-
 #ifdef PTP_DISABLED
     return;
 #endif
@@ -128,10 +124,6 @@ void EXTI4_IRQHandler(void)
 
 void EXTI9_5_IRQHandler(void)
 {
-    //DEBUG
-    static uint8_t dbg = 0;
-    dbg++;
-
 #ifdef PTP_DISABLED
     return;
 #endif
@@ -140,18 +132,6 @@ void EXTI9_5_IRQHandler(void)
     return;
 #endif
 
-    /*
-    uint32_t pending = EXTI->PR1;
-    if (pending & PTPA_PIN)
-    {
-        HAL_GPIO_EXTI_IRQHandler(PTPA_PIN);
-    }
-
-    if (pending & PTPB_PIN)
-    {
-        HAL_GPIO_EXTI_IRQHandler(PTPB_PIN);
-    }
-*/
     uint32_t pending = EXTI->PR1;
     if (pending & PTPA_PIN)
     {
@@ -166,10 +146,6 @@ void EXTI9_5_IRQHandler(void)
 
 void EXTI3_IRQHandler(void)
 {
-    //DEBUG
-    static uint8_t dbg = 0;
-    dbg++;
-
 #ifdef PTP_DISABLED
     return;
 #endif
@@ -185,8 +161,5 @@ void EXTI3_IRQHandler(void)
 
 void EXTI1_IRQHandler(void)
 {
-    //DEBUG
-    static uint8_t dbg = 0;
-    dbg++;
 }
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

@@ -111,10 +111,6 @@ void SysTick_Handler(void)
 /******************************************************************************/
 void EXTI9_5_IRQHandler(void)
 {
-    //DEBUG
-    static uint8_t dbg = 0;
-    dbg++;
-
 #ifdef PTP_DISABLED
     return;
 #endif
@@ -125,12 +121,9 @@ void EXTI9_5_IRQHandler(void)
     HAL_GPIO_EXTI_IRQHandler(PTPB_PIN);
 #endif
 }
+
 void EXTI4_IRQHandler(void)
 {
-    //DEBUG
-    static uint8_t dbg = 0;
-    dbg++;
-
 #ifdef PTP_DISABLED
     return;
 #endif
@@ -140,29 +133,8 @@ void EXTI4_IRQHandler(void)
 #endif
 }
 
-void EXTI2_IRQHandler(void)
-{
-    //DEBUG
-    static uint8_t dbg = 0;
-    dbg++;
-
-#ifdef PTP_DISABLED
-    return;
-#endif
-#if defined(PTP_CONFIG_D)
-    HAL_GPIO_EXTI_IRQHandler(PTPA_PIN);
-#endif
-#if defined(PTP_CONFIG_CD) || defined(PTP_CONFIG_AD) || defined(PTP_CONFIG_BD)
-    HAL_GPIO_EXTI_IRQHandler(PTPB_PIN);
-#endif
-}
-
 void EXTI1_IRQHandler(void)
 {
-    //DEBUG
-    static uint8_t dbg = 0;
-    dbg++;
-
 #ifdef PTP_DISABLED
     return;
 #endif
@@ -176,14 +148,21 @@ void EXTI1_IRQHandler(void)
 #endif
 }
 
-void EXTI15_10_IRQHandler(void)
+void EXTI2_IRQHandler(void)
 {
-    //DEBUG
-    static uint8_t dbg = 0;
-    dbg++;
-
 #ifdef PTP_DISABLED
     return;
 #endif
+#if defined(PTP_CONFIG_D)
+    HAL_GPIO_EXTI_IRQHandler(PTPA_PIN);
+#endif
+#if defined(PTP_CONFIG_CD) || defined(PTP_CONFIG_AD) || defined(PTP_CONFIG_BD)
+    HAL_GPIO_EXTI_IRQHandler(PTPB_PIN);
+#endif
+}
+
+
+void EXTI15_10_IRQHandler(void)
+{
 }
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
