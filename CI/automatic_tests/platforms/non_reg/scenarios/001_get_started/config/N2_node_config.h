@@ -150,7 +150,7 @@
 #define PTP_NO_IRQ     EXTI2_3_IRQn
 
 // PTP_CONFIG_UNKNOWN below is modified by Luos CI python tool :
-#define PTP_CONFIG_D // DO NOT EDIT THIS LINE !!!!!!!!!!!!!!!!!!!!!!!
+#define PTP_CONFIG_A // DO NOT EDIT THIS LINE !!!!!!!!!!!!!!!!!!!!!!!
 
 // Depending on previous config values, declaration of PTP lines and RS485 power
 // state
@@ -164,9 +164,10 @@
 #define PTPA_IRQ  PTP_NO_IRQ
 #define PTPB_IRQ  PTP_NO_IRQ
 #define PTP_DISABLED
+#define POWER_LEVEL GPIO_PIN_RESET
 #else
 // Node is connected, the breakout boards must be powered on
-#define PTP_POWER
+#define POWER_LEVEL GPIO_PIN_SET
 #endif
 
 // PTP A
@@ -268,5 +269,16 @@
 #define PTPB_PORT PTP_D_PORT
 #define PTPB_IRQ  PTP_D_IRQ
 #endif
+
+#define HAL_Platform_Init()                                 \
+    if (PTPB_IRQ == PTP_NO_IRQ)                             \
+        HAL_NVIC_DisableIRQ(PTP_B_IRQ);                     \
+    GPIO_InitTypeDef GPIO_InitStruct = {0};                 \
+    GPIO_InitStruct.Pin              = PTP_POWER_PIN;       \
+    GPIO_InitStruct.Mode             = GPIO_MODE_OUTPUT_PP; \
+    GPIO_InitStruct.Pull             = GPIO_PULLDOWN;       \
+    GPIO_InitStruct.Speed            = GPIO_SPEED_FREQ_LOW; \
+    HAL_GPIO_Init(PTP_POWER_PORT, &GPIO_InitStruct);        \
+    HAL_GPIO_WritePin(PTP_POWER_PORT, PTP_POWER_PIN, POWER_LEVEL);
 
 #endif /* _NODE_CONFIG_H_ */

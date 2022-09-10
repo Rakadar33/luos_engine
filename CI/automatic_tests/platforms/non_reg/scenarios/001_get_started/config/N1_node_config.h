@@ -105,7 +105,7 @@
 #define PTP_D         4
 
 // PTP_CONFIG_UNKNOWN below is modified by Luos CI python tool :
-#define PTP_CONFIG_UNKNOWN // DO NOT EDIT THIS LINE !!!!!!!!!!!!!!!!!!!!!!!
+#define PTP_CONFIG_A // DO NOT EDIT THIS LINE !!!!!!!!!!!!!!!!!!!!!!!
 
 // Depending on previous config values, declaration of PTP lines and RS485 power
 // state
