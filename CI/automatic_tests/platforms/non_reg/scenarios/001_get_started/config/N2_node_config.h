@@ -150,7 +150,7 @@
 #define PTP_NO_IRQ     EXTI2_3_IRQn
 
 // PTP_CONFIG_UNKNOWN below is modified by Luos CI python tool :
-#define PTP_CONFIG_A // DO NOT EDIT THIS LINE !!!!!!!!!!!!!!!!!!!!!!!
+#define PTP_CONFIG_D // DO NOT EDIT THIS LINE !!!!!!!!!!!!!!!!!!!!!!!
 
 // Depending on previous config values, declaration of PTP lines and RS485 power
 // state
