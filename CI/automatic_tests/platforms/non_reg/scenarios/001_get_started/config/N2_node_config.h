@@ -54,7 +54,7 @@
  ******************************************************************************/
 #define MAX_SERVICE_NUMBER 5
 #define MAX_MSG_NB         40
-
+#define NODETECTION
 /*******************************************************************************
  * LUOS HAL LIBRARY DEFINITION
 *******************************************************************************
@@ -270,9 +270,10 @@
 #define PTPB_IRQ  PTP_D_IRQ
 #endif
 
+//aa#define HAL_Platform_Init()                                 
+//    if (PTPB_IRQ == PTP_NO_IRQ)                             
+//        HAL_NVIC_DisableIRQ(PTP_B_IRQ);                     
 #define HAL_Platform_Init()                                 \
-    if (PTPB_IRQ == PTP_NO_IRQ)                             \
-        HAL_NVIC_DisableIRQ(PTP_B_IRQ);                     \
     GPIO_InitTypeDef GPIO_InitStruct = {0};                 \
     GPIO_InitStruct.Pin              = PTP_POWER_PIN;       \
     GPIO_InitStruct.Mode             = GPIO_MODE_OUTPUT_PP; \
