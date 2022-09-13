@@ -126,7 +126,8 @@ special config)
  *****************************************************************************/
 
 // PTP definitions
-#define PTP_POWER_PIN  GPIO_PIN_8
+
+#define PTP_POWER_PIN  GPIO_PIN_0
 #define PTP_POWER_PORT GPIOA
 #define PTP_A          GPIO_PIN_4
 #define PTP_A_PORT     GPIOB
@@ -263,15 +264,19 @@ special config)
 #define PTPB_IRQ  PTP_D_IRQ
 #endif
 
-#define HAL_Platform_Init()                                 \
-    if (PTPB_IRQ == PTP_NO_IRQ)                             \
-        HAL_NVIC_DisableIRQ(PTP_B_IRQ);                     \
-    GPIO_InitTypeDef GPIO_InitStruct = {0};                 \
-    GPIO_InitStruct.Pin              = PTP_POWER_PIN;       \
-    GPIO_InitStruct.Mode             = GPIO_MODE_OUTPUT_PP; \
-    GPIO_InitStruct.Pull             = GPIO_PULLDOWN;       \
-    GPIO_InitStruct.Speed            = GPIO_SPEED_FREQ_LOW; \
-    HAL_GPIO_Init(PTP_POWER_PORT, &GPIO_InitStruct);        \
-    HAL_GPIO_WritePin(PTP_POWER_PORT, PTP_POWER_PIN, POWER_LEVEL);
+#define HAL_Platform_Init()                                        \
+    GPIO_InitTypeDef GPIO_InitStruct_Power = {0};                  \
+    GPIO_InitStruct_Power.Pin              = PTP_POWER_PIN;        \
+    GPIO_InitStruct_Power.Mode             = GPIO_MODE_OUTPUT_PP;  \
+    GPIO_InitStruct_Power.Pull             = GPIO_PULLDOWN;        \
+    GPIO_InitStruct_Power.Speed            = GPIO_SPEED_FREQ_LOW;  \
+    HAL_GPIO_Init(PTP_POWER_PORT, &GPIO_InitStruct_Power);         \
+    HAL_GPIO_WritePin(PTP_POWER_PORT, PTP_POWER_PIN, POWER_LEVEL); \
+    GPIO_InitTypeDef GPIO_InitStruct_PinD = {0};                   \
+    GPIO_InitStruct_PinD.Pin              = PTP_D;                 \
+    GPIO_InitStruct_PinD.Mode             = GPIO_MODE_INPUT;       \
+    GPIO_InitStruct_PinD.Pull             = GPIO_PULLDOWN;         \
+    HAL_GPIO_Init(PTP_D_PORT, &GPIO_InitStruct_PinD);              \
+    HAL_GPIO_WritePin(PTP_D_PORT, PTP_D, GPIO_PIN_SET);
 
 #endif /* _NODE_CONFIG_H_ */
