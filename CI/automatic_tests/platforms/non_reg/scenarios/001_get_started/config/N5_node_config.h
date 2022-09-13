@@ -271,12 +271,6 @@ special config)
     GPIO_InitStruct_Power.Pull             = GPIO_PULLDOWN;        \
     GPIO_InitStruct_Power.Speed            = GPIO_SPEED_FREQ_LOW;  \
     HAL_GPIO_Init(PTP_POWER_PORT, &GPIO_InitStruct_Power);         \
-    HAL_GPIO_WritePin(PTP_POWER_PORT, PTP_POWER_PIN, POWER_LEVEL); \
-    GPIO_InitTypeDef GPIO_InitStruct_PinD = {0};                   \
-    GPIO_InitStruct_PinD.Pin              = PTP_D;                 \
-    GPIO_InitStruct_PinD.Mode             = GPIO_MODE_INPUT;       \
-    GPIO_InitStruct_PinD.Pull             = GPIO_PULLDOWN;         \
-    HAL_GPIO_Init(PTP_D_PORT, &GPIO_InitStruct_PinD);              \
-    HAL_GPIO_WritePin(PTP_D_PORT, PTP_D, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(PTP_POWER_PORT, PTP_POWER_PIN, POWER_LEVEL); 
 
 #endif /* _NODE_CONFIG_H_ */
