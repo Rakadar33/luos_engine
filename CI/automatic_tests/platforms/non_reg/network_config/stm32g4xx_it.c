@@ -109,20 +109,8 @@ void SysTick_Handler(void)
 /* For the available peripheral interrupt handler names,                      */
 /* please refer to the startup file (startup_stm32g4xx.s).                    */
 /******************************************************************************/
-void EXTI9_5_IRQHandler(void)
-{
-#ifdef PTP_DISABLED
-    return;
-#endif
-#if defined(PTP_CONFIG_B) || defined(PTP_CONFIG_BC) || defined(PTP_CONFIG_BD)
-    HAL_GPIO_EXTI_IRQHandler(PTPA_PIN);
-#endif
-#if defined(PTP_CONFIG_AB)
-    HAL_GPIO_EXTI_IRQHandler(PTPB_PIN);
-#endif
-}
 
-void EXTI4_IRQHandler(void)
+void EXTI9_5_IRQHandler(void)
 {
 #ifdef PTP_DISABLED
     return;
@@ -133,17 +121,15 @@ void EXTI4_IRQHandler(void)
 #endif
 }
 
-void EXTI1_IRQHandler(void)
+void EXTI4_IRQHandler(void)
 {
 #ifdef PTP_DISABLED
     return;
 #endif
 
-#if defined(PTP_CONFIG_C) || defined(PTP_CONFIG_CD)
+#if defined(PTP_CONFIG_B) || defined(PTP_CONFIG_BC) || defined(PTP_CONFIG_BD)
     HAL_GPIO_EXTI_IRQHandler(PTPA_PIN);
-#endif
-
-#if defined(PTP_CONFIG_AC) || defined(PTP_CONFIG_BC)
+#else
     HAL_GPIO_EXTI_IRQHandler(PTPB_PIN);
 #endif
 }
@@ -153,16 +139,29 @@ void EXTI2_IRQHandler(void)
 #ifdef PTP_DISABLED
     return;
 #endif
-#if defined(PTP_CONFIG_D)
+
+#if defined(PTP_CONFIG_C) || defined(PTP_CONFIG_CD)
     HAL_GPIO_EXTI_IRQHandler(PTPA_PIN);
-#endif
-#if defined(PTP_CONFIG_CD) || defined(PTP_CONFIG_AD) || defined(PTP_CONFIG_BD)
+#else
     HAL_GPIO_EXTI_IRQHandler(PTPB_PIN);
 #endif
 }
 
+void EXTI1_IRQHandler(void)
+{
+#ifdef PTP_DISABLED
+    return;
+#endif
+
+#if defined(PTP_CONFIG_D)
+    HAL_GPIO_EXTI_IRQHandler(PTPA_PIN);
+#else
+    HAL_GPIO_EXTI_IRQHandler(PTPB_PIN);
+#endif
+}
 
 void EXTI15_10_IRQHandler(void)
 {
 }
+
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

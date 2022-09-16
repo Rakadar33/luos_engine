@@ -279,6 +279,8 @@ class LuosControl:
             state = self.device._poll_once()
             if ('routing_table' in str(state)):
                 return ["Detection OK", retry]
+            #else:
+            #    ci_log.logger.warning(f"Message received: {state}")
 
     def get_node_number(self, nodes):
         return len(str(nodes).split("node")[1:])

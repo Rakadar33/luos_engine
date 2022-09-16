@@ -126,20 +126,20 @@ special config)
  *****************************************************************************/
 
 // PTP definitions
-#define PTP_POWER_PIN  GPIO_PIN_8
+#define PTP_POWER_PIN  GPIO_PIN_0
 #define PTP_POWER_PORT GPIOA
-#define PTP_A          GPIO_PIN_4
+#define PTP_A          GPIO_PIN_5
 #define PTP_A_PORT     GPIOB
-#define PTP_B          GPIO_PIN_5
+#define PTP_B          GPIO_PIN_4
 #define PTP_B_PORT     GPIOB
-#define PTP_C          GPIO_PIN_1
+#define PTP_C          GPIO_PIN_2
 #define PTP_C_PORT     GPIOA
-#define PTP_D          GPIO_PIN_2
+#define PTP_D          GPIO_PIN_1
 #define PTP_D_PORT     GPIOA
-#define PTP_A_IRQ      EXTI4_IRQn
-#define PTP_B_IRQ      EXTI9_5_IRQn
-#define PTP_C_IRQ      EXTI1_IRQn
-#define PTP_D_IRQ      EXTI2_IRQn
+#define PTP_A_IRQ      EXTI9_5_IRQn
+#define PTP_B_IRQ      EXTI4_IRQn
+#define PTP_C_IRQ      EXTI2_IRQn
+#define PTP_D_IRQ      EXTI1_IRQn
 #define PTP_NO_IRQ     EXTI15_10_IRQn
 
 // PTP_CONFIG_UNKNOWN below is modified by Luos CI python tool :
@@ -170,7 +170,7 @@ special config)
 #define PTPA_IRQ  PTP_A_IRQ
 #define PTPB_PIN  PTP_B
 #define PTPB_PORT PTP_B_PORT
-#define PTPB_IRQ  PTP_NO_IRQ
+#define PTPB_IRQ  PTP_B_IRQ
 #endif
 
 // PTP B
@@ -180,7 +180,7 @@ special config)
 #define PTPA_IRQ  PTP_B_IRQ
 #define PTPB_PIN  PTP_D
 #define PTPB_PORT PTP_D_PORT
-#define PTPB_IRQ  PTP_NO_IRQ
+#define PTPB_IRQ  PTP_D_IRQ
 #endif
 
 // PTP C
@@ -188,9 +188,9 @@ special config)
 #define PTPA_PIN  PTP_C
 #define PTPA_PORT PTP_C_PORT
 #define PTPA_IRQ  PTP_C_IRQ
-#define PTPB_PIN  PTP_D
-#define PTPB_PORT PTP_D_PORT
-#define PTPB_IRQ  PTP_NO_IRQ
+#define PTPB_PIN  PTP_B
+#define PTPB_PORT PTP_B_PORT
+#define PTPB_IRQ  PTP_B_IRQ
 #endif
 
 // PTP D
@@ -200,7 +200,7 @@ special config)
 #define PTPA_IRQ  PTP_D_IRQ
 #define PTPB_PIN  PTP_B
 #define PTPB_PORT PTP_B_PORT
-#define PTPB_IRQ  PTP_NO_IRQ
+#define PTPB_IRQ  PTP_B_IRQ
 #endif
 
 // PTP A and B
@@ -220,7 +220,7 @@ special config)
 #define PTPA_IRQ  PTP_C_IRQ
 #define PTPB_PIN  PTP_D
 #define PTPB_PORT PTP_D_PORT
-#define PTPB_IRQ  PTP_D_IRQ
+#define PTPA_IRQ  PTP_D_IRQ
 #endif
 
 // PTP A and C
@@ -263,15 +263,21 @@ special config)
 #define PTPB_IRQ  PTP_D_IRQ
 #endif
 
-#define HAL_Platform_Init()                                 \
-    if (PTPB_IRQ == PTP_NO_IRQ)                             \
-        HAL_NVIC_DisableIRQ(PTP_B_IRQ);                     \
-    GPIO_InitTypeDef GPIO_InitStruct = {0};                 \
-    GPIO_InitStruct.Pin              = PTP_POWER_PIN;       \
-    GPIO_InitStruct.Mode             = GPIO_MODE_OUTPUT_PP; \
-    GPIO_InitStruct.Pull             = GPIO_PULLDOWN;       \
-    GPIO_InitStruct.Speed            = GPIO_SPEED_FREQ_LOW; \
-    HAL_GPIO_Init(PTP_POWER_PORT, &GPIO_InitStruct);        \
-    HAL_GPIO_WritePin(PTP_POWER_PORT, PTP_POWER_PIN, POWER_LEVEL);
+#define HAL_Platform_Init()                                        \
+    /* Init Power Pin */                                           \
+    GPIO_InitTypeDef GPIO_InitStruct = {0};                        \
+    GPIO_InitStruct.Pin              = PTP_POWER_PIN;              \
+    GPIO_InitStruct.Mode             = GPIO_MODE_OUTPUT_PP;        \
+    GPIO_InitStruct.Pull             = GPIO_PULLDOWN;              \
+    GPIO_InitStruct.Speed            = GPIO_SPEED_FREQ_LOW;        \
+    HAL_GPIO_Init(PTP_POWER_PORT, &GPIO_InitStruct);               \
+    HAL_GPIO_WritePin(PTP_POWER_PORT, PTP_POWER_PIN, POWER_LEVEL); \
+    /* PTP D is initialized to 0 */                                \
+    GPIO_InitTypeDef GPIO_InitStruct_PTP_C = {0};                  \
+    GPIO_InitStruct_PTP_C.Pin              = PTP_C;                \
+    GPIO_InitStruct_PTP_C.Mode             = GPIO_MODE_AF_OD;      \
+    GPIO_InitStruct_PTP_C.Pull             = GPIO_PULLDOWN;        \
+    HAL_GPIO_Init(PTP_C_PORT, &GPIO_InitStruct_PTP_C);             \
+    HAL_GPIO_WritePin(PTP_C_PORT, PTP_C, GPIO_PIN_RESET);
 
 #endif /* _NODE_CONFIG_H_ */

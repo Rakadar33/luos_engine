@@ -187,7 +187,8 @@ class PlatformIOApi:
         ci_log.logger.info(f"Run UPLOAD command for {name} environment")
         #ci_log.logger.info(self.code_path)
 
-        flash_process = run_command(f'platformio run -t upload --upload-port \"\/dev\/{self.flashing_port}\" -d {self.code_path}', verbose=True, timeout=40)
+        #flash_process = run_command(f'platformio run -t upload --upload-port "/dev/{self.flashing_port}" -d {self.code_path}', verbose=True, timeout=40)
+        flash_process = run_command(f'platformio run -t upload -d {self.code_path}', verbose=True, timeout=40)
         if flash_process != "ERROR":
             time.sleep(8)
             return 0
@@ -239,3 +240,12 @@ class PlatformIOApi:
 
     def device_list():
         return run_command('pio device list --serial --json-output').read()
+
+def power_down_platform():
+    pf= McuControl()
+    pf.powerDown_Node(1)
+    pf.powerDown_Node(2)
+    pf.powerDown_Node(3)
+    pf.powerDown_Node(4)
+    run_command(f'sudo uhubctl -a off -r 150 -p 3 -l 4-1.4', verbose=False, timeout=20)
+

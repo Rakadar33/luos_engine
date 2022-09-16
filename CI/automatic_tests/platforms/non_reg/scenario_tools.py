@@ -7,6 +7,7 @@ import serial
 from pathlib import Path
 from tools.pytest_luos.config.settings import ci_log
 from tools.pytest_luos.config.platform import create_platform
+from tools.pytest_luos.mcu_controller import power_down_platform
 from tools.pytest_luos.termcolor import colored
 from platforms.non_reg.network_config.config import NetworkNodeConfig
 from platforms.non_reg.scenario_tools import *
@@ -32,28 +33,48 @@ def setup_nodes(scenario, config, upload="OFF"):
     platform.engine.debug_state(DEBUG_MODE)    
     #platform.mcu.start_Node(config_Gate)  #FOR DEBUG
 
+    # Power ON nodes
     nodes = config.split("_")
+    excluded_nodes= [x for x in range(1,6)]
+    for mcu in nodes:
+        number= int(mcu[1])
+        if number ==5:
+            platform.basic_hub.enable(5)
+            excluded_nodes.remove(number)
+        if number < 5:
+            platform.mcu.powerUp_Node(number)
+            excluded_nodes.remove(number)
+        time.sleep(0.1)
+    # Power OFF unused nodes 
+    for mcu in range(1,6):
+        if mcu in excluded_nodes:
+            if mcu == 5:
+                platform.basic_hub.disable(5)
+            else:
+                platform.mcu.powerDown_Node(mcu)
+            time.sleep(0.1)
+    time.sleep(2)
+
     if upload == "ON":
         ci_log.phase_log('Flash nodes')
         for mcu in nodes:
             ci_log.phase_log(f"[Flash] {mcu}")
             mcu = eval(f"config_{mcu}")
             assert(platform.mcu.flash_Node(mcu))
-
-    # Power ON nodes
-    excluded_nodes= [x for x in range(1,5)]
-    for mcu in nodes:
-        number= int(mcu[1])
-        if number < 5:
-            platform.mcu.powerUp_Node(number)
-            excluded_nodes.remove(number)
-        time.sleep(0.1)
-    # Power OFF unused nodes 
-    for mcu in range(1,5):
-        if mcu in excluded_nodes:
-            platform.mcu.powerDown_Node(mcu)
-            time.sleep(0.1)
-
+            # Power OFF nodes, wait a bit, and Power ON 
+            for mcu in nodes:
+                number= int(mcu[1])
+                if number < 5:
+                    platform.mcu.powerDown_Node(number)
+                    time.sleep(0.1)
+            time.sleep(2)
+            for mcu in nodes:
+                number= int(mcu[1])
+                if number < 5:
+                    platform.mcu.powerUp_Node(number)
+                    time.sleep(0.1)
+            
+    time.sleep(5)
     # Search for a Gate
     connected_ports = platform.mcu.available_serial_ports()
     ci_log.logger.info(f"Availabled serial ports : {connected_ports}")
@@ -64,7 +85,7 @@ def setup_nodes(scenario, config, upload="OFF"):
     gate_port = platform.luos.search_gate()
     if gate_port == 0:
         ci_log.logger.critical(colored("No Gate", "magenta"))
-        assert(gate_port)
+        platform.engine.assert_step("No Gate", "Detection OK", stop_on_failure=True)
     ci_log.logger.info(f"Gate on port: {gate_port}\n")
     platform.luos.port = gate_port
     platform.mcu.reinit_serial_port(gate_port)
@@ -89,15 +110,19 @@ def scenario_exception(e):
     ci_log.logger.error(error)
     ci_log.logger.error(e)
 
-def teardown(state, platform):
+def teardown(state, platform = None):
     ci_log.phase_log('Start Teardown')
+    ci_log.step_log(f"Power Down All Nodes", "Step")
     if platform != None:
         platform.engine.teardown_step(platform.luos.device.close(), "Closing Device")
         platform.engine.teardown_step(platform.mcu.reinit_serial_port(platform.luos.port), "Closing Serial")
+
         if (state == "Exception"):
             # Should never occured. If state = Exception, scenario must be modified to handle all exceptions properly.
             platform.engine.error_counter = -1
+        power_down_platform()
         sys.exit(platform.engine.test_result())
     else:
         ci_log.logger.critical(colored("[ERROR] Unable to connect to test platform\n\n", "magenta"))
+        power_down_platform()
         sys.exit(1)

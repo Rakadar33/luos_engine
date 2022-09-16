@@ -105,7 +105,7 @@
 #define PTP_D         4
 
 // PTP_CONFIG_UNKNOWN below is modified by Luos CI python tool :
-#define PTP_CONFIG_A // DO NOT EDIT THIS LINE !!!!!!!!!!!!!!!!!!!!!!!
+#define PTP_CONFIG_UNKNOWN // DO NOT EDIT THIS LINE !!!!!!!!!!!!!!!!!!!!!!!
 
 // Depending on previous config values, declaration of PTP lines and RS485 power
 // state
@@ -115,11 +115,12 @@
 #define ARDUINO_PTPA_PIN 2 //TODO : VERIFY
 #define ARDUINO_PTPB_PIN 2 //TODO : VERIFY
 #define PTP_DISABLED
-
+#define POWER_LEVEL LOW
 #else
 // Node is connected, the breakout boards must be powered on
-#define PTP_POWER
+#define POWER_LEVEL HIGH
 #endif
+
 
 // PTP A
 #ifdef PTP_CONFIG_A
@@ -180,5 +181,9 @@
 #define ARDUINO_PTPA_PIN PTP_B
 #define ARDUINO_PTPB_PIN PTP_D
 #endif
+
+#define HAL_Platform_Init()                                 \
+    pinMode(PTP_POWER_PIN, OUTPUT);                         \
+    digitalWrite(PTP_POWER_PIN, HIGH);
 
 #endif /* _NODE_CONFIG_H_ */

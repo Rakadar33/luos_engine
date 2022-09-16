@@ -266,9 +266,9 @@
 #define PTPB_IRQ  PTP_D_IRQ
 #endif
 
+//    if (PTPB_IRQ == PTP_NO_IRQ)
+//        HAL_NVIC_DisableIRQ(PTP_B_IRQ);
 #define HAL_Platform_Init()                                 \
-    if (PTPB_IRQ == PTP_NO_IRQ)                             \
-        HAL_NVIC_DisableIRQ(PTP_B_IRQ);                     \
     GPIO_InitTypeDef GPIO_InitStruct = {0};                 \
     GPIO_InitStruct.Pin              = PTP_POWER_PIN;       \
     GPIO_InitStruct.Mode             = GPIO_MODE_OUTPUT_PP; \
