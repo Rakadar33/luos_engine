@@ -111,31 +111,16 @@ void SysTick_Handler(void)
 /* please refer to the startup file (startup_stm32l4xx.s).                    */
 /******************************************************************************/
 
-void EXTI4_IRQHandler(void)
-{
-#ifdef PTP_DISABLED
-    return;
-#endif
-
-#if defined(PTP_CONFIG_A) || defined(PTP_CONFIG_AB) || defined(PTP_CONFIG_AC) || defined(PTP_CONFIG_AD)
-    HAL_GPIO_EXTI_IRQHandler(PTPA_PIN);
-#endif
-}
-
 void EXTI9_5_IRQHandler(void)
 {
 #ifdef PTP_DISABLED
     return;
 #endif
 
-#if defined(PTP_CONFIG_A) || defined(PTP_CONFIG_C) || defined(PTP_CONFIG_AC)
-    return;
-#endif
-
     uint32_t pending = EXTI->PR1;
     if (pending & PTPA_PIN)
     {
-        HAL_GPIO_EXTI_IRQHandler(PTPA_PIN);
+		HAL_GPIO_EXTI_IRQHandler(PTPA_PIN);		
     }
 
     if ((pending & PTPB_PIN) && (PTPB_IRQ != PTP_NO_IRQ))
@@ -144,17 +129,28 @@ void EXTI9_5_IRQHandler(void)
     }
 }
 
+void EXTI4_IRQHandler(void)
+{
+#ifdef PTP_DISABLED
+    return;
+#endif
+
+#if defined(PTP_CONFIG_B) || defined(PTP_CONFIG_BC) || defined(PTP_CONFIG_BD)
+    HAL_GPIO_EXTI_IRQHandler(PTPA_PIN);
+#else
+    HAL_GPIO_EXTI_IRQHandler(PTPB_PIN);
+#endif
+}
+
 void EXTI3_IRQHandler(void)
 {
 #ifdef PTP_DISABLED
     return;
 #endif
 
-#if defined(PTP_CONFIG_C) || defined(PTP_CONFIG_CD)
+#if defined(PTP_CONFIG_D)
     HAL_GPIO_EXTI_IRQHandler(PTPA_PIN);
-#endif
-
-#if defined(PTP_CONFIG_AC) || defined(PTP_CONFIG_BC)
+#else
     HAL_GPIO_EXTI_IRQHandler(PTPB_PIN);
 #endif
 }

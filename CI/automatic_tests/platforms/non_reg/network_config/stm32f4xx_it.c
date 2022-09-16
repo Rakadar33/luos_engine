@@ -112,11 +112,7 @@ void SysTick_Handler(void)
 /******************************************************************************/
 void EXTI9_5_IRQHandler(void)
 {
-#ifdef PTP_DISABLED
-    return;
-#endif
-
-#if defined(PTP_CONFIG_A) || defined(PTP_CONFIG_AB) || defined(PTP_CONFIG_AC) || defined(PTP_CONFIG_AD)
+#ifndef PTP_DISABLED
     HAL_GPIO_EXTI_IRQHandler(PTPA_PIN);
 #endif
 }

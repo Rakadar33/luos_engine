@@ -99,10 +99,10 @@
  *****************************************************************************/
 // PTP definitions
 #define PTP_POWER_PIN 5
-#define PTP_A         6
-#define PTP_B         7
-#define PTP_C         1
-#define PTP_D         4
+#define PTP_A         7
+#define PTP_B         6
+#define PTP_C         4
+#define PTP_D         1
 
 // PTP_CONFIG_UNKNOWN below is modified by Luos CI python tool :
 #define PTP_CONFIG_UNKNOWN // DO NOT EDIT THIS LINE !!!!!!!!!!!!!!!!!!!!!!!

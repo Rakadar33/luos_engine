@@ -137,10 +137,10 @@
 #define PTP_A_PORT     GPIOB
 #define PTP_B          GPIO_PIN_4
 #define PTP_B_PORT     GPIOB
-#define PTP_C          GPIO_PIN_12
-#define PTP_C_PORT     GPIOB
-#define PTP_D          GPIO_PIN_11
-#define PTP_D_PORT     GPIOA
+#define PTP_C          GPIO_PIN_11
+#define PTP_C_PORT     GPIOA
+#define PTP_D          GPIO_PIN_12
+#define PTP_D_PORT     GPIOB
 #define PTP_A_IRQ      EXTI9_5_IRQn
 #define PTP_B_IRQ      EXTI4_IRQn
 #define PTP_C_IRQ      EXTI15_10_IRQn
@@ -175,7 +175,7 @@
 #define PTPA_IRQ  PTP_A_IRQ
 #define PTPB_PIN  PTP_B
 #define PTPB_PORT PTP_B_PORT
-#define PTPB_IRQ  PTP_NO_IRQ
+#define PTPB_IRQ  PTP_B_IRQ
 #endif
 
 // PTP B
@@ -185,7 +185,7 @@
 #define PTPA_IRQ  PTP_B_IRQ
 #define PTPB_PIN  PTP_D
 #define PTPB_PORT PTP_D_PORT
-#define PTPB_IRQ  PTP_NO_IRQ
+#define PTPB_IRQ  PTP_D_IRQ
 #endif
 
 // PTP C
@@ -195,7 +195,7 @@
 #define PTPA_IRQ  PTP_C_IRQ
 #define PTPB_PIN  PTP_D
 #define PTPB_PORT PTP_D_PORT
-#define PTPB_IRQ  PTP_NO_IRQ
+#define PTPB_IRQ  PTP_D_IRQ
 #endif
 
 // PTP D
@@ -205,7 +205,7 @@
 #define PTPA_IRQ  PTP_D_IRQ
 #define PTPB_PIN  PTP_B
 #define PTPB_PORT PTP_B_PORT
-#define PTPB_IRQ  PTP_NO_IRQ
+#define PTPB_IRQ  PTP_B_IRQ
 #endif
 
 // PTP A and B
