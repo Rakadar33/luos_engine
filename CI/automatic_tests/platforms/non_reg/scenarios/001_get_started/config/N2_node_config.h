@@ -150,7 +150,7 @@
 #define PTP_NO_IRQ     EXTI2_3_IRQn
 
 // PTP_CONFIG_UNKNOWN below is modified by Luos CI python tool :
-#define PTP_CONFIG_D // DO NOT EDIT THIS LINE !!!!!!!!!!!!!!!!!!!!!!!
+#define PTP_CONFIG_A // DO NOT EDIT THIS LINE !!!!!!!!!!!!!!!!!!!!!!!
 
 // Depending on previous config values, declaration of PTP lines and RS485 power
 // state
@@ -270,8 +270,6 @@
 #define PTPB_IRQ  PTP_D_IRQ
 #endif
 
-//    if (PTPB_IRQ == PTP_NO_IRQ)
-//        HAL_NVIC_DisableIRQ(PTP_B_IRQ);
 #define HAL_Platform_Init()                                 \
     GPIO_InitTypeDef GPIO_InitStruct = {0};                 \
     GPIO_InitStruct.Pin              = PTP_POWER_PIN;       \

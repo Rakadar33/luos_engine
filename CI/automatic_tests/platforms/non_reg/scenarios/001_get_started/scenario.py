@@ -68,20 +68,25 @@ def run_scenario(network_conf):
         target_config = eval(f"config_{config}['flashing_options']['config']")
         serial = eval(f"config_{config}['flashing_options']['serial']")
         with open(project_config_file, "a+") as f:
-            f.write('\n')
-            f.write('upload_protocol = custom\n')
-            f.write('upload_command = openocd -s $PROJECT_PACKAGES_DIR/tool-openocd/scripts -f interface/stlink.cfg -c "transport select hla_swd" $UPLOAD_FLAGS -c "program {$SOURCE} 0x08000000 verify reset; shutdown;"\n')
-            f.write('upload_flags =\n')
-            f.write('\t-c\n')
-            f.write(f'\thla_serial {serial}\n')
-            f.write('\t-f\n')
-            f.write(f'\ttarget/{target_config}\n')
+            if config == "N1": #ARDUINO
+                flashing_port = 'upload_port = /dev/' + eval(f"config_{config}['flashing_port']")
+                replacetext(eval(f"config_{config}[\"path\"]") + "/platformio.ini",\
+                                  "\[env\]", f"[env]\n{flashing_port}\n")
+            else: #STM32
+                f.write('\n')
+                f.write('upload_protocol = custom\n')
+                f.write('upload_command = openocd -s $PROJECT_PACKAGES_DIR/tool-openocd/scripts -f interface/stlink.cfg -c "transport select hla_swd" $UPLOAD_FLAGS -c "program {$SOURCE} 0x08000000 verify reset; shutdown;"\n')
+                f.write('upload_flags =\n')
+                f.write('\t-c\n')
+                f.write(f'\thla_serial {serial}\n')
+                f.write('\t-f\n')
+                f.write(f'\ttarget/{target_config}\n')
 
     set_upload_command(gate_node)
     set_upload_command(node_2)
 
     # For Arduino : select mkrzero
-    replacetext(eval(f"config_{gate_node}[\"path\"]") + "/platformio.ini", "zero", "mkrzero")
+    # replacetext(eval(f"config_{gate_node}[\"path\"]") + "/platformio.ini", "zero", "mkrzero")
 
     # Remove "Led" from GATE project
     replacetext(gate_sourcecode, "Led_Init", "//Led_Init")

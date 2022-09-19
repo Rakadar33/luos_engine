@@ -9,7 +9,7 @@ from pathlib import Path
 #   Example:
 #   ********
 #
-#       ["AB", "CD", "AC", "C", "None"] means: 
+#       ["AB", "CD", "AC", "C", "None"] means:
 #
 #           - Node 1 (Arduino) is configured with PTP:    A    and    B
 #           - Node 2 (F072-RB) is configured with PTP:    C    and    D
@@ -55,9 +55,14 @@ networkConfig["N2_N1_N3_N4_N5"] = ["AB", "A" , "AC", "CD",  "D"]
 class NetworkNodeConfig():
     def __init__(self, scenario_path, conf, max_node_number=5):
         self.scenario_name= self._get_scenario_name(scenario_path)
-        self.config= networkConfig[conf]
-        #self.max_node_number= max_node_number
-        self.max_node_number= 5
+        self.max_node_number= max_node_number
+        try:
+            self.config= networkConfig[conf]
+        except:
+            invert_conf= conf.split("_")
+            conf= f"{invert_conf[1]}_{invert_conf[0]}"
+            self.config= networkConfig[conf]
+            pass
 
     def nodeConfig_generation(self):
         status= True
@@ -73,13 +78,13 @@ class NetworkNodeConfig():
                 # Compute node_config PTPs connection for
                 template_file = open(source, 'r')
                 data = template_file.read()
-        
+
                 if self.config[node] is not None:
                     print(f"- [node {node+1}] PTP are connected to :  {self.config[node]}")
                     data = data.replace(pattern, new_config)
                 else:
                     info+= f"\t[INFO] Node {node+1} is not connected to the network\n"
-                
+
                 template_file.close()
                 # Create node_config.h
                 node_config_file = open(destination, 'x')

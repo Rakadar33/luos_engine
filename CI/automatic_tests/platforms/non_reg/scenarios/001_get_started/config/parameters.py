@@ -16,7 +16,13 @@ expected_services = ['gate', 'Pipe', 'led', 'blinker']
 # TODO : A remettre !!!!!!!!!!!!!!!!!!!!!!!!!
 # TODO : A remettre !!!!!!!!!!!!!!!!!!!!!!!!!    
 #network_conf = ["N1_N2", "N2_N5", "N3_N4", "N4_N1", "N5_N3"]
-network_conf = ["N2_N5"]
+
+network_conf = ["N2_N5"] # OK :-)
+#network_conf = ["N3_N4"] # KO :  no detection
+#network_conf = ["N5_N3"] # KO : idem
+network_conf = ["N1_N2"]  # KO : Arduino prob appui bouton 
+#network_conf = ["N4_N1"] # KO : Idem (même pas testé)
+
 
 config_N1 = {"environment": "mkrzero",
              "path": f"{Path(__file__).parent.resolve()}//../Get_started/Arduino",
@@ -40,7 +46,7 @@ config_N3 = {"environment": "nucleo_f401re",
              "source": "main.c",
              "target": "nucleo_f401re",
              "flashing_port": "N3_F401RE",
-             "flashing_options": {"config": "stm32f4x.cfg", "serial": "0667FF515250898367135930"}}
+             "flashing_options": {"config": "stm32f4x.cfg", "serial": "066FFF555054877567045540"}}
 
 config_N4 = {"environment": "nucleo_l432kc",
              "path": f"{Path(__file__).parent.resolve()}//../Get_started/NUCLEO-L432KC",
