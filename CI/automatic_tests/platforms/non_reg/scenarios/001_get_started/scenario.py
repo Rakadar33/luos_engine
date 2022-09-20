@@ -41,7 +41,6 @@ def run_scenario(network_conf):
     dest_IT_N4 = config_N4["path"] + SOURCES + config_N4["interruption"]
     dest_IT_N5 = config_N5["path"] + SOURCES + config_N5["interruption"]
 
-    print(dest_IT_N2)
     copyfile(source_IT_N2, dest_IT_N2)
     copyfile(source_IT_N3, dest_IT_N3)
     copyfile(source_IT_N4, dest_IT_N4)
@@ -99,9 +98,8 @@ def run_scenario(network_conf):
     replacetext(led_sourcecode, "Gate_Loop", "//Gate_Loop")
     replacetext(led_sourcecode, "Pipe_Loop", "//Pipe_Loop")
     replacetext(led_sourcecode, "Blinker_Loop",  "//Blinker_Loop")
-    #'''
 
-    # Add break boards Power ON in project
+    # Add break boards Power ON in projects
     replacetext(gate_sourcecode, "\/\* USER CODE END 2 \*\/", "HAL_Platform_Init();")
     replacetext(led_sourcecode, "\/\* USER CODE END 2 \*\/", "HAL_Platform_Init();")
 
