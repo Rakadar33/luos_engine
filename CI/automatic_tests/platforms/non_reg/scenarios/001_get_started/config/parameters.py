@@ -20,8 +20,8 @@ expected_services = ['gate', 'Pipe', 'led', 'blinker']
 network_conf = ["N2_N5"] # OK :-)
 #network_conf = ["N3_N4"] # KO :  no detection
 #network_conf = ["N5_N3"] # KO : idem
-network_conf = ["N1_N2"]  # KO : Arduino prob appui bouton 
-#network_conf = ["N4_N1"] # KO : Idem (même pas testé)
+#network_conf = ["N1_N2"]  # OK :-)
+#network_conf = ["N4_N1"]  # OK :-)
 
 
 config_N1 = {"environment": "mkrzero",

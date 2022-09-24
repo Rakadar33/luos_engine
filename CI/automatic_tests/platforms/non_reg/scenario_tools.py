@@ -53,7 +53,7 @@ def setup_nodes(scenario, config, upload="OFF"):
             else:
                 platform.mcu.powerDown_Node(mcu)
             time.sleep(0.1)
-    time.sleep(2)
+    time.sleep(5)
 
     if upload == "ON":
         ci_log.phase_log('Flash nodes')

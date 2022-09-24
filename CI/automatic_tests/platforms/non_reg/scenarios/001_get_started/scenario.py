@@ -41,7 +41,6 @@ def run_scenario(network_conf):
     dest_IT_N4 = config_N4["path"] + SOURCES + config_N4["interruption"]
     dest_IT_N5 = config_N5["path"] + SOURCES + config_N5["interruption"]
 
-    print(dest_IT_N2)
     copyfile(source_IT_N2, dest_IT_N2)
     copyfile(source_IT_N3, dest_IT_N3)
     copyfile(source_IT_N4, dest_IT_N4)
@@ -102,8 +101,22 @@ def run_scenario(network_conf):
     #'''
 
     # Add break boards Power ON in project
-    replacetext(gate_sourcecode, "\/\* USER CODE END 2 \*\/", "HAL_Platform_Init();")
-    replacetext(led_sourcecode, "\/\* USER CODE END 2 \*\/", "HAL_Platform_Init();")
+    init_breakboards_gate = "HAL_Platform_Init();"
+    init_breakboards_led  = "HAL_Platform_Init();"
+    if "Arduino" in gate_sourcecode:
+        replace_gate = "Blinker_Init\(\);"
+        replace_led  = "\/\* USER CODE END 2 \*\/"
+        init_breakboards_gate = "Blinker_Init();" + init_breakboards_gate
+
+    elif "Arduino" in led_sourcecode:
+        replace_gate = "\/\* USER CODE END 2 \*\/"
+        replace_led  = "Blinker_Init();"
+        init_breakboards_led = "Blinker_Init\(\);" + replace_led
+    else:
+        replace_gate = "\/\* USER CODE END 2 \*\/"
+        replace_led  = "\/\* USER CODE END 2 \*\/"
+    replacetext(gate_sourcecode, replace_gate, init_breakboards_gate)
+    replacetext(led_sourcecode,  replace_led,  init_breakboards_led)
 
     # Upload all nodes
     ci_log.phase_log('Setup MCUs')
