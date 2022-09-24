@@ -129,7 +129,7 @@ void EXTI4_IRQHandler(void)
 
 #if defined(PTP_CONFIG_B) || defined(PTP_CONFIG_BC) || defined(PTP_CONFIG_BD)
     HAL_GPIO_EXTI_IRQHandler(PTPA_PIN);
-#else
+#else // PTP_CONFIG_AB
     HAL_GPIO_EXTI_IRQHandler(PTPB_PIN);
 #endif
 }
@@ -142,7 +142,7 @@ void EXTI2_IRQHandler(void)
 
 #if defined(PTP_CONFIG_C) || defined(PTP_CONFIG_CD)
     HAL_GPIO_EXTI_IRQHandler(PTPA_PIN);
-#else
+#else // PTP_CONFIG_AC or PTP_CONFIG_BC
     HAL_GPIO_EXTI_IRQHandler(PTPB_PIN);
 #endif
 }
@@ -155,7 +155,7 @@ void EXTI1_IRQHandler(void)
 
 #if defined(PTP_CONFIG_D)
     HAL_GPIO_EXTI_IRQHandler(PTPA_PIN);
-#else
+#else // PTP_CONFIG_AD or PTP_CONFIG_BD or PTP_CONFIG_CD
     HAL_GPIO_EXTI_IRQHandler(PTPB_PIN);
 #endif
 }

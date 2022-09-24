@@ -126,63 +126,87 @@
 #ifdef PTP_CONFIG_A
 #define ARDUINO_PTPA_PIN PTP_A
 #define ARDUINO_PTPB_PIN PTP_B
+#define PTP_UNUSED_1     PTP_C
+#define PTP_UNUSED_2     PTP_D
 #endif
 
 // PTP B
 #ifdef PTP_CONFIG_B
 #define ARDUINO_PTPA_PIN PTP_B
 #define ARDUINO_PTPB_PIN PTP_D
+#define PTP_UNUSED_1     PTP_A
+#define PTP_UNUSED_2     PTP_C
 #endif
 
 // PTP C
 #ifdef PTP_CONFIG_C
 #define ARDUINO_PTPA_PIN PTP_C
 #define ARDUINO_PTPB_PIN PTP_D
+#define PTP_UNUSED_1     PTP_A
+#define PTP_UNUSED_2     PTP_B
 #endif
 
 // PTP D
 #ifdef PTP_CONFIG_D
 #define ARDUINO_PTPA_PIN PTP_D
 #define ARDUINO_PTPB_PIN PTP_B
+#define PTP_UNUSED_1     PTP_A
+#define PTP_UNUSED_2     PTP_C
 #endif
 
 // PTP A and B
 #ifdef PTP_CONFIG_AB
 #define ARDUINO_PTPA_PIN PTP_A
 #define ARDUINO_PTPB_PIN PTP_B
+#define PTP_UNUSED_1     PTP_C
+#define PTP_UNUSED_2     PTP_D
 #endif
 
 // PTP C and D
 #ifdef PTP_CONFIG_CD
 #define ARDUINO_PTPA_PIN PTP_C
 #define ARDUINO_PTPB_PIN PTP_D
+#define PTP_UNUSED_1     PTP_A
+#define PTP_UNUSED_2     PTP_B
 #endif
 
 // PTP A and C
 #ifdef PTP_CONFIG_AC
 #define ARDUINO_PTPA_PIN PTP_A
 #define ARDUINO_PTPB_PIN PTP_C
+#define PTP_UNUSED_1     PTP_B
+#define PTP_UNUSED_2     PTP_D
 #endif
 
 // PTP A and D
 #ifdef PTP_CONFIG_AD
 #define ARDUINO_PTPA_PIN PTP_A
 #define ARDUINO_PTPB_PIN PTP_D
+#define PTP_UNUSED_1     PTP_B
+#define PTP_UNUSED_2     PTP_C
 #endif
 
 // PTP B and C
 #ifdef PTP_CONFIG_BC
 #define ARDUINO_PTPA_PIN PTP_B
 #define ARDUINO_PTPB_PIN PTP_C
+#define PTP_UNUSED_1     PTP_A
+#define PTP_UNUSED_2     PTP_D
 #endif
 
 // PTP B and D
 #ifdef PTP_CONFIG_BD
 #define ARDUINO_PTPA_PIN PTP_B
 #define ARDUINO_PTPB_PIN PTP_D
+#define PTP_UNUSED_1     PTP_A
+#define PTP_UNUSED_2     PTP_C
 #endif
 
 #define HAL_Platform_Init()                                 \
+    pinMode(PTP_UNUSED_1, OUTPUT);                          \
+    digitalWrite(PTP_UNUSED_1, LOW);                        \
+    pinMode(PTP_UNUSED_2, OUTPUT);                          \
+    digitalWrite(PTP_UNUSED_2, LOW);                        \
     pinMode(PTP_POWER_PIN, OUTPUT);                         \
     digitalWrite(PTP_POWER_PIN, HIGH);
 
