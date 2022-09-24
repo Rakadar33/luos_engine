@@ -98,9 +98,8 @@ def run_scenario(network_conf):
     replacetext(led_sourcecode, "Gate_Loop", "//Gate_Loop")
     replacetext(led_sourcecode, "Pipe_Loop", "//Pipe_Loop")
     replacetext(led_sourcecode, "Blinker_Loop",  "//Blinker_Loop")
-    #'''
 
-    # Add break boards Power ON in project
+    # Add break boards Power ON in projects
     init_breakboards_gate = "HAL_Platform_Init();"
     init_breakboards_led  = "HAL_Platform_Init();"
     if "Arduino" in gate_sourcecode:
