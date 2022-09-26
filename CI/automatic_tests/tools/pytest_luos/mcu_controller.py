@@ -188,7 +188,7 @@ class PlatformIOApi:
         #ci_log.logger.info(self.code_path)
 
         #flash_process = run_command(f'platformio run -t upload --upload-port "/dev/{self.flashing_port}" -d {self.code_path}', verbose=True, timeout=40)
-        flash_process = run_command(f'platformio run -t upload -d {self.code_path}', verbose=True, timeout=40)
+        flash_process = run_command(f'platformio run -t upload -d {self.code_path}', verbose=False, timeout=40)
         if flash_process != "ERROR":
             time.sleep(8)
             return 0

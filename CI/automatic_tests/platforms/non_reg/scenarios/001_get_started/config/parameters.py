@@ -17,11 +17,80 @@ expected_services = ['gate', 'Pipe', 'led', 'blinker']
 # TODO : A remettre !!!!!!!!!!!!!!!!!!!!!!!!!    
 #network_conf = ["N1_N2", "N2_N5", "N3_N4", "N4_N1", "N5_N3"]
 
-network_conf = ["N2_N5"] # OK :-)
-#network_conf = ["N3_N4"] # KO :  no detection
-#network_conf = ["N5_N3"] # KO : idem
-#network_conf = ["N1_N2"]  # OK :-)
-#network_conf = ["N4_N1"]  # OK :-)
+# OK
+#network_conf = ["N2_N5"] # OK :-)
+#network_conf = ["N1_N2"] # OK :-) 
+#network_conf = ["N3_N4"] # OK :-)
+
+
+
+network_conf = ["N2_N3"]
+
+
+
+# All confs
+    #OK --   # network_conf = ["N1_N2"]
+    #OK --   # network_conf = ["N1_N3"]
+    #OK --   # network_conf = ["N1_N4"]
+			### KO ###  network_conf = ["N1_N5"]  # Seule la gate a été vue
+			### KO ###  network_conf = ["N2_N3"]  # Idem ici
+    #OK --   # network_conf = ["N2_N4"]
+    #OK --   # network_conf = ["N2_N5"]
+			### KO ###  network_conf = ["N2_N1"]
+    #OK --   # network_conf = ["N3_N4"]
+			### KO ###  network_conf = ["N3_N5"]
+			### KO ###  network_conf = ["N3_N1"]
+			### KO ###  network_conf = ["N3_N2"]
+    #OK --   network_conf = ["N4_N5"]
+			### KO ###  network_conf = ["N4_N1"]
+    #OK --   network_conf = ["N4_N2"]
+    #OK --   network_conf = ["N4_N3"]
+			### KO ###  network_conf = ["N5_N1"] 
+			### KO ###  network_conf = ["N5_N2"]
+			### KO ###  network_conf = ["N5_N3"]
+			### KO ###  network_conf = ["N5_N4"]
+#------------------------------------------------------
+			### KO ###  network_conf = ["N2_N1"]
+			### KO ###  network_conf = ["N3_N1"]
+			### KO ###  network_conf = ["N4_N1"]
+			### KO ###  etwork_conf = ["N5_N1"]
+			### KO ###  network_conf = ["N3_N2"]
+    #OK --   network_conf = ["N4_N2"]
+			### KO ###  network_conf = ["N5_N2"]
+    #OK --   network_conf = ["N1_N2"]
+    #OK --   network_conf = ["N4_N3"]
+			### KO ###  network_conf = ["N5_N3"]
+    #OK --   network_conf = ["N1_N3"]
+			### KO ###   network_conf = ["N2_N3"] # Seule la gate a été vue
+			### KO ###  network_conf = ["N5_N4"]
+    #OK --   network_conf = ["N1_N4"]
+    #OK --   network_conf = ["N2_N4"]
+    #OK --   network_conf = ["N3_N4"]
+			### KO ###   network_conf = ["N1_N5"] # Seule la gate a été vue
+    #OK --   network_conf = ["N2_N5"]
+			####### KO -------------   # network_conf = ["N3_N5"]
+    #OK --   network_conf = ["N4_N5"]
+
+
+
+
+
+#-----------------------------------------------------------------------------
+# KO N4_N1
+#-----------------------------------------------------------------------------
+#network_conf = ["N4_N1"]
+   # OK :-)
+   # Redevenu ko............. Gate N4 seule est détectée. Mais bloqué dans la detection si on allume l'Arduino. prob IT Arduino ???
+#network_conf = ["N1_N4"] # on inverse N4/N1 pour voir : OK ça marche. Donc IT ok dans ce sens (Arduino est une Gate)
+#-----------------------------------------------------------------------------
+
+
+#-----------------------------------------------------------------------------
+# KO N5_N3
+#-----------------------------------------------------------------------------
+#network_conf = ["N5_N3"]   # KO : idem
+#network_conf = ["N3_N5"] # on inverse N3/N5 pour voir : KO. Prob conf
+#-----------------------------------------------------------------------------
 
 
 config_N1 = {"environment": "mkrzero",

@@ -272,7 +272,7 @@ special config)
     GPIO_InitStruct.Speed            = GPIO_SPEED_FREQ_LOW;        \
     HAL_GPIO_Init(PTP_POWER_PORT, &GPIO_InitStruct);               \
     HAL_GPIO_WritePin(PTP_POWER_PORT, PTP_POWER_PIN, POWER_LEVEL); \
-    /* PTP D is initialized to 0 */                                \
+    /* PTP C is initialized to 0 */                                \
     GPIO_InitTypeDef GPIO_InitStruct_PTP_C = {0};                  \
     GPIO_InitStruct_PTP_C.Pin              = PTP_C;                \
     GPIO_InitStruct_PTP_C.Mode             = GPIO_MODE_AF_OD;      \

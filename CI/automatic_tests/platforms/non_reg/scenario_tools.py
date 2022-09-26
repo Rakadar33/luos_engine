@@ -53,6 +53,7 @@ def setup_nodes(scenario, config, upload="OFF"):
             else:
                 platform.mcu.powerDown_Node(mcu)
             time.sleep(0.1)
+
     time.sleep(5)
 
     if upload == "ON":
@@ -112,17 +113,26 @@ def scenario_exception(e):
 
 def teardown(state, platform = None):
     ci_log.phase_log('Start Teardown')
-    ci_log.step_log(f"Power Down All Nodes", "Step")
     if platform != None:
         platform.engine.teardown_step(platform.luos.device.close(), "Closing Device")
-        platform.engine.teardown_step(platform.mcu.reinit_serial_port(platform.luos.port), "Closing Serial")
+        #platform.engine.teardown_step(platform.mcu.reinit_serial_port(platform.luos.port), "Closing Serial")
 
         if (state == "Exception"):
             # Should never occured. If state = Exception, scenario must be modified to handle all exceptions properly.
+            ci_log.step_warn(f"Test scenario EXCEPTION: please modify your scenario to handle this exception", "Step")            
             platform.engine.error_counter = -1
-        power_down_platform()
-        sys.exit(platform.engine.test_result())
+        result = platform.engine.test_result()
     else:
         ci_log.logger.critical(colored("[ERROR] Unable to connect to test platform\n\n", "magenta"))
-        power_down_platform()
-        sys.exit(1)
+        result = 1
+
+    ci_log.step_log(f"Power Down All Nodes", "Step")
+    power_down_platform()
+
+    # DEBUG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    # DEBUG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!    
+    # platform.basic_hub.enable(5)
+    # DEBUG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    # DEBUG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!    
+
+    sys.exit(result)

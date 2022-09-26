@@ -84,6 +84,13 @@ def run_scenario(network_conf):
     set_upload_command(gate_node)
     set_upload_command(node_2)
 
+    tested_version= "fix/pipe_serial"
+    luos_engine_version= f"https://github.com/Luos-io/luos_engine.git#{tested_version} ;"
+    replacetext(eval(f"config_{gate_node}[\"path\"]") + "/platformio.ini", "luos_engine", luos_engine_version)
+    replacetext(eval(f"config_{node_2}[\"path\"]") + "/platformio.ini", "luos_engine", luos_engine_version)
+    #assert(1==2)
+
+
     # For Arduino : select mkrzero
     # replacetext(eval(f"config_{gate_node}[\"path\"]") + "/platformio.ini", "zero", "mkrzero")
 
