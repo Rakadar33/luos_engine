@@ -80,13 +80,17 @@ class loggerEngine(loggerSingleton):
         self.logger("\n"+msg)
 
     def phase_log(self, title, message=""):    
-        self.logger.info(colored(f"\n{10*'-'}{title}{10*'-'}","red"))
+        self.logger.info(colored(f"\n{10*'-'}{title}{10*'-'}","green"))
         if message != "":
             self.logger.info(colored(f"\n{message}","yellow"))
     def step_log(self, message, title=""):
+        '''
         if title != "":
             self.logger.info(colored(f"\n{10*'-'}{title}{10*'-'}","blue"))
         self.logger.info(colored(f"\n{message}","blue"))
+        '''
+        self.logger.info(colored(f"{title}: {message}","blue"))
+
     def colored_log(self, message, color="yellow"):
         # Availabled colors : grey,  red,  green,  yellow,  blue,  magenta,  cyan,  white
         self.logger.info(colored(f"\n{message}",color))

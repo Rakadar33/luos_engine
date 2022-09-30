@@ -75,7 +75,7 @@ def setup_nodes(scenario, config, upload="OFF"):
                     platform.mcu.powerUp_Node(number)
                     time.sleep(0.1)
             
-    time.sleep(5)
+    time.sleep(10)
     # Search for a Gate
     connected_ports = platform.mcu.available_serial_ports()
     ci_log.logger.info(f"Availabled serial ports : {connected_ports}")
@@ -115,7 +115,8 @@ def teardown(state, platform = None):
     ci_log.phase_log('Start Teardown')
     if platform != None:
         platform.engine.teardown_step(platform.luos.device.close(), "Closing Device")
-        #platform.engine.teardown_step(platform.mcu.reinit_serial_port(platform.luos.port), "Closing Serial")
+        time.sleep(2)
+        platform.engine.teardown_step(platform.mcu.reinit_serial_port(platform.luos.port), "Closing Serial")
 
         if (state == "Exception"):
             # Should never occured. If state = Exception, scenario must be modified to handle all exceptions properly.
@@ -131,6 +132,7 @@ def teardown(state, platform = None):
 
     # DEBUG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     # DEBUG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!    
+    # time.sleep(3)
     # platform.basic_hub.enable(5)
     # DEBUG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     # DEBUG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!    

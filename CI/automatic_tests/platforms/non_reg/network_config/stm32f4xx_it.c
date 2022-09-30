@@ -138,7 +138,7 @@ void EXTI15_10_IRQHandler(void)
     return;
 #endif
 
-#if defined(PTP_CONFIG_C) || defined(PTP_CONFIG_D) || defined(PTP_CONFIG_CD)
+//#if defined(PTP_CONFIG_C) || defined(PTP_CONFIG_D) || defined(PTP_CONFIG_CD)
     uint32_t pending = EXTI->PR;
     if (pending & PTPA_PIN)
     {
@@ -149,11 +149,11 @@ void EXTI15_10_IRQHandler(void)
         HAL_GPIO_EXTI_IRQHandler(PTPB_PIN);
     }
 
-#endif
+//#endif
 
-#if defined(PTP_CONFIG_AC) || defined(PTP_CONFIG_AD) || defined(PTP_CONFIG_BC) || defined(PTP_CONFIG_BD)
+/*#if defined(PTP_CONFIG_AC) || defined(PTP_CONFIG_AD) || defined(PTP_CONFIG_BC) || defined(PTP_CONFIG_BD)
     HAL_GPIO_EXTI_IRQHandler(PTPB_PIN);
-#endif
+#endif*/
 }
 
 void EXTI3_IRQHandler(void)

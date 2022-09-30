@@ -28,7 +28,7 @@ def run_scenario(network_conf):
             error = "Unable to remove get started directory"
             ci_log.logger.warning(error)
     cmd = "git clone https://github.com/Luos-io/Get_started.git"
-    run_command(cmd, verbose=True, timeout=20)
+    run_command(cmd, verbose=False, timeout=20)
 
     ci_log.step_log(f"Interruptions configuration", "Step")
     SOURCES = "/src/"
@@ -55,7 +55,7 @@ def run_scenario(network_conf):
     replacetext(eval(f"config_{gate_node}[\"path\"]") + "/platformio.ini",\
                       "node_config.h", f"{gate_node}_node_config.h \n    -I ../../config/")
 
-    ci_log.step_log(f"Update project for second node", "Step")
+    ci_log.step_log(f"Update project for the second node", "Step")
     led_sourcecode = eval(f"config_{node_2}[\"path\"]") + SOURCES + eval(f"config_{node_2}[\"source\"]")
     replacetext(eval(f"config_{node_2}[\"path\"]") + "/platformio.ini",\
                       "node_config.h", f"{node_2}_node_config.h \n\t-I ../../config/")
@@ -84,12 +84,10 @@ def run_scenario(network_conf):
     set_upload_command(gate_node)
     set_upload_command(node_2)
 
-    tested_version= "fix/pipe_serial"
+    tested_version= "2.6.3"
     luos_engine_version= f"https://github.com/Luos-io/luos_engine.git#{tested_version} ;"
     replacetext(eval(f"config_{gate_node}[\"path\"]") + "/platformio.ini", "luos_engine", luos_engine_version)
     replacetext(eval(f"config_{node_2}[\"path\"]") + "/platformio.ini", "luos_engine", luos_engine_version)
-    #assert(1==2)
-
 
     # For Arduino : select mkrzero
     # replacetext(eval(f"config_{gate_node}[\"path\"]") + "/platformio.ini", "zero", "mkrzero")
@@ -97,6 +95,10 @@ def run_scenario(network_conf):
     # Remove "Led" from GATE project
     replacetext(gate_sourcecode, "Led_Init", "//Led_Init")
     replacetext(gate_sourcecode, "Led_Loop", "//Led_Loop")
+    
+    # DEBUG !!! ENLEVER CES DEUX LIGNES
+    #replacetext(gate_sourcecode, "Blinker_Init",  "//Blinker_Init")
+    #replacetext(gate_sourcecode, "Blinker_Loop",  "//Blinker_Loop")
 
     # Remove "Gate", "Pipe" and "Blinker" from LED project
     replacetext(led_sourcecode, "Gate_Init", "//Gate_Init")
@@ -152,6 +154,12 @@ def run_scenario(network_conf):
     ci_log.step_log(f"Start detections", "Step")
     platform.engine.assert_step(platform.luos.verify_topology(nodes, expected_topology, expected_services), True)
     time.sleep(0.1)
+
+    ci_log.step_log(f"Conf {network_conf}: OK", "Step")
+    platform.luos.device.close()
+    time.sleep(2)
+    platform.mcu.reinit_serial_port(platform.luos.port)
+    power_down_platform()
     return platform
 
 if __name__ == '__main__':

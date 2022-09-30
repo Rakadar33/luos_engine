@@ -10,7 +10,6 @@ expected_nodes    = ['Gate', 'blinker']
 expected_services = ['gate', 'Pipe', 'led', 'blinker']
 
 
-
 # TODO : A remettre !!!!!!!!!!!!!!!!!!!!!!!!!
 # TODO : A remettre !!!!!!!!!!!!!!!!!!!!!!!!!
 # TODO : A remettre !!!!!!!!!!!!!!!!!!!!!!!!!
@@ -21,10 +20,11 @@ expected_services = ['gate', 'Pipe', 'led', 'blinker']
 #network_conf = ["N2_N5"] # OK :-)
 #network_conf = ["N1_N2"] # OK :-) 
 #network_conf = ["N3_N4"] # OK :-)
+#network_conf = ["N1_N2", "N2_N5", "N3_N4"] # OK ;-)
 
 
-
-network_conf = ["N2_N3"]
+#network_conf = ["N5_N2"] # parfois OK / cf ci-dessous
+network_conf = ["N5_N3"]
 
 
 
@@ -32,48 +32,44 @@ network_conf = ["N2_N3"]
     #OK --   # network_conf = ["N1_N2"]
     #OK --   # network_conf = ["N1_N3"]
     #OK --   # network_conf = ["N1_N4"]
-			### KO ###  network_conf = ["N1_N5"]  # Seule la gate a été vue
-			### KO ###  network_conf = ["N2_N3"]  # Idem ici
+    #OK --   #network_conf = ["N2_N3"]
     #OK --   # network_conf = ["N2_N4"]
     #OK --   # network_conf = ["N2_N5"]
-			### KO ###  network_conf = ["N2_N1"]
     #OK --   # network_conf = ["N3_N4"]
-			### KO ###  network_conf = ["N3_N5"]
-			### KO ###  network_conf = ["N3_N1"]
-			### KO ###  network_conf = ["N3_N2"]
+    #OK --   network_conf = ["N3_N2"]
     #OK --   network_conf = ["N4_N5"]
-			### KO ###  network_conf = ["N4_N1"]
     #OK --   network_conf = ["N4_N2"]
     #OK --   network_conf = ["N4_N3"]
-			### KO ###  network_conf = ["N5_N1"] 
-			### KO ###  network_conf = ["N5_N2"]
-			### KO ###  network_conf = ["N5_N3"]
-			### KO ###  network_conf = ["N5_N4"]
-#------------------------------------------------------
-			### KO ###  network_conf = ["N2_N1"]
+
+            # ---- Vers N1 : aucun ne marche ----
+			### KO ###  network_conf = ["N2_N1"] # L'inverse (N1_N2) marche donc GPIO et IT ont l'air OK. Prob de tempo ? N2 seul = OK
 			### KO ###  network_conf = ["N3_N1"]
-			### KO ###  network_conf = ["N4_N1"]
-			### KO ###  etwork_conf = ["N5_N1"]
-			### KO ###  network_conf = ["N3_N2"]
-    #OK --   network_conf = ["N4_N2"]
-			### KO ###  network_conf = ["N5_N2"]
-    #OK --   network_conf = ["N1_N2"]
-    #OK --   network_conf = ["N4_N3"]
+			### KO ###  network_conf = ["N4_N1"] # Gate N4 seule est détectée. Bloqué ds  detection si on allume l'Arduino. Prob IT Arduino ???
+                                                 # A été vu OK une fois ???
+
+            # ---- De N5 (Gate + Blinker)----
+            # GATE N5 seule ne marche pas : cf salae sur Bureau.
+            #                               Prob de time init pas bon ? Non car pas cablé (en fait si, le prob doit venir des tempos)
+            #                               prob du blinker (enlever blinker pour voir) ? Peut être mettre init pf hardware
+            #                               avant blinker_init puis attendre 500ms
+            # Par contre, avec pyluos-shell, ça a l'air de marcher Gate + Led, mais arrêt après 5 détections (+ 1 avant). Mais pas rtb affichée par pyluos ???
+            # Avec le script scenario.py, ça ressembe à gate seule :  Le blinker fait une détection 700 us avant que Tx ne soit init.
+            # ----> Rajouter une tempo !! Ceci dit je comprends pas pk Tx mets autant de temps à s'init à 1...
+            # -----> Contournement rapide : enlever le blinker
+            # MAJ 28/09
+            # - Code : ajout tempo + inversion ptp c, power on :
+            #            -> N5_N2 marche avec pyluos-shell en mettant EXPLICITEMENT le port /dev/N5
+            #            -> Ne marche pas avec mon script alors que SALAE a l'air OK (cf n5_n2_tempo.sal)
+            #            -> Ah si, mon script a marché. Mais pas à tous les coups
+            #
+            ### KO ###  network_conf = ["N5_N1"] -- de N5 / vers N1 #double!
+			### KO ###  network_conf = ["N5_N2"] --de N5
 			### KO ###  network_conf = ["N5_N3"]
-    #OK --   network_conf = ["N1_N3"]
-			### KO ###   network_conf = ["N2_N3"] # Seule la gate a été vue
 			### KO ###  network_conf = ["N5_N4"]
-    #OK --   network_conf = ["N1_N4"]
-    #OK --   network_conf = ["N2_N4"]
-    #OK --   network_conf = ["N3_N4"]
-			### KO ###   network_conf = ["N1_N5"] # Seule la gate a été vue
-    #OK --   network_conf = ["N2_N5"]
-			####### KO -------------   # network_conf = ["N3_N5"]
-    #OK --   network_conf = ["N4_N5"]
 
-
-
-
+            # ---- Vers N5 ----
+			### KO ###  network_conf = ["N1_N5"]  # Seule la gate a été vue. Encore prob de tempo à l'init ??? voir à la salae
+            ### KO ###  network_conf = ["N3_N5"]  # Mettre salae
 
 #-----------------------------------------------------------------------------
 # KO N4_N1
