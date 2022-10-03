@@ -37,13 +37,13 @@ class loggerSingleton:
         # Create Log File directory
         now=datetime.now()
         timestamp=now.strftime("%Y_%m_%d__%H:%M:%S")
-        logPath=f"{Path(__file__).parent.resolve()}/../Results"
-        self.logFileName=f"{logPath}/test_result.log"        
+        logPath=f"{Path(__file__).parent.resolve()}/../../Results"
+        self.logFileName=f"{logPath}/test_result_{timestamp}.log"
         os.makedirs(logPath, exist_ok=True)
 
         # Logging parameters
-        logformat = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-        datefmt = "%m-%d %H:%M"
+        logformat = "%(asctime)s.%(msecs)03d - %(levelname)s - %(message)s"
+        datefmt = "%m-%d %H:%M:%S"
 
         logging.basicConfig(filename=self.logFileName, level=logging.INFO, filemode="w", format=logformat, datefmt=datefmt)
         stream_handler = logging.StreamHandler(sys.stderr)
@@ -53,7 +53,7 @@ class loggerSingleton:
         self.logger = logging.getLogger(__name__)
         self.logger.addHandler(stream_handler)
         self.pp = pp.PrettyPrinter(indent=4)
-        self.logger.warning(colored(f"\n\n----- NEW LOG INSTANCE : {timestamp} -----\n" + 51*"-" + "\n","green"))
+        self.logger.warning(colored(f"\n\n----- NEW LOG INSTANCE {timestamp} -----\n" + 51*"-" + "\n","green"))
 
 @singleton
 class loggerEngine(loggerSingleton):
@@ -84,12 +84,10 @@ class loggerEngine(loggerSingleton):
         if message != "":
             self.logger.info(colored(f"\n{message}","yellow"))
     def step_log(self, message, title=""):
-        '''
+        #'''
         if title != "":
             self.logger.info(colored(f"\n{10*'-'}{title}{10*'-'}","blue"))
         self.logger.info(colored(f"\n{message}","blue"))
-        '''
-        self.logger.info(colored(f"{title}: {message}","blue"))
 
     def colored_log(self, message, color="yellow"):
         # Availabled colors : grey,  red,  green,  yellow,  blue,  magenta,  cyan,  white

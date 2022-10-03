@@ -128,7 +128,7 @@ class LuosControl:
                 msg=f"FATAL ERROR : {mesuredStat['Dropped messages']} message(s) dropped !!!!!"
                 ci_log.logger.critical(colored(msg, "magenta"))
 
-                time.sleep(1)
+                time.sleep(0.5)
                 raise Exception(msg)
             if mesuredStat['Dropped messages'] > required_Node['Dropped messages']:
                 result += f"\t{mesuredStat['Dropped messages']} messages dropped => Expected value : Max {required_Node['Dropped messages']}\n"
@@ -224,7 +224,7 @@ class LuosControl:
             except:
                 msg=f"FATAL ERROR : {mesuredStat['Dropped messages']} message(s) dropped !!!!!"
                 ci_log.logger.critical(colored(msg, "magenta"))
-                time.sleep(1)
+                time.sleep(0.5)
                 raise Exception(msg)
             if mesuredStat['Dropped messages'] > requiredStat['Dropped messages']:
                 result += f"\t{mesuredStat['Dropped messages']} messages dropped => Expected value : Max {requiredStat['Dropped messages']}\n"

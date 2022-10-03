@@ -39,8 +39,7 @@ class Engine:
             else:
                 ci_log.logger.critical(colored(f"\n\n\n\t\t[FAILED]\t*** Test is KO: {self.error_counter} steps are KO ***\n\n", "magenta"))
             error = -2
-        sep= 30*"*" 
-        ci_log.logger.info(colored(f"\n\n{sep}\nLogs are available in file:\n{sep}\n{ci_log.get_log_filename()}\n\n", "blue"))
+        #ci_log.logger.info(colored(f"\n\nLogs are available in file:\n{ci_log.get_log_filename()}\n\n", "blue"))
         return error
 
     # Tools functions

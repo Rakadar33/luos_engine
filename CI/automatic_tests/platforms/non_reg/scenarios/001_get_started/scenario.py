@@ -10,11 +10,9 @@ from platforms.non_reg.network_config.config import NetworkNodeConfig
 from platforms.non_reg.scenario_tools import *
 from config.parameters import *
 
-def run_scenario(network_conf):
-    # Setup project
-    ci_log.phase_log('Setup project')
-    ci_log.step_log(f"Clone Get started", "Step")
 
+def product_config(network_conf, tested_version= "main"):
+    ci_log.step_log("Clone Get started", "Step")
     if os.path.isdir('Get_started'):
         try:
             ci_log.logger.warning(f"Remove get started directory")
@@ -84,8 +82,8 @@ def run_scenario(network_conf):
     set_upload_command(gate_node)
     set_upload_command(node_2)
 
-    tested_version= "2.6.3"
-    luos_engine_version= f"https://github.com/Luos-io/luos_engine.git#{tested_version} ;"
+    luos_engine_version= f"https://github.com/Luos-io/luos_engine.git#{tested_version}\n\t;"
+
     replacetext(eval(f"config_{gate_node}[\"path\"]") + "/platformio.ini", "luos_engine", luos_engine_version)
     replacetext(eval(f"config_{node_2}[\"path\"]") + "/platformio.ini", "luos_engine", luos_engine_version)
 
@@ -109,22 +107,29 @@ def run_scenario(network_conf):
     replacetext(led_sourcecode, "Blinker_Loop",  "//Blinker_Loop")
 
     # Add break boards Power ON in projects
+    default_pattern       = "\/\* USER CODE END 2 \*\/"
+    arduino_pattern       = "Luos_Init\(\);"
     init_breakboards_gate = "HAL_Platform_Init();"
-    init_breakboards_led  = "HAL_Platform_Init();"
+    init_breakboards_led  = init_breakboards_gate    
     if "Arduino" in gate_sourcecode:
-        replace_gate = "Blinker_Init\(\);"
-        replace_led  = "\/\* USER CODE END 2 \*\/"
-        init_breakboards_gate = "Blinker_Init();" + init_breakboards_gate
-
+        replace_gate = arduino_pattern
+        replace_led  = default_pattern
+        init_breakboards_gate = init_breakboards_gate + "\n\t" + replace_gate.replace("\\","")
     elif "Arduino" in led_sourcecode:
-        replace_gate = "\/\* USER CODE END 2 \*\/"
-        replace_led  = "Blinker_Init();"
-        init_breakboards_led = "Blinker_Init\(\);" + replace_led
+        replace_gate = default_pattern
+        replace_led  = arduino_pattern
+        init_breakboards_led = init_breakboards_gate + "\n\t" + replace_led.replace("\\","")
     else:
-        replace_gate = "\/\* USER CODE END 2 \*\/"
-        replace_led  = "\/\* USER CODE END 2 \*\/"
+        replace_gate = default_pattern
+        replace_led  = default_pattern
     replacetext(gate_sourcecode, replace_gate, init_breakboards_gate)
     replacetext(led_sourcecode,  replace_led,  init_breakboards_led)
+
+
+def run_scenario(network_conf, tested_version= "main"):
+    # Setup project
+    ci_log.phase_log(f'Setup project for conf {network_conf} with version {tested_version}')
+    product_config(network_conf, tested_version= "main")
 
     # Upload all nodes
     ci_log.phase_log('Setup MCUs')
@@ -154,19 +159,23 @@ def run_scenario(network_conf):
     ci_log.step_log(f"Start detections", "Step")
     platform.engine.assert_step(platform.luos.verify_topology(nodes, expected_topology, expected_services), True)
     time.sleep(0.1)
+    ci_log.logger.info(f"Test OK with configuration {network_conf}")
 
-    ci_log.step_log(f"Conf {network_conf}: OK", "Step")
+    # Teardown current configuration
     platform.luos.device.close()
-    time.sleep(2)
+    time.sleep(0.5)
     platform.mcu.reinit_serial_port(platform.luos.port)
     power_down_platform()
     return platform
 
+
 if __name__ == '__main__':
-    platform_handler, state, upload = get_arguments()
+    upload, version = get_arguments()
+    platform_handler = None
+    state = ""
     try:
         for conf in network_conf:
-            platform_handler = run_scenario(conf)
+            platform_handler = run_scenario(conf, version)
     except Exception as e:
         scenario_exception(e)
         state= "Exception"

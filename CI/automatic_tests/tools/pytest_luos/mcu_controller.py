@@ -73,15 +73,13 @@ class McuControl:
         #run_command(f"/usr/bin/python3 {os.path.dirname(os.getcwd())}/scripts/capable-robot-driver.py --port {nodeNumber} --power ON")
         run_command(f"export PYTHONPATH=/home/luos_adm/Luos_tests/Docker/Quality_assurance/CI/automatic_tests:$PYTHONPATH;\
                       /usr/bin/python3 \
-                      /home/luos_adm/Luos_tests/Docker/Quality_assurance/CI/automatic_tests/tools/scripts/capable-robot-driver.py --port {nodeNumber} --power ON")
-        time.sleep(0.5)
+                      /home/luos_adm/Luos_tests/Docker/Quality_assurance/CI/automatic_tests/tools/scripts/capable-robot-driver.py --port {nodeNumber} --power ON", timeout=5)
     
     def powerDown_Node(self, nodeNumber):    
         #run_command(f"/usr/bin/python3 {os.path.dirname(os.getcwd())}/scripts/capable-robot-driver.py --port {nodeNumber} --power OFF")
         run_command(f"export PYTHONPATH=/home/luos_adm/Luos_tests/Docker/Quality_assurance/CI/automatic_tests:$PYTHONPATH;\
                       /usr/bin/python3 \
-                      /home/luos_adm/Luos_tests/Docker/Quality_assurance/CI/automatic_tests/tools/scripts/capable-robot-driver.py --port {nodeNumber} --power OFF")
-        time.sleep(0.5)
+                      /home/luos_adm/Luos_tests/Docker/Quality_assurance/CI/automatic_tests/tools/scripts/capable-robot-driver.py --port {nodeNumber} --power OFF", timeout=5)
 
     def flash_Node(self, config):
         pf = PlatformIOApi(config, verbose=False)
@@ -133,8 +131,7 @@ class UsbControl:
             # Give writing right access and activate or deactivate serial
             ftdi_driver = "/sys/bus/usb/drivers/ftdi_sio/"
             toggle_usb_cmd = f"echo -n \"{self.usb_gate}\" > {ftdi_driver}"
-            run_command(f"chmod 777 {ftdi_driver}{state}; {toggle_usb_cmd}{state}")
-            time.sleep(0.1)
+            run_command(f"chmod 777 {ftdi_driver}{state}; {toggle_usb_cmd}{state}", timeout=1)
 
 class PlatformIOApi:
     def __init__(self, configuration, verbose=False):
@@ -157,7 +154,6 @@ class PlatformIOApi:
                 ci_log.logger.critical("Unable to delete .pio directory")
                 clean_process = "ERROR"
         if clean_process != "ERROR":
-            time.sleep(4)
             return 0
         else:
             return -1
@@ -170,27 +166,16 @@ class PlatformIOApi:
             variables = {'pioenv': name, 'project_config': pio_config.path}
             options = pio_config.items(env=name, as_dict=True)
 
-            compile_process = run_command(
-                f'platformio run -d {self.code_path}', verbose=False)
+            compile_process = run_command(f'platformio run -d {self.code_path}', verbose=False, timeout=30)
             if compile_process != "ERROR":
-                time.sleep(10)
                 return 0
             else:
                 return -1
-            # ci_log.logger.info(pio_config.envs())
-            #platform = PlatformFactory.new(options['platform'])
-            # result = platform.run(variables, [], False,
-            #                      self.verbose, cpu_count())
-            # return result["returncode"]
 
     def upload(self, name):
         ci_log.logger.info(f"Run UPLOAD command for {name} environment")
-        #ci_log.logger.info(self.code_path)
-
-        #flash_process = run_command(f'platformio run -t upload --upload-port "/dev/{self.flashing_port}" -d {self.code_path}', verbose=True, timeout=40)
         flash_process = run_command(f'platformio run -t upload -d {self.code_path}', verbose=False, timeout=40)
         if flash_process != "ERROR":
-            time.sleep(8)
             return 0
         else:
             ci_log.logger.info(f"ERROR : {name} Flashing command error")
@@ -208,10 +193,8 @@ class PlatformIOApi:
 
             # ci_log.logger.info(f"\n\n\nerase_command :  {erase_command}")
             print(erase_command)
-            erase_process = run_command(f"{erase_command}", verbose=False)
-
+            erase_process = run_command(f"{erase_command}", verbose=False, timeout=10)
             if erase_process != "ERROR":
-                time.sleep(2)
                 return True
             else:
                 return False

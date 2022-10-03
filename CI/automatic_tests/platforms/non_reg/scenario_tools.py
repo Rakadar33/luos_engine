@@ -17,8 +17,9 @@ from config.parameters import *
 def get_arguments():
     parser = argparse.ArgumentParser()
     parser.add_argument('--upload', type=str, default="OFF")
+    parser.add_argument('--version', type=str, default="main")
     args= parser.parse_args()
-    return None, "", args.upload
+    return args.upload, args.version
 
 def setup_nodes(scenario, config, upload="OFF"):
     # Generate node_config.h
@@ -53,8 +54,7 @@ def setup_nodes(scenario, config, upload="OFF"):
             else:
                 platform.mcu.powerDown_Node(mcu)
             time.sleep(0.1)
-
-    time.sleep(5)
+    time.sleep(3)
 
     if upload == "ON":
         ci_log.phase_log('Flash nodes')
@@ -68,14 +68,18 @@ def setup_nodes(scenario, config, upload="OFF"):
                 if number < 5:
                     platform.mcu.powerDown_Node(number)
                     time.sleep(0.1)
+                elif number == 5:
+                    platform.basic_hub.disable(number)
             time.sleep(2)
             for mcu in nodes:
                 number= int(mcu[1])
                 if number < 5:
                     platform.mcu.powerUp_Node(number)
-                    time.sleep(0.1)
-            
-    time.sleep(10)
+                elif number == 5:
+                    platform.basic_hub.enable(number)
+                time.sleep(0.1)
+
+    time.sleep(5)
     # Search for a Gate
     connected_ports = platform.mcu.available_serial_ports()
     ci_log.logger.info(f"Availabled serial ports : {connected_ports}")
@@ -115,26 +119,19 @@ def teardown(state, platform = None):
     ci_log.phase_log('Start Teardown')
     if platform != None:
         platform.engine.teardown_step(platform.luos.device.close(), "Closing Device")
-        time.sleep(2)
+        time.sleep(0.5)
         platform.engine.teardown_step(platform.mcu.reinit_serial_port(platform.luos.port), "Closing Serial")
-
         if (state == "Exception"):
             # Should never occured. If state = Exception, scenario must be modified to handle all exceptions properly.
-            ci_log.step_warn(f"Test scenario EXCEPTION: please modify your scenario to handle this exception", "Step")            
+            ci_log.logger.warning(f"Test scenario EXCEPTION: please modify your scenario to handle this exception", "Step")            
             platform.engine.error_counter = -1
         result = platform.engine.test_result()
     else:
         ci_log.logger.critical(colored("[ERROR] Unable to connect to test platform\n\n", "magenta"))
         result = 1
-
     ci_log.step_log(f"Power Down All Nodes", "Step")
-    power_down_platform()
-
-    # DEBUG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    # DEBUG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!    
-    # time.sleep(3)
-    # platform.basic_hub.enable(5)
-    # DEBUG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    # DEBUG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!    
-
+    try:
+        power_down_platform()
+    except:
+        pass
     sys.exit(result)

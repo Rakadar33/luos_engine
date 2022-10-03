@@ -283,43 +283,4 @@ special config)
     tickstart = LuosHAL_GetSystick();                              \
     while ((LuosHAL_GetSystick() - tickstart) < INIT_TIME);
 
-// #if defined(PTP_CONFIG_C) || defined(PTP_CONFIG_AC) || defined(PTP_CONFIG_BC) || defined(PTP_CONFIG_CD)
-// #define HAL_Platform_Init()                                        \
-//     uint32_t tickstart      = 0;                                   \
-//     /* Init Power Pin */                                           \
-//     GPIO_InitTypeDef GPIO_InitStruct = {0};                        \
-//     GPIO_InitStruct.Pin              = PTP_POWER_PIN;              \
-//     GPIO_InitStruct.Mode             = GPIO_MODE_OUTPUT_PP;        \
-//     GPIO_InitStruct.Pull             = GPIO_PULLDOWN;              \
-//     GPIO_InitStruct.Speed            = GPIO_SPEED_FREQ_LOW;        \
-//     HAL_GPIO_Init(PTP_POWER_PORT, &GPIO_InitStruct);               \
-//     HAL_GPIO_WritePin(PTPsss_POWER_PORT, PTP_POWER_PIN, POWER_LEVEL); \
-//     tickstart = LuosHAL_GetSystick();                              \
-//     while ((LuosHAL_GetSystick() - tickstart) < INIT_TIME);
-// #else
-// #define HAL_Platform_Init()                                        \
-//     uint32_t tickstart      = 0;                                   \
-//     /* PTP C is initialized to 0 */                                \
-//     GPIO_InitTypeDef GPIO_InitStruct_PTP_C = {0};                  \
-//     GPIO_InitStruct_PTP_C.Pin              = PTP_C;                \
-//     GPIO_InitStruct_PTP_C.Mode             = GPIO_MODE_AF_OD;      \
-//     GPIO_InitStruct_PTP_C.Pull             = GPIO_PULLDOWN;        \
-//     HAL_GPIO_Init(PTP_C_PORT, &GPIO_InitStruct_PTP_C);             \
-//     HAL_GPIO_WritePin(PTP_C_PORT, PTP_C, GPIO_PIN_RESET);          \
-//     /* Init Power Pin */                                           \
-//     GPIO_InitTypeDef GPIO_InitStruct = {0};                        \
-//     GPIO_InitStruct.Pin              = PTP_POWER_PIN;              \
-//     GPIO_InitStruct.Mode             = GPIO_MODE_OUTPUT_PP;        \
-//     GPIO_InitStruct.Pull             = GPIO_PULLDOWN;              \
-//     GPIO_InitStruct.Speed            = GPIO_SPEED_FREQ_LOW;        \
-//     HAL_GPIO_Init(PTP_POWER_PORT, &GPIO_InitStruct);               \
-//     HAL_GPIO_WritePin(PTP_POWER_PORT, PTP_POWER_PIN, POWER_LEVEL); \
-//     tickstart = LuosHAL_GetSystick();                              \
-//     while ((LuosHAL_GetSystick() - tickstart) < INIT_TIME);
-// #endif
-
-
 #endif /* _NODE_CONFIG_H_ */
-
-
-
