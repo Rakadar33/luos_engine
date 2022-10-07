@@ -8,43 +8,47 @@ class Engine:
     def __init__(self):
         self.error_counter = 0
         self.debug= False
+        self.fatal= "[Guru Meditation]"
         
     def assert_step(self, obtained, expected, message="", stop_on_failure=False):
         try:
             assert(obtained == expected)
         except:
             ci_log.logger.info(colored("\n[Step KO]", "red"))
-            ci_log.logger.critical(colored(f"\n[Step KO]\t{message} : \"{obtained}\" instead of \"{expected}\"", "magenta"))
-            pass
-
-            if(stop_on_failure):
-                time.sleep(0.1)
-                raise Exception("[CRITICAL ERROR ON STEP : stop test]")
-            else:
+            if not stop_on_failure:
+                ci_log.logger.critical(colored(f"\n[Step KO]\t{message} : \"{obtained}\" instead of \"{expected}\"", "magenta"))                
                 self.error_counter += 1
-                pass
+            else:
+                ci_log.logger.critical(colored(f"\n{self.fatal}\n[CRITICAL ERROR]\t{message} : \"{obtained}\" instead of \"{expected}\"", "yellow"))
+                time.sleep(0.1)
+                raise Exception(self.fatal)
 
     def test_result(self):
         ci_log.phase_log("End of test")
         if(self.error_counter == 0):
             ci_log.logger.info(colored("\n\n\n\t\t[SUCCEED]\t*** Test is OK ***\n\n", "green"))
             error = 0
+        elif self.error_counter == 1:
+            ci_log.logger.critical(colored(f"\n\n\n\t\t[FAILED]\t*** Test is KO: {self.error_counter} step is KO ***\n\n", "magenta"))
+            error = -2
+        elif self.error_counter > 1:
+           ci_log.logger.critical(colored(f"\n\n\n\t\t[FAILED]\t*** Test is KO: {self.error_counter} steps are KO ***\n\n", "magenta"))
+           error = -2
         elif (self.error_counter == -1):
             ci_log.logger.info(colored("\n\n\n\t\t[UNEXPECTED ERROR]\t*** The test scenario doesn\'t handle this error ***\n\n", "magenta"))
             self.assert_step("[UNEXPECTED ERROR] the test scenario doesn\'t handle this error", "OK")
             error = -1
-        else:
-            if self.error_counter == 1:
-                ci_log.logger.critical(colored(f"\n\n\n\t\t[FAILED]\t*** Test is KO: {self.error_counter} step is KO ***\n\n", "magenta"))
-            else:
-                ci_log.logger.critical(colored(f"\n\n\n\t\t[FAILED]\t*** Test is KO: {self.error_counter} steps are KO ***\n\n", "magenta"))
-            error = -2
+        elif (self.error_counter < -1):
+            ci_log.logger.info(colored("\n\n\n\t\t[EXCEPTION]\t***\n\n", "magenta"))
+            self.assert_step("[EXCEPTION]", "OK")
+            error = -1
+
         #ci_log.logger.info(colored(f"\n\nLogs are available in file:\n{ci_log.get_log_filename()}\n\n", "blue"))
         return error
 
     # Tools functions
     def teardown_step(self, cmd, message=""):
-        ci_log.phase_log(f"Teardown : {message}")
+        ci_log.phase_log(f"Teardown: {message}")
         try:
             cmd
         except:
@@ -61,6 +65,9 @@ class Engine:
         ci_log.logger.critical(colored(msg, "magenta"))
         assert("FATAL" == msg)
 
+    def fatal_exception(self):
+        return self.fatal
+
     def debug_state(self, enable):
         if enable:
             self.debug= True
@@ -69,7 +76,6 @@ class Engine:
 
 # Misc functions
 def run_command(cmd, verbose=False, timeout=20):
-    #cmd += ' 2>&1'
     process = Popen(cmd, stderr=PIPE, stdout=PIPE, shell=True)
     output, errors = process.communicate(timeout=timeout)
     if process.returncode:

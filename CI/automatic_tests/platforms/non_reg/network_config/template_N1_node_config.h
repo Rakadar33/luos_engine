@@ -101,8 +101,8 @@
 #define PTP_POWER_PIN 5
 #define PTP_A         7
 #define PTP_B         6
-#define PTP_C         4
-#define PTP_D         1
+#define PTP_C         1
+#define PTP_D         4
 
 // PTP_CONFIG_UNKNOWN below is modified by Luos CI python tool :
 #define PTP_CONFIG_UNKNOWN // DO NOT EDIT THIS LINE !!!!!!!!!!!!!!!!!!!!!!!
@@ -203,11 +203,14 @@
 #endif
 
 #define HAL_Platform_Init()                                 \
+    /* Unused PTP Pins are set to Low level */              \
     pinMode(PTP_UNUSED_1, OUTPUT);                          \
     digitalWrite(PTP_UNUSED_1, LOW);                        \
     pinMode(PTP_UNUSED_2, OUTPUT);                          \
     digitalWrite(PTP_UNUSED_2, LOW);                        \
+    /* Init Power Pin */                                    \
     pinMode(PTP_POWER_PIN, OUTPUT);                         \
-    digitalWrite(PTP_POWER_PIN, HIGH);
+    digitalWrite(PTP_POWER_PIN, HIGH);                       \
+    delay(INIT_TIME);
 
 #endif /* _NODE_CONFIG_H_ */

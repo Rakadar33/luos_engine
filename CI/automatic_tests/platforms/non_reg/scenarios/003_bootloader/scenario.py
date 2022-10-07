@@ -295,7 +295,7 @@ def run_scenario():
 
         # Verify topology
         # ############################################################################
-        ci_log.phase_log(f'Verify topology : all nodes must be in App mode')
+        ci_log.phase_log(f'Verify topology: All nodes must be in App mode')
         # ############################################################################
         ci_log.step_log(services, "Services")
         services = platform.luos.device.services

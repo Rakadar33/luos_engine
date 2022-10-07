@@ -5,6 +5,8 @@ expected_topology = {'Gate':  ['gate', 'Pipe', 'led'], 'blinker':  ['blinker']}
 expected_nodes    = ['Gate', 'blinker']
 expected_services = ['gate', 'Pipe', 'led', 'blinker']
 network_conf = ["N1_N2", "N2_N5", "N3_N4", "N4_N1", "N5_N3"]
+#network_conf = ["N1_N5"]
+
 
 config_N1 = {"environment": "mkrzero",
              "path": f"{Path(__file__).parent.resolve()}//../Get_started/Arduino",
@@ -45,3 +47,5 @@ config_N5 = {"environment": "nucleo_g431kb",
              "target": "stm32g4x",
              "flashing_port": "N5_G431KB",
              "flashing_options": {"config": "stm32g4x.cfg", "serial": "001100174741500720383733"}}
+
+DEBUG_MODE = "OFF" # For Debug -  "ON" to enable "breakpoint()"" method

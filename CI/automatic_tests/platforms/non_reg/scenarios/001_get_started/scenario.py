@@ -12,7 +12,6 @@ from config.parameters import *
 
 
 def product_config(network_conf, tested_version= "main"):
-    ci_log.step_log("Clone Get started", "Step")
     if os.path.isdir('Get_started'):
         try:
             ci_log.logger.warning(f"Remove get started directory")
@@ -25,8 +24,9 @@ def product_config(network_conf, tested_version= "main"):
         except:
             error = "Unable to remove get started directory"
             ci_log.logger.warning(error)
+    ci_log.step_log("Clone Get started", "Step")            
     cmd = "git clone https://github.com/Luos-io/Get_started.git"
-    run_command(cmd, verbose=False, timeout=20)
+    assert(run_command(cmd, verbose=False, timeout=20) != "ERROR")
 
     ci_log.step_log(f"Interruptions configuration", "Step")
     SOURCES = "/src/"
@@ -172,12 +172,18 @@ def run_scenario(network_conf, tested_version= "main"):
 if __name__ == '__main__':
     upload, version = get_arguments()
     platform_handler = None
-    state = ""
+    
     try:
         for conf in network_conf:
             platform_handler = run_scenario(conf, version)
+    
     except Exception as e:
         scenario_exception(e)
-        state= "Exception"
-    finally:
-        teardown(state, platform_handler)        
+        time.sleep(1)
+        if "Guru" in str(e) :
+            teardown("Guru", platform_handler)
+            state= "Fatal"
+        else:
+            teardown("Exception", platform_handler)
+
+    teardown("OK", platform_handler)    

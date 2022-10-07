@@ -109,29 +109,42 @@ def replacetext(file, search,replace):
         f.truncate()
 
 def scenario_exception(e):
-    template = "An exception of type \"{0}\" has occurred. Arguments:\n{1!r}"
+    template = f'\n{70*"*"}\n\tAn exception of type \"{e}\" has occurred\n\tArguments: {1!r}\n{70*"*"}'
     error= template.format(type(e).__name__, e.args)
-    print(error)
-    ci_log.logger.error(error)
-    ci_log.logger.error(e)
+    ci_log.logger.warning(error)
+    #ci_log.logger.warning(e)
 
 def teardown(state, platform = None):
     ci_log.phase_log('Start Teardown')
     if platform != None:
-        platform.engine.teardown_step(platform.luos.device.close(), "Closing Device")
-        time.sleep(0.5)
-        platform.engine.teardown_step(platform.mcu.reinit_serial_port(platform.luos.port), "Closing Serial")
+        try:
+            platform.engine.teardown_step("platform.luos.device.close()", "Closing Device")
+            time.sleep(0.5)
+        except:
+            pass
+        try:
+            platform.engine.teardown_step("platform.mcu.reinit_serial_port(platform.luos.port)", "Closing Serial")
+        except:
+            pass
+
         if (state == "Exception"):
             # Should never occured. If state = Exception, scenario must be modified to handle all exceptions properly.
-            ci_log.logger.warning(f"Test scenario EXCEPTION: please modify your scenario to handle this exception", "Step")            
+            ci_log.logger.warning("Test scenario EXCEPTION: please modify your scenario to handle this exception")
             platform.engine.error_counter = -1
+        elif (state in platform.engine.fatal_exception()):
+            platform.engine.error_counter = -2
+
         result = platform.engine.test_result()
+
     else:
         ci_log.logger.critical(colored("[ERROR] Unable to connect to test platform\n\n", "magenta"))
-        result = 1
-    ci_log.step_log(f"Power Down All Nodes", "Step")
+        result = -3
+
     try:
         power_down_platform()
+        ci_log.step_log(f"Power Down All Nodes", "Step")
     except:
+        ci_log.logger.warbibg(f"Unable to power down the nodes")
+        result = -4
         pass
     sys.exit(result)
