@@ -53,7 +53,7 @@ class loggerSingleton:
         self.logger = logging.getLogger(__name__)
         self.logger.addHandler(stream_handler)
         self.pp = pp.PrettyPrinter(indent=4)
-        self.logger.warning(colored(f"\n\n----- NEW LOG INSTANCE {timestamp} -----\n" + 51*"-" + "\n","green"))
+        self.logger.warning(colored(f"----- NEW LOG INSTANCE {timestamp} -----","yellow"))
 
 @singleton
 class loggerEngine(loggerSingleton):
@@ -80,15 +80,25 @@ class loggerEngine(loggerSingleton):
         self.logger("\n"+msg)
 
     def phase_log(self, title, message=""):    
-        self.logger.info(colored(f"\n{10*'-'}{title}{10*'-'}","green"))
+        self.logger.info(colored(f"{title}","green"))
         if message != "":
-            self.logger.info(colored(f"\n{message}","yellow"))
+            self.logger.info(colored(f"{message}","yellow"))
+
     def step_log(self, message, title=""):
-        #'''
-        if title != "":
-            self.logger.info(colored(f"\n{10*'-'}{title}{10*'-'}","blue"))
-        self.logger.info(colored(f"\n{message}","blue"))
+        tag = chr(664)
+        if "\n" in message:
+            if title != "":
+                self.logger.info(colored(f"\t{tag} {title}","blue"))
+            self.logger.info(colored(f"\n{message}","blue"))
+        else:
+            if title != "":
+                self.logger.info(colored(f"\t{tag} {title}:\t{message}","blue"))
+            else:
+                self.logger.info(colored(f"\n{message}","blue"))
 
     def colored_log(self, message, color="yellow"):
         # Availabled colors : grey,  red,  green,  yellow,  blue,  magenta,  cyan,  white
-        self.logger.info(colored(f"\n{message}",color))
+        if "\n" in message:
+            self.logger.info(colored(f"\n{message}",color))
+        else:
+            self.logger.info(colored(f"{message}",color))

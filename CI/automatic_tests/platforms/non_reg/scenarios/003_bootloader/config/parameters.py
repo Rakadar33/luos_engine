@@ -67,8 +67,9 @@ for services in list(expected_topology_N5.values()):
         expected_services_N5.append(service)
 
 config_N2 = {"environment": "nucleo_f072rb",
-             "path": f"{Path(__file__).parent.resolve()}//../luos_engine/examples/projects/NUCLEO-F072RB/",
-             "app": "button",
+             "path_bootloader": f"{Path(__file__).parent.resolve()}//../luos_engine/examples/projects/NUCLEO-F072RB/bootloader",
+             "path_app": f"{Path(__file__).parent.resolve()}//../luos_engine/examples/projects/NUCLEO-F072RB/button",
+             "path_gate": f"{Path(__file__).parent.resolve()}//../luos_engine/examples/projects/NUCLEO-F072RB/gate_serialcom",
              "boot_environment": "nucleo_f072rb_with_bootloader",
              "interruption": "stm32f0xx_it.c",
              "target": "nucleo_f072rb",
@@ -76,8 +77,9 @@ config_N2 = {"environment": "nucleo_f072rb",
              "flashing_options": {"config": "stm32f0x.cfg", "serial": "066AFF544949878667153627"}}
 
 config_N3 = {"environment": "nucleo_f401re",
-             "path": f"{Path(__file__).parent.resolve()}//../luos_engine/examples/projects/NUCLEO-F401RE/",
-             "app": "led",
+             "path_bootloader": f"{Path(__file__).parent.resolve()}//../luos_engine/examples/projects/NUCLEO-F401RE/bootloader",
+             "path_app": f"{Path(__file__).parent.resolve()}//../luos_engine/examples/projects/NUCLEO-F401RE/led",
+             "path_gate": f"{Path(__file__).parent.resolve()}//../luos_engine/examples/projects/NUCLEO-F401RE/gate_serialcom",
              "boot_environment": "nucleo_f401re_with_bootloader",
              "interruption": "stm32f4xx_it.c",
              "target": "nucleo_f401re",
@@ -85,8 +87,9 @@ config_N3 = {"environment": "nucleo_f401re",
              "flashing_options": {"config": "stm32f4x.cfg", "serial": "066FFF555054877567045540"}}
 
 config_N4 = {"environment": "nucleo_l432kc",
-             "path": f"{Path(__file__).parent.resolve()}//../luos_engine/examples/projects/NUCLEO-G431KB/",
-             "app": "dc_motor",
+             "path_bootloader": f"{Path(__file__).parent.resolve()}//../luos_engine/examples/projects/NUCLEO-L432KC/bootloader",
+             "path_app": f"{Path(__file__).parent.resolve()}//../luos_engine/examples/projects/NUCLEO-L432KC/dc_motor",
+             "path_gate": f"{Path(__file__).parent.resolve()}//../luos_engine/examples/projects/NUCLEO-L432KC/gate_serialcom",
              "boot_environment": "nucleo_l432kc_with_bootloader",
              "interruption": "stm32l4xx_it.c",
              "target": "stm32l4x",
@@ -94,10 +97,12 @@ config_N4 = {"environment": "nucleo_l432kc",
              "flashing_options": {"config": "stm32l4x.cfg", "serial": "0671FF485688494867102626"}}
 
 config_N5 = {"environment": "nucleo_g431kb",
-             "path": f"{Path(__file__).parent.resolve()}//../luos_engine/examples/projects/NUCLEO-L432KC/",
-             "app": "potentiometer",
+             "path_bootloader": f"{Path(__file__).parent.resolve()}//../luos_engine/examples/projects/NUCLEO-G431KB/bootloader",
+             "path_app": f"{Path(__file__).parent.resolve()}//../luos_engine/examples/projects/NUCLEO-G431KB/potentiometer",
+             "path_gate": f"{Path(__file__).parent.resolve()}//../luos_engine/examples/projects/NUCLEO-G431KB/gate_serialcom",
              "boot_environment": "nucleo_g431kb_with_bootloader",
              "interruption": "stm32g4xx_it.c",
              "target": "stm32g4x",
              "flashing_port": "N5_G431KB",
              "flashing_options": {"config": "stm32g4x.cfg", "serial": "001100174741500720383733"}}
+ 

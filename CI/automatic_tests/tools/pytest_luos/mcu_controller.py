@@ -81,15 +81,27 @@ class McuControl:
                       /usr/bin/python3 \
                       /home/luos_adm/Luos_tests/Docker/Quality_assurance/CI/automatic_tests/tools/scripts/capable-robot-driver.py --port {nodeNumber} --power OFF", timeout=5)
 
-    def flash_Node(self, config):
+    def compile_Node(self, config):
         pf = PlatformIOApi(config, verbose=False)
 
-        ci_log.logger.info("Clean project")
         if (pf.clean(config["environment"]) != 0):
             ci_log.logger.error("********** Cleaning project Error " + config["environment"])
             return False
 
-        ci_log.logger.info("Upload program")
+        if (pf.compile(config["environment"]) != 0):
+            ci_log.logger.error("********** Compilation Error " + config["environment"])
+            return False
+
+        # Everything OK
+        return True
+
+    def flash_Node(self, config):
+        pf = PlatformIOApi(config, verbose=False)
+
+        if (pf.clean(config["environment"]) != 0):
+            ci_log.logger.error("********** Cleaning project Error " + config["environment"])
+            return False
+
         if (pf.upload(config["environment"]) != 0):
             ci_log.logger.error("********** Uploading Error " + config["environment"])
             return False
@@ -144,7 +156,7 @@ class PlatformIOApi:
         self.verbose = verbose
 
     def clean(self, name):
-        ci_log.logger.info(f"Run CLEAN command for {name} environment")
+        ci_log.logger.info(f"Clean project {name}")
         clean_process = run_command(f'platformio run -t clean -d {self.code_path}', verbose=False, timeout=5)
         pio_dir= self.code_path + "/.pio/"
         if os.path.isdir(pio_dir):
@@ -159,7 +171,7 @@ class PlatformIOApi:
             return -1
 
     def compile(self, name):
-        ci_log.logger.info(f"Run COMPILE command for {name} environment")
+        ci_log.logger.info(f"Compile project {name}")
         with fs.cd(self.code_path):
             pio_config = ProjectConfig.get_instance()
             pio_config.validate([name])
@@ -173,7 +185,7 @@ class PlatformIOApi:
                 return -1
 
     def upload(self, name):
-        ci_log.logger.info(f"Run UPLOAD command for {name} environment")
+        ci_log.logger.info(f"Upload project {name}")
         flash_process = run_command(f'platformio run -t upload -d {self.code_path}', verbose=False, timeout=40)
         if flash_process != "ERROR":
             return 0

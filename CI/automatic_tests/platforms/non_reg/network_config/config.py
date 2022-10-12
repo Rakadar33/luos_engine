@@ -78,13 +78,11 @@ class NetworkNodeConfig():
                 # Compute node_config PTPs connection for
                 template_file = open(source, 'r')
                 data = template_file.read()
-
                 if self.config[node] is not None:
-                    print(f"- [node {node+1}] PTP are connected to :  {self.config[node]}")
+                    print(f"\t\t\t\t{chr(664)} [Node {node+1}] PTP are connected to :  {self.config[node]}")
                     data = data.replace(pattern, new_config)
                 else:
-                    info+= f"\t[INFO] Node {node+1} is not connected to the network\n"
-
+                    info+= f"\t\t\t\tx [Node {node+1}] is NOT connected to the network"
                 template_file.close()
                 # Create node_config.h
                 node_config_file = open(destination, 'x')
@@ -97,7 +95,7 @@ class NetworkNodeConfig():
                     self._remove_config_files(node)
                 status= False
                 pass
-        print(info+"\n")
+        print(info)
         return status
 
     def _remove_config_files(self, node):

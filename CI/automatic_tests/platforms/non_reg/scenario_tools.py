@@ -28,16 +28,18 @@ def setup_nodes(scenario, config, upload="OFF"):
     platform= create_platform()
     platform.init_platform()
     platform.engine.debug_state(DEBUG_MODE)    
-
+    try:
+        config = config[0]
+    except:
+        pass
     nodes = config.split("_")
-
     if upload == "ON":
         # Generate node_config.h
         conf= NetworkNodeConfig(scenario, config)
         result= conf.nodeConfig_generation()
-        time.sleep(0.1)
         assert(result)
 
+        ci_log.step_log(f"Power ON nodes", "Step")
         # Power ON nodes
         nodes = config.split("_")
         excluded_nodes= [x for x in range(1,6)]
@@ -103,14 +105,14 @@ def setup_nodes(scenario, config, upload="OFF"):
 
     ci_log.step_log(f"Search a Gate", "Step")
     time.sleep(10)
-    gate_max_try = 10
+    gate_max_try = 5
     while gate_max_try:  
         gate_port = platform.luos.search_gate()
         if gate_port != 0:
             break
         else:
             ci_log.logger.info("Retry to find a Gate")   
-            time.sleep(2)
+            time.sleep(1.5)
             gate_max_try -= 1
     if gate_port == 0:
         ci_log.logger.critical(colored("No Gate", "magenta"))
@@ -134,9 +136,9 @@ def replacetext(file, search,replace):
         f.truncate()
 
 def scenario_exception(e):
-    template = f'\n{70*"*"}\n\tAn exception of type \"{e}\" has occurred\n\tArguments: {1!r}\n{70*"*"}'
+    template = f'\n{70*"*"}\n\tAn exception of type \"{e}\" has occurred\n{70*"*"}'
     error= template.format(type(e).__name__, e.args)
-    ci_log.logger.warning(error)
+    ci_log.logger.warning(colored(error, "magenta"))
     #ci_log.logger.warning(e)
 
 def teardown(state, platform = None):
