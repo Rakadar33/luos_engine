@@ -210,7 +210,7 @@
     digitalWrite(PTP_UNUSED_2, LOW);                        \
     /* Init Power Pin */                                    \
     pinMode(PTP_POWER_PIN, OUTPUT);                         \
-    digitalWrite(PTP_POWER_PIN, HIGH);                       \
+    digitalWrite(PTP_POWER_PIN, HIGH);                      \
     delay(INIT_TIME);
 
 #endif /* _NODE_CONFIG_H_ */

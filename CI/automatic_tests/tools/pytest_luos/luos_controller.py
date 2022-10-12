@@ -322,7 +322,7 @@ class LuosControl:
 
     def search_gate(self):
         try:
-            gate= run_command("pyluos-discover", verbose=False)
+            gate = run_command("pyluos-discover", verbose=False)
             gate= gate[-2].split('\'')[1]
         except:
             ci_log.logger.warning(f"Pyluos Detection has failed")

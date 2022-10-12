@@ -22,75 +22,100 @@ def get_arguments():
     return args.upload, args.version
 
 def setup_nodes(scenario, config, upload="OFF"):
-    # Generate node_config.h
-    conf= NetworkNodeConfig(scenario, config)
-    result= conf.nodeConfig_generation()
-    time.sleep(0.1)
-    assert(result)
+    ci_log.phase_log("Setup all nodes")
 
     # Create platform
     platform= create_platform()
     platform.init_platform()
     platform.engine.debug_state(DEBUG_MODE)    
-    #platform.mcu.start_Node(config_Gate)  #FOR DEBUG
 
-    # Power ON nodes
     nodes = config.split("_")
-    excluded_nodes= [x for x in range(1,6)]
-    for mcu in nodes:
-        number= int(mcu[1])
-        if number ==5:
-            platform.basic_hub.enable(5)
-            excluded_nodes.remove(number)
-        if number < 5:
-            platform.mcu.powerUp_Node(number)
-            excluded_nodes.remove(number)
-        time.sleep(0.1)
-    # Power OFF unused nodes 
-    for mcu in range(1,6):
-        if mcu in excluded_nodes:
-            if mcu == 5:
-                platform.basic_hub.disable(5)
-            else:
-                platform.mcu.powerDown_Node(mcu)
-            time.sleep(0.1)
-    time.sleep(3)
 
     if upload == "ON":
-        ci_log.phase_log('Flash nodes')
+        # Generate node_config.h
+        conf= NetworkNodeConfig(scenario, config)
+        result= conf.nodeConfig_generation()
+        time.sleep(0.1)
+        assert(result)
+
+        # Power ON nodes
+        nodes = config.split("_")
+        excluded_nodes= [x for x in range(1,6)]
+        for mcu in nodes:
+            number= int(mcu[1])
+            if number == 5:
+                platform.basic_hub.enable(5)
+                excluded_nodes.remove(number)
+            elif number < 5:
+                platform.mcu.powerUp_Node(number)
+                excluded_nodes.remove(number)
+            time.sleep(0.1)
+        # Power OFF unused nodes 
+        for mcu in range(1,6):
+            if mcu in excluded_nodes:
+                if mcu == 5:
+                    platform.basic_hub.disable(5)
+                else:
+                    platform.mcu.powerDown_Node(mcu)
+                time.sleep(0.1)
+        time.sleep(3)
+
+        # Flash nodes
+        ci_log.step_log(f"Flash nodes", "Step")
         for mcu in nodes:
             ci_log.phase_log(f"[Flash] {mcu}")
             mcu = eval(f"config_{mcu}")
             assert(platform.mcu.flash_Node(mcu))
-            # Power OFF nodes, wait a bit, and Power ON 
-            for mcu in nodes:
-                number= int(mcu[1])
-                if number < 5:
-                    platform.mcu.powerDown_Node(number)
-                    time.sleep(0.1)
-                elif number == 5:
-                    platform.basic_hub.disable(number)
-            time.sleep(2)
-            for mcu in nodes:
-                number= int(mcu[1])
-                if number < 5:
-                    platform.mcu.powerUp_Node(number)
-                elif number == 5:
-                    platform.basic_hub.enable(number)
+ 
+        # Power OFF nodes
+        ci_log.step_log(f"Power OFF nodes", "Step")
+        for mcu in nodes:
+            number= int(mcu[1])
+            if number < 5:
+                platform.mcu.powerDown_Node(number)
                 time.sleep(0.1)
+            elif number == 5:
+                platform.basic_hub.disable(number)
+    time.sleep(2)
 
-    time.sleep(5)
+    gate_node = nodes.pop(1) 
+    # Power ON all nodes (except Gate)
+    for mcu in nodes:
+        number = int(mcu[1])
+        if number < 5:
+            platform.mcu.powerUp_Node(number)
+        elif number == 5:
+            platform.basic_hub.enable(number)
+        time.sleep(1)
+    # Power ON the Gate
+    number = int(gate_node[1])
+    if number < 5:
+        platform.mcu.powerUp_Node(number)
+    elif number == 5:
+        platform.basic_hub.enable(number)
+    time.sleep(1)
+
     # Search for a Gate
     connected_ports = platform.mcu.available_serial_ports()
     ci_log.logger.info(f"Availabled serial ports : {connected_ports}")
-
     if len(connected_ports) == 0:
         raise Exception("No serial port")
 
-    gate_port = platform.luos.search_gate()
+    ci_log.step_log(f"Search a Gate", "Step")
+    time.sleep(10)
+    gate_max_try = 10
+    while gate_max_try:  
+        gate_port = platform.luos.search_gate()
+        if gate_port != 0:
+            break
+        else:
+            ci_log.logger.info("Retry to find a Gate")   
+            time.sleep(2)
+            gate_max_try -= 1
     if gate_port == 0:
         ci_log.logger.critical(colored("No Gate", "magenta"))
         platform.engine.assert_step("No Gate", "Detection OK", stop_on_failure=True)
+    
     ci_log.logger.info(f"Gate on port: {gate_port}\n")
     platform.luos.port = gate_port
     platform.mcu.reinit_serial_port(gate_port)
