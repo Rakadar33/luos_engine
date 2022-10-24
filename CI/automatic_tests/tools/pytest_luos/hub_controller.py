@@ -26,6 +26,7 @@ class HubControl:
               "Port_9":  {"location": "2-1.4.4", "port": "1"},
               "Port_10": {"location": "2-1.4.4", "port": "4"},
               "Port_5":  {"location": "4-1.4",   "port": "3"},
+              "Port_7":  {"location": "4-1.4.4", "port": "3"}
               }
 
         location= HUB[f"Port_{position}"]["location"]
@@ -38,7 +39,7 @@ class HubControl:
             location, port = self._get_location(port)
             start_command = f"sudo uhubctl -a on -p {port} -l {location};"
             start_command += f"echo 1 > sudo tee /sys/bus/usb/devices/{location}.{port}/authorized;"
-            run_command(start_command)
+            run_command(start_command, timeout=40)
 
     def _disable_default(self, port):
         if (port!= 0) and (port<= 10):
@@ -46,7 +47,7 @@ class HubControl:
             location, port = self._get_location(port)            
             stop_command = f"echo 0 > sudo tee /sys/bus/usb/devices/{location}.{port}/authorized;"        
             stop_command += f"sudo uhubctl -a off -r 100 -l {location} -p {port};"
-            run_command(stop_command)
+            run_command(stop_command, timeout=40)
 
     def _enable_capable_robot(self, port):
         #TODO

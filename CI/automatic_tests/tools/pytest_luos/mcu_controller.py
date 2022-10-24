@@ -32,7 +32,8 @@ class McuControl:
             ports = ['COM%s' % (i + 1) for i in range(256)]
         elif sys.platform.startswith('linux') or sys.platform.startswith('cygwin'):
             ports = glob.glob('/dev/ttyU[A-Za-z]*') # excludes current terminal /dev/tty
-            ports.extend(glob.glob('/dev/ttyACM*'))
+            ports.extend(glob.glob('/dev/N*'))
+            #ports.extend(glob.glob('/dev/ttyACM*'))
         else:
             raise EnvironmentError('Unsupported platform')
 
@@ -242,5 +243,5 @@ def power_down_platform():
     pf.powerDown_Node(2)
     pf.powerDown_Node(3)
     pf.powerDown_Node(4)
-    run_command(f'sudo uhubctl -a off -r 150 -p 3 -l 4-1.4', verbose=False, timeout=20)
+    run_command(f'sudo uhubctl -a off -r 150 -p 3 -l 4-1.4', verbose=False, timeout=30)
 
