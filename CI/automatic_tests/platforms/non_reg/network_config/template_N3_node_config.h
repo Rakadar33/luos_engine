@@ -183,9 +183,9 @@
 #define PTPA_PIN  PTP_B
 #define PTPA_PORT PTP_B_PORT
 #define PTPA_IRQ  PTP_B_IRQ
-#define PTPB_PIN  PTP_D
-#define PTPB_PORT PTP_D_PORT
-#define PTPB_IRQ  PTP_D_IRQ
+#define PTPB_PIN  PTP_A
+#define PTPB_PORT PTP_A_PORT
+#define PTPB_IRQ  PTP_A_IRQ
 #endif
 
 // PTP C
@@ -203,9 +203,9 @@
 #define PTPA_PIN  PTP_D
 #define PTPA_PORT PTP_D_PORT
 #define PTPA_IRQ  PTP_D_IRQ
-#define PTPB_PIN  PTP_B
-#define PTPB_PORT PTP_B_PORT
-#define PTPB_IRQ  PTP_B_IRQ
+#define PTPB_PIN  PTP_C
+#define PTPB_PORT PTP_C_PORT
+#define PTPB_IRQ  PTP_C_IRQ
 #endif
 
 // PTP A and B

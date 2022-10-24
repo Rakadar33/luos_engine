@@ -133,9 +133,9 @@
 // PTP B
 #ifdef PTP_CONFIG_B
 #define ARDUINO_PTPA_PIN PTP_B
-#define ARDUINO_PTPB_PIN PTP_D
-#define PTP_UNUSED_1     PTP_A
-#define PTP_UNUSED_2     PTP_C
+#define ARDUINO_PTPB_PIN PTP_A
+#define PTP_UNUSED_1     PTP_C
+#define PTP_UNUSED_2     PTP_D
 #endif
 
 // PTP C

@@ -116,8 +116,29 @@ void EXTI9_5_IRQHandler(void)
     return;
 #endif
 
-#if defined(PTP_CONFIG_A) || defined(PTP_CONFIG_AB) || defined(PTP_CONFIG_AC) || defined(PTP_CONFIG_AD)
+    uint32_t pending = EXTI->PR1;
+
+#if defined(PTP_CONFIG_A) || defined(PTP_CONFIG_AB) || defined(PTP_CONFIG_AD)
     HAL_GPIO_EXTI_IRQHandler(PTPA_PIN);
+#endif
+
+#if defined(PTP_CONFIG_AC)
+    if (pending & PTPA_PIN)
+    {
+        HAL_GPIO_EXTI_IRQHandler(PTPA_PIN);
+    }
+    if (pending & PTPB_PIN)
+    {
+        HAL_GPIO_EXTI_IRQHandler(PTPB_PIN);
+    }
+#endif
+
+#if defined(PTP_CONFIG_C) || defined(PTP_CONFIG_CD)
+    HAL_GPIO_EXTI_IRQHandler(PTPA_PIN);
+#endif
+
+#if defined(PTP_CONFIG_BC)
+    HAL_GPIO_EXTI_IRQHandler(PTPB_PIN);
 #endif
 }
 
@@ -134,18 +155,6 @@ void EXTI4_IRQHandler(void)
 #endif
 }
 
-void EXTI2_IRQHandler(void)
-{
-#ifdef PTP_DISABLED
-    return;
-#endif
-
-#if defined(PTP_CONFIG_C) || defined(PTP_CONFIG_CD)
-    HAL_GPIO_EXTI_IRQHandler(PTPA_PIN);
-#else // PTP_CONFIG_AC or PTP_CONFIG_BC
-    HAL_GPIO_EXTI_IRQHandler(PTPB_PIN);
-#endif
-}
 
 void EXTI1_IRQHandler(void)
 {

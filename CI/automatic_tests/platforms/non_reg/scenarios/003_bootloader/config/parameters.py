@@ -5,14 +5,20 @@ from pathlib import Path
 DEBUG_MODE = "OFF" # "ON" to enable "breakpoint()"" method
 
 # Platform parameters
-network_conf = ["N2_N3_N4_N5"]
-network_node_number = 4
+###network_conf = ["N2_N3_N4_N5"]
+###network_node_number = 4
+
+#network_conf = ["N2_N3"] # Almost OK
+#network_conf = ["N2_N4"] # no detection boot - A essayer de nouveau avec le debug_build_flags
+network_conf = ["N2_N5"] # no detection boot - A essayer de nouveau avec le debug_build_flags
+network_node_number = 2
+
 
 expected_bootloader_topology = {
                     'Gate':    ['gate', 'Pipe'],
-                    'boot_1':  ['boot_1'],
-                    'boot_2':  ['boot_2'],
-                    'boot_3':  ['boot_3']}
+                    'boot_1':  ['boot_service_1'],
+                    'boot_2':  ['boot_service_2'],
+                    'boot_3':  ['boot_service_3']}
 
 expected_topology_N2 = {
                     'Gate':           ['gate', 'Pipe'],
@@ -70,6 +76,7 @@ config_N2 = {"environment": "nucleo_f072rb",
              "path_bootloader": f"{Path(__file__).parent.resolve()}//../luos_engine/examples/projects/NUCLEO-F072RB/bootloader",
              "path_app": f"{Path(__file__).parent.resolve()}//../luos_engine/examples/projects/NUCLEO-F072RB/button",
              "path_gate": f"{Path(__file__).parent.resolve()}//../luos_engine/examples/projects/NUCLEO-F072RB/gate_serialcom",
+             "path": "Unknown",
              "boot_environment": "nucleo_f072rb_with_bootloader",
              "interruption": "stm32f0xx_it.c",
              "target": "nucleo_f072rb",
@@ -90,6 +97,7 @@ config_N4 = {"environment": "nucleo_l432kc",
              "path_bootloader": f"{Path(__file__).parent.resolve()}//../luos_engine/examples/projects/NUCLEO-L432KC/bootloader",
              "path_app": f"{Path(__file__).parent.resolve()}//../luos_engine/examples/projects/NUCLEO-L432KC/dc_motor",
              "path_gate": f"{Path(__file__).parent.resolve()}//../luos_engine/examples/projects/NUCLEO-L432KC/gate_serialcom",
+             "path": "Unknown",
              "boot_environment": "nucleo_l432kc_with_bootloader",
              "interruption": "stm32l4xx_it.c",
              "target": "stm32l4x",
@@ -100,6 +108,7 @@ config_N5 = {"environment": "nucleo_g431kb",
              "path_bootloader": f"{Path(__file__).parent.resolve()}//../luos_engine/examples/projects/NUCLEO-G431KB/bootloader",
              "path_app": f"{Path(__file__).parent.resolve()}//../luos_engine/examples/projects/NUCLEO-G431KB/potentiometer",
              "path_gate": f"{Path(__file__).parent.resolve()}//../luos_engine/examples/projects/NUCLEO-G431KB/gate_serialcom",
+             "path": "Unknown",
              "boot_environment": "nucleo_g431kb_with_bootloader",
              "interruption": "stm32g4xx_it.c",
              "target": "stm32g4x",

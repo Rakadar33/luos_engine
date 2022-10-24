@@ -4,6 +4,7 @@ import argparse
 import time
 import re
 import serial
+import traceback
 from pathlib import Path
 from tools.pytest_luos.config.settings import ci_log
 from tools.pytest_luos.config.platform import create_platform
@@ -29,55 +30,64 @@ def setup_nodes(scenario, config, upload="OFF"):
     platform.init_platform()
     platform.engine.debug_state(DEBUG_MODE)    
     try:
-        config = config[0]
+        if not isinstance(config, str) :
+            config = config[0]
     except:
         pass
     nodes = config.split("_")
-    if upload == "ON":
-        # Generate node_config.h
-        conf= NetworkNodeConfig(scenario, config)
-        result= conf.nodeConfig_generation()
-        assert(result)
+    # Generate node_config.h
+    conf= NetworkNodeConfig(scenario, config)
+    result= conf.nodeConfig_generation()
+    assert(result)
 
-        ci_log.step_log(f"Power ON nodes", "Step")
-        # Power ON nodes
-        nodes = config.split("_")
-        excluded_nodes= [x for x in range(1,6)]
-        for mcu in nodes:
-            number= int(mcu[1])
-            if number == 5:
-                platform.basic_hub.enable(5)
-                excluded_nodes.remove(number)
-            elif number < 5:
-                platform.mcu.powerUp_Node(number)
-                excluded_nodes.remove(number)
+    # Power ON nodes
+    nodes = config.split("_")
+    excluded_nodes= [x for x in range(1,6)]
+    for mcu in nodes:
+        ci_log.step_log(f"[Power ON] Node {mcu}", "Step")
+        number= int(mcu[1])
+        if number == 5:
+            platform.basic_hub.enable(5)
+            excluded_nodes.remove(number)
+        elif number < 5:
+            platform.mcu.powerUp_Node(number)
+            excluded_nodes.remove(number)
+        time.sleep(0.1)
+    # Power OFF unused nodes 
+    for mcu in range(1,6):
+        if mcu in excluded_nodes:
+            ci_log.step_log(f"[Power OFF] Unused Node {mcu}", "Step")                
+            if mcu == 5:
+                platform.basic_hub.disable(5)
+            else:
+                platform.mcu.powerDown_Node(mcu)
             time.sleep(0.1)
-        # Power OFF unused nodes 
-        for mcu in range(1,6):
-            if mcu in excluded_nodes:
-                if mcu == 5:
-                    platform.basic_hub.disable(5)
-                else:
-                    platform.mcu.powerDown_Node(mcu)
-                time.sleep(0.1)
-        time.sleep(3)
+    time.sleep(3)
 
+    if upload == "ON":
         # Flash nodes
         ci_log.step_log(f"Flash nodes", "Step")
         for mcu in nodes:
             ci_log.phase_log(f"[Flash] {mcu}")
             mcu = eval(f"config_{mcu}")
             assert(platform.mcu.flash_Node(mcu))
- 
-        # Power OFF nodes
-        ci_log.step_log(f"Power OFF nodes", "Step")
+    else:
+        # Compile nodes
+        ci_log.step_log(f"Compile nodes", "Step")
         for mcu in nodes:
-            number= int(mcu[1])
-            if number < 5:
-                platform.mcu.powerDown_Node(number)
-                time.sleep(0.1)
-            elif number == 5:
-                platform.basic_hub.disable(number)
+            ci_log.phase_log(f"[Compile] {mcu}")
+            mcu = eval(f"config_{mcu}")
+            assert(platform.mcu.compile_Node(mcu))
+
+    # Power OFF nodes
+    #ci_log.step_log(f"[Power OFF] Nodes", "Step")
+    for mcu in nodes:
+        number= int(mcu[1])
+        if number < 5:
+            platform.mcu.powerDown_Node(number)
+            time.sleep(0.1)
+        elif number == 5:
+            platform.basic_hub.disable(number)
     time.sleep(2)
 
     gate_node = nodes.pop(1) 
@@ -95,7 +105,7 @@ def setup_nodes(scenario, config, upload="OFF"):
         platform.mcu.powerUp_Node(number)
     elif number == 5:
         platform.basic_hub.enable(number)
-    time.sleep(1)
+    time.sleep(10)
 
     # Search for a Gate
     connected_ports = platform.mcu.available_serial_ports()
@@ -104,7 +114,7 @@ def setup_nodes(scenario, config, upload="OFF"):
         raise Exception("No serial port")
 
     ci_log.step_log(f"Search a Gate", "Step")
-    time.sleep(10)
+    time.sleep(1)
     gate_max_try = 5
     while gate_max_try:  
         gate_port = platform.luos.search_gate()
@@ -123,6 +133,7 @@ def setup_nodes(scenario, config, upload="OFF"):
     platform.mcu.reinit_serial_port(gate_port)
 
     # Connect to platform
+    ci_log.step_log(f"Connection to Gate - Auto trig detection", "Step")
     platform.luos.connect(gate_port)
     assert(platform.luos.get_self_connection()) # Stop if Gate connection error
     return platform
@@ -136,9 +147,13 @@ def replacetext(file, search,replace):
         f.truncate()
 
 def scenario_exception(e):
-    template = f'\n{70*"*"}\n\tAn exception of type \"{e}\" has occurred\n{70*"*"}'
+    template = f'\n{70*"*"}\n\tWhat ??? An exception occured: {e} \n{70*"*"}'
     error= template.format(type(e).__name__, e.args)
     ci_log.logger.warning(colored(error, "magenta"))
+    print(traceback.format_exc())
+    ci_log.logger.debug(traceback.format_exc())
+
+
     #ci_log.logger.warning(e)
 
 def teardown(state, platform = None):
@@ -171,7 +186,7 @@ def teardown(state, platform = None):
         power_down_platform()
         ci_log.step_log(f"Power Down All Nodes", "Step")
     except:
-        ci_log.logger.warbibg(f"Unable to power down the nodes")
+        ci_log.logger.warning(f"Unable to power down the nodes")
         result = -4
         pass
     sys.exit(result)

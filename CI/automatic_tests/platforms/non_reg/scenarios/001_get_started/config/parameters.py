@@ -5,7 +5,14 @@ expected_topology = {'Gate':  ['gate', 'Pipe', 'led'], 'blinker':  ['blinker']}
 expected_nodes    = ['Gate', 'blinker']
 expected_services = ['gate', 'Pipe', 'led', 'blinker']
 network_conf = ["N1_N2", "N2_N5", "N3_N4", "N4_N1", "N5_N3"]
+#network_conf = ["N5_N1"]
 #network_conf = ["N1_N5"]
+network_conf = ["N1_N2"]
+#network_conf = ["N4_N1"]
+#network_conf = ["N4_N5"]
+#network_conf = ["N5_N3"]
+#network_conf = ["N5_N2"]
+#network_conf = ["N5_N4"]
 
 
 config_N1 = {"environment": "mkrzero",

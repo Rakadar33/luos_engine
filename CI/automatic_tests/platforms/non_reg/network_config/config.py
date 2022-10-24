@@ -82,7 +82,7 @@ class NetworkNodeConfig():
                     print(f"\t\t\t\t{chr(664)} [Node {node+1}] PTP are connected to :  {self.config[node]}")
                     data = data.replace(pattern, new_config)
                 else:
-                    info+= f"\t\t\t\tx [Node {node+1}] is NOT connected to the network"
+                    info+= f"\t\t\t\tx [Node {node+1}] is NOT connected to the network\n"
                 template_file.close()
                 # Create node_config.h
                 node_config_file = open(destination, 'x')

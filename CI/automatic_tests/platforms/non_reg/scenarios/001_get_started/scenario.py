@@ -1,6 +1,7 @@
 # coding:utf-8
 import os
 import sys
+import glob
 from shutil import copyfile, copytree, rmtree
 from pyluos import Device
 from tools.pytest_luos.config.settings import ci_log
@@ -28,6 +29,27 @@ def product_config(network_conf, tested_version= "main"):
     cmd = "git clone https://github.com/Luos-io/Get_started.git"
     assert(run_command(cmd, verbose=False, timeout=20) != "ERROR")
 
+    # DEBUG HACK !!!!!!!!!!!!!!!!!!!!!!!!!!
+    # DEBUG HACK !!!!!!!!!!!!!!!!!!!!!!!!!!
+    # DEBUG HACK !!!!!!!!!!!!!!!!!!!!!!!!!!
+    # Local libraries
+    '''libs = glob.glob("./luos_engine/**/library.json", recursive = True)
+    for lib in libs:
+        replacetext(lib, "luos/luos_engine", "luos_engine")
+
+    filter_scripts = glob.glob("./**/source_filter_script.py", recursive = True)
+    for script in filter_scripts:
+        replacetext(script, "\$PYTHONEXE -m pip install", "echo")
+
+    cmd = "pip3 uninstall pyluos -y"
+    run_command(cmd, verbose=True, timeout=20)
+    cmd = "pip3 install -e /var/www/PF/Workspace/Pyluos"
+    assert(run_command(cmd, verbose=True, timeout=20) != "ERROR")'''
+    # DEBUG HACK !!!!!!!!!!!!!!!!!!!!!!!!!!
+    # DEBUG HACK !!!!!!!!!!!!!!!!!!!!!!!!!!
+    # DEBUG HACK !!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
     ci_log.step_log(f"Interruptions configuration", "Step")
     SOURCES = "/src/"
     source_IT_N2 = "../../network_config/" + config_N2["interruption"]
@@ -50,6 +72,9 @@ def product_config(network_conf, tested_version= "main"):
     gate_sourcecode = eval(f"config_{gate_node}[\"path\"]") + SOURCES + eval(f"config_{gate_node}[\"source\"]")
 
     # Update platformio.ini Build Flags
+    print("11111111111111111111111111111111111")
+    print(eval(f"config_{gate_node}[\"path\"]") + "/platformio.ini")
+    print("11111111111111111111111111111111111")    
     replacetext(eval(f"config_{gate_node}[\"path\"]") + "/platformio.ini",\
                       "node_config.h", f"{gate_node}_node_config.h \n    -I ../../config/")
 
@@ -71,7 +96,7 @@ def product_config(network_conf, tested_version= "main"):
                                   "\[env\]", f"[env]\n{flashing_port}\n")
             else: #STM32
                 f.write('\n')
-                f.write('upload_protocol = custom\n')
+                f.write('urpload_protocol = custom\n')
                 f.write('upload_command = openocd -s $PROJECT_PACKAGES_DIR/tool-openocd/scripts -f interface/stlink.cfg -c "transport select hla_swd" $UPLOAD_FLAGS -c "program {$SOURCE} 0x08000000 verify reset; shutdown;"\n')
                 f.write('upload_flags =\n')
                 f.write('\t-c\n')
@@ -87,17 +112,11 @@ def product_config(network_conf, tested_version= "main"):
     replacetext(eval(f"config_{gate_node}[\"path\"]") + "/platformio.ini", "luos_engine", luos_engine_version)
     replacetext(eval(f"config_{node_2}[\"path\"]") + "/platformio.ini", "luos_engine", luos_engine_version)
 
-    # For Arduino : select mkrzero
-    # replacetext(eval(f"config_{gate_node}[\"path\"]") + "/platformio.ini", "zero", "mkrzero")
 
     # Remove "Led" from GATE project
     replacetext(gate_sourcecode, "Led_Init", "//Led_Init")
     replacetext(gate_sourcecode, "Led_Loop", "//Led_Loop")
     
-    # DEBUG !!! ENLEVER CES DEUX LIGNES
-    #replacetext(gate_sourcecode, "Blinker_Init",  "//Blinker_Init")
-    #replacetext(gate_sourcecode, "Blinker_Loop",  "//Blinker_Loop")
-
     # Remove "Gate", "Pipe" and "Blinker" from LED project
     replacetext(led_sourcecode, "Gate_Init", "//Gate_Init")
     replacetext(led_sourcecode, "Pipe_Init", "//Pipe_Init")
@@ -106,33 +125,21 @@ def product_config(network_conf, tested_version= "main"):
     replacetext(led_sourcecode, "Pipe_Loop", "//Pipe_Loop")
     replacetext(led_sourcecode, "Blinker_Loop",  "//Blinker_Loop")
 
-    # Add break boards Power ON in projects
-    default_pattern       = "\/\* USER CODE END 2 \*\/"
-    arduino_pattern       = "Luos_Init\(\);"
-    init_breakboards_gate = "HAL_Platform_Init();"
-    init_breakboards_led  = init_breakboards_gate    
-    if "Arduino" in gate_sourcecode:
-        replace_gate = arduino_pattern
-        replace_led  = default_pattern
-        init_breakboards_gate = init_breakboards_gate + "\n\t" + replace_gate.replace("\\","")
-    elif "Arduino" in led_sourcecode:
-        replace_gate = default_pattern
-        replace_led  = arduino_pattern
-        init_breakboards_led = init_breakboards_gate + "\n\t" + replace_led.replace("\\","")
-    else:
-        replace_gate = default_pattern
-        replace_led  = default_pattern
-    replacetext(gate_sourcecode, replace_gate, init_breakboards_gate)
-    replacetext(led_sourcecode,  replace_led,  init_breakboards_led)
+    # Add HAL platform initialisation in projects
+    default_pattern  = "Luos_Init\(\);"
+    init_breakboards = "Luos_Init();\n\tHAL_Platform_Init();"
+    #init_breakboards = "HAL_Platform_Init();\n\tLuos_Init();"
+    replacetext(gate_sourcecode, default_pattern, init_breakboards)
+    replacetext(led_sourcecode,  default_pattern, init_breakboards)
 
 
 def run_scenario(network_conf, tested_version= "main"):
     # Setup project
-    ci_log.phase_log(f'Setup project for conf {network_conf} with version {tested_version}')
-    product_config(network_conf, tested_version= "main")
-
-    # Upload all nodes
-    ci_log.phase_log('Setup MCUs')
+    ci_log.phase_log(f'Test Luos Engine \"{tested_version}\" version with config {network_conf}')
+    
+    if upload == "ON":
+        ci_log.phase_log('Config all projects')
+        product_config(network_conf, tested_version= "main")
     platform= setup_nodes(__file__, network_conf, upload)   
 
     # Verify Get started projects
@@ -159,7 +166,7 @@ def run_scenario(network_conf, tested_version= "main"):
     ci_log.step_log(f"Start detections", "Step")
     platform.engine.assert_step(platform.luos.verify_topology(nodes, expected_topology, expected_services), True)
     time.sleep(0.1)
-    ci_log.logger.info(f"Test OK with configuration {network_conf}")
+    ci_log.logger.info(f"End test with configuration {network_conf}")
 
     # Teardown current configuration
     platform.luos.device.close()
@@ -172,7 +179,7 @@ def run_scenario(network_conf, tested_version= "main"):
 if __name__ == '__main__':
     upload, version = get_arguments()
     platform_handler = None
-    
+
     try:
         for conf in network_conf:
             platform_handler = run_scenario(conf, version)

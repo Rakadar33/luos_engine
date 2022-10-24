@@ -132,13 +132,13 @@ special config)
 #define PTP_A_PORT     GPIOB
 #define PTP_B          GPIO_PIN_4
 #define PTP_B_PORT     GPIOB
-#define PTP_C          GPIO_PIN_2
+#define PTP_C          GPIO_PIN_7
 #define PTP_C_PORT     GPIOA
 #define PTP_D          GPIO_PIN_1
 #define PTP_D_PORT     GPIOA
 #define PTP_A_IRQ      EXTI9_5_IRQn
 #define PTP_B_IRQ      EXTI4_IRQn
-#define PTP_C_IRQ      EXTI2_IRQn
+#define PTP_C_IRQ      EXTI9_5_IRQn
 #define PTP_D_IRQ      EXTI1_IRQn
 #define PTP_NO_IRQ     EXTI15_10_IRQn
 
@@ -178,9 +178,9 @@ special config)
 #define PTPA_PIN  PTP_B
 #define PTPA_PORT PTP_B_PORT
 #define PTPA_IRQ  PTP_B_IRQ
-#define PTPB_PIN  PTP_D
-#define PTPB_PORT PTP_D_PORT
-#define PTPB_IRQ  PTP_D_IRQ
+#define PTPB_PIN  PTP_A
+#define PTPB_PORT PTP_A_PORT
+#define PTPB_IRQ  PTP_A_IRQ
 #endif
 
 // PTP C
@@ -263,6 +263,20 @@ special config)
 #define PTPB_IRQ  PTP_D_IRQ
 #endif
 
+#if((PTPA_PIN == PTP_C) || (PTPB_PIN == PTP_C))
+#define HAL_Platform_Init()                                        \
+    uint32_t tickstart      = 0;                                   \
+    /* Init Power Pin */                                           \
+    GPIO_InitTypeDef GPIO_InitStruct = {0};                        \
+    GPIO_InitStruct.Pin              = PTP_POWER_PIN;              \
+    GPIO_InitStruct.Mode             = GPIO_MODE_OUTPUT_PP;        \
+    GPIO_InitStruct.Pull             = GPIO_PULLDOWN;              \
+    GPIO_InitStruct.Speed            = GPIO_SPEED_FREQ_LOW;        \
+    HAL_GPIO_Init(PTP_POWER_PORT, &GPIO_InitStruct);               \
+    HAL_GPIO_WritePin(PTP_POWER_PORT, PTP_POWER_PIN, POWER_LEVEL); \
+    tickstart = LuosHAL_GetSystick();                              \
+    while ((LuosHAL_GetSystick() - tickstart) < INIT_TIME);
+#else
 #define HAL_Platform_Init()                                        \
     uint32_t tickstart      = 0;                                   \
     /* PTP C is initialized to 0 */                                \
@@ -282,5 +296,6 @@ special config)
     HAL_GPIO_WritePin(PTP_POWER_PORT, PTP_POWER_PIN, POWER_LEVEL); \
     tickstart = LuosHAL_GetSystick();                              \
     while ((LuosHAL_GetSystick() - tickstart) < INIT_TIME);
+#endif
 
 #endif /* _NODE_CONFIG_H_ */
