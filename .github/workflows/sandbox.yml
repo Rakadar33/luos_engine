@@ -4,15 +4,24 @@ on:
   push:
     tags:
       - "*"
-    tags-ignore:
-      - rc_*
   workflow_dispatch:
 
 jobs:
-  nothing_to_do_ls:
+  check_valid_tag:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: LS
+      - name: No upload if tag is a release candidate
+        if: contains(github.event.ref, '-rc.')
+        run: |
+          echo "Stop job: release candidate tag is ignored"
+          exit 1
+  nothing_to_do_ls:
+    needs: check_valid_tag
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: do xxx
         run: |
           ls
+          echo 'bla bla bla'
