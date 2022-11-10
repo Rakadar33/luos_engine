@@ -1,15 +1,28 @@
-name: Upload platformio library
-
+name: Upload zobi
 on:
   push:
+    branches:
+      - main
     tags:
       - "*"
   workflow_dispatch:
 
 jobs:
-  deploy_engine:
+  check_valid_tag:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: void step
-        run: echo '123'
+      - name: No upload if tag is a release candidate
+        if: contains(github.event.ref, 'rc')
+        run: |
+          echo "Stop job: do not upload a release candidate tag"
+          exit 1
+
+  deploy_azerty:
+    needs: check_valid_tag
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install dependencies
+        run: |
+          echo 'Uploaddddddddddddddddddd'
