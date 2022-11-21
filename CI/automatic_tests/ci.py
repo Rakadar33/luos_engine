@@ -57,7 +57,6 @@ def main():
     # print help
     if len(sys.argv) < 2:
         print(f"\nFor help, type:\n\tpython {sys.argv[0]} -h\n")
-        time.sleep(0.05)
         sys.exit()
 
     # run CLI subcommands

@@ -54,6 +54,8 @@
  ******************************************************************************/
 #define MAX_SERVICE_NUMBER 5
 #define MAX_MSG_NB         40
+#define MSG_BUFFER_SIZE    2048
+//#define NODETECTION
 
 /*******************************************************************************
  * LUOS HAL LIBRARY DEFINITION
@@ -139,11 +141,14 @@
 #define PTP_C_PORT     GPIOA
 #define PTP_D          GPIO_PIN_3
 #define PTP_D_PORT     GPIOA
+#define PTP_DUMMY      GPIO_PIN_9
+#define PTP_DUMMY_PORT GPIOB
 #define PTP_A_IRQ      EXTI9_5_IRQn
 #define PTP_B_IRQ      EXTI4_IRQn
 #define PTP_C_IRQ      EXTI9_5_IRQn
 #define PTP_D_IRQ      EXTI3_IRQn
 #define PTP_NO_IRQ     EXTI1_IRQn
+#define PTP_DUMMY_IRQ  EXTI9_5_IRQn
 
 // PTP_CONFIG_UNKNOWN below is modified by Luos CI python tool :
 #define PTP_CONFIG_UNKNOWN // DO NOT EDIT THIS LINE !!!!!!!!!!!!!!!!!!!!!!!
@@ -157,8 +162,17 @@
 #define PTPA_PORT PTP_A_PORT
 #define PTPB_PIN  PTP_B
 #define PTPB_PORT PTP_B_PORT
-#define PTPA_IRQ  PTP_NO_IRQ
-#define PTPB_IRQ  PTP_NO_IRQ
+#define PTP_UNUSED_1      PTP_DUMMY
+#define PTP_UNUSED_PORT_1 PTP_DUMMY_PORT
+#define PTP_UNUSED_2      PTP_DUMMY
+#define PTP_UNUSED_PORT_2 PTP_DUMMY_PORT
+#define PTP_UNUSED_3      PTP_DUMMY
+#define PTP_UNUSED_PORT_3 PTP_DUMMY_PORT
+#define PTPA_IRQ          PTP_NO_IRQ
+#define PTPB_IRQ          PTP_NO_IRQ
+#define PTP_UNUSED_IRQ_1  PTP_NO_IRQ
+#define PTP_UNUSED_IRQ_2  PTP_NO_IRQ
+#define PTP_UNUSED_IRQ_3  PTP_NO_IRQ
 #define PTP_DISABLED
 #define POWER_LEVEL GPIO_PIN_RESET
 #else
@@ -171,9 +185,18 @@
 #define PTPA_PIN  PTP_A
 #define PTPA_PORT PTP_A_PORT
 #define PTPA_IRQ  PTP_A_IRQ
-#define PTPB_PIN  PTP_B
-#define PTPB_PORT PTP_B_PORT
-#define PTPB_IRQ  PTP_B_IRQ
+#define PTPB_PIN  PTP_DUMMY
+#define PTPB_PORT PTP_DUMMY_PORT
+#define PTPB_IRQ  PTP_DUMMY_IRQ
+#define PTP_UNUSED_1      PTP_B
+#define PTP_UNUSED_PORT_1 PTP_B_PORT
+#define PTP_UNUSED_IRQ_1  PTP_B_IRQ
+#define PTP_UNUSED_2      PTP_C
+#define PTP_UNUSED_PORT_2 PTP_C_PORT
+#define PTP_UNUSED_IRQ_2  PTP_C_IRQ
+#define PTP_UNUSED_3      PTP_D
+#define PTP_UNUSED_PORT_3 PTP_D_PORT
+#define PTP_UNUSED_IRQ_3  PTP_D_IRQ
 #endif
 
 // PTP B
@@ -181,9 +204,18 @@
 #define PTPA_PIN  PTP_B
 #define PTPA_PORT PTP_B_PORT
 #define PTPA_IRQ  PTP_B_IRQ
-#define PTPB_PIN  PTP_A
-#define PTPB_PORT PTP_A_PORT
-#define PTPB_IRQ  PTP_A_IRQ
+#define PTPB_PIN  PTP_DUMMY
+#define PTPB_PORT PTP_DUMMY_PORT
+#define PTPB_IRQ  PTP_DUMMY_IRQ
+#define PTP_UNUSED_1      PTP_A
+#define PTP_UNUSED_PORT_1 PTP_A_PORT
+#define PTP_UNUSED_IRQ_1  PTP_A_IRQ
+#define PTP_UNUSED_2      PTP_C
+#define PTP_UNUSED_PORT_2 PTP_C_PORT
+#define PTP_UNUSED_IRQ_2  PTP_C_IRQ
+#define PTP_UNUSED_3      PTP_D
+#define PTP_UNUSED_PORT_3 PTP_D_PORT
+#define PTP_UNUSED_IRQ_3  PTP_D_IRQ
 #endif
 
 // PTP C
@@ -191,9 +223,18 @@
 #define PTPA_PIN  PTP_C
 #define PTPA_PORT PTP_C_PORT
 #define PTPA_IRQ  PTP_C_IRQ
-#define PTPB_PIN  PTP_D
-#define PTPB_PORT PTP_D_PORT
-#define PTPB_IRQ  PTP_D_IRQ
+#define PTPB_PIN  PTP_DUMMY
+#define PTPB_PORT PTP_DUMMY_PORT
+#define PTPB_IRQ  PTP_DUMMY_IRQ
+#define PTP_UNUSED_1      PTP_A
+#define PTP_UNUSED_PORT_1 PTP_A_PORT
+#define PTP_UNUSED_IRQ_1  PTP_A_IRQ
+#define PTP_UNUSED_2      PTP_B
+#define PTP_UNUSED_PORT_2 PTP_B_PORT
+#define PTP_UNUSED_IRQ_2  PTP_B_IRQ
+#define PTP_UNUSED_3      PTP_D
+#define PTP_UNUSED_PORT_3 PTP_D_PORT
+#define PTP_UNUSED_IRQ_3  PTP_D_IRQ
 #endif
 
 // PTP D
@@ -201,9 +242,18 @@
 #define PTPA_PIN  PTP_D
 #define PTPA_PORT PTP_D_PORT
 #define PTPA_IRQ  PTP_D_IRQ
-#define PTPB_PIN  PTP_B
-#define PTPB_PORT PTP_B_PORT
-#define PTPB_IRQ  PTP_B_IRQ
+#define PTPB_PIN  PTP_DUMMY
+#define PTPB_PORT PTP_DUMMY_PORT
+#define PTPB_IRQ  PTP_DUMMY_IRQ
+#define PTP_UNUSED_1      PTP_A
+#define PTP_UNUSED_PORT_1 PTP_A_PORT
+#define PTP_UNUSED_IRQ_1  PTP_A_IRQ
+#define PTP_UNUSED_2      PTP_B
+#define PTP_UNUSED_PORT_2 PTP_B_PORT
+#define PTP_UNUSED_IRQ_2  PTP_B_IRQ
+#define PTP_UNUSED_3      PTP_C
+#define PTP_UNUSED_PORT_3 PTP_C_PORT
+#define PTP_UNUSED_IRQ_3  PTP_C_IRQ
 #endif
 
 // PTP A and B
@@ -214,6 +264,12 @@
 #define PTPB_PIN  PTP_B
 #define PTPB_PORT PTP_B_PORT
 #define PTPB_IRQ  PTP_B_IRQ
+#define PTP_UNUSED_1      PTP_C
+#define PTP_UNUSED_PORT_1 PTP_C_PORT
+#define PTP_UNUSED_IRQ_1  PTP_C_IRQ
+#define PTP_UNUSED_2      PTP_D
+#define PTP_UNUSED_PORT_2 PTP_D_PORT
+#define PTP_UNUSED_IRQ_2  PTP_D_IRQ
 #endif
 
 // PTP C and D
@@ -224,6 +280,12 @@
 #define PTPB_PIN  PTP_D
 #define PTPB_PORT PTP_D_PORT
 #define PTPB_IRQ  PTP_D_IRQ
+#define PTP_UNUSED_1      PTP_A
+#define PTP_UNUSED_PORT_1 PTP_A_PORT
+#define PTP_UNUSED_IRQ_1  PTP_A_IRQ
+#define PTP_UNUSED_2      PTP_B
+#define PTP_UNUSED_PORT_2 PTP_B_PORT
+#define PTP_UNUSED_IRQ_2  PTP_B_IRQ
 #endif
 
 // PTP A and C
@@ -234,6 +296,12 @@
 #define PTPB_PIN  PTP_C
 #define PTPB_PORT PTP_C_PORT
 #define PTPB_IRQ  PTP_C_IRQ
+#define PTP_UNUSED_1      PTP_B
+#define PTP_UNUSED_PORT_1 PTP_B_PORT
+#define PTP_UNUSED_IRQ_1  PTP_B_IRQ
+#define PTP_UNUSED_2      PTP_D
+#define PTP_UNUSED_PORT_2 PTP_D_PORT
+#define PTP_UNUSED_IRQ_2  PTP_D_IRQ
 #endif
 
 // PTP A and D
@@ -244,6 +312,12 @@
 #define PTPB_PIN  PTP_D
 #define PTPB_PORT PTP_D_PORT
 #define PTPB_IRQ  PTP_D_IRQ
+#define PTP_UNUSED_1      PTP_B
+#define PTP_UNUSED_PORT_1 PTP_B_PORT
+#define PTP_UNUSED_IRQ_1  PTP_B_IRQ
+#define PTP_UNUSED_2      PTP_C
+#define PTP_UNUSED_PORT_2 PTP_C_PORT
+#define PTP_UNUSED_IRQ_2  PTP_C_IRQ
 #endif
 
 // PTP B and C
@@ -254,6 +328,12 @@
 #define PTPB_PIN  PTP_C
 #define PTPB_PORT PTP_C_PORT
 #define PTPB_IRQ  PTP_C_IRQ
+#define PTP_UNUSED_1      PTP_A
+#define PTP_UNUSED_PORT_1 PTP_A_PORT
+#define PTP_UNUSED_IRQ_1  PTP_A_IRQ
+#define PTP_UNUSED_2      PTP_D
+#define PTP_UNUSED_PORT_2 PTP_D_PORT
+#define PTP_UNUSED_IRQ_2  PTP_D_IRQ
 #endif
 
 // PTP B and D
@@ -264,15 +344,56 @@
 #define PTPB_PIN  PTP_D
 #define PTPB_PORT PTP_D_PORT
 #define PTPB_IRQ  PTP_D_IRQ
+#define PTP_UNUSED_1      PTP_A
+#define PTP_UNUSED_PORT_1 PTP_A_PORT
+#define PTP_UNUSED_IRQ_1  PTP_A_IRQ
+#define PTP_UNUSED_2      PTP_C
+#define PTP_UNUSED_PORT_2 PTP_C_PORT
+#define PTP_UNUSED_IRQ_2  PTP_C_IRQ
 #endif
 
-#define HAL_Platform_Init()                                 \
-    GPIO_InitTypeDef GPIO_InitStruct = {0};                 \
-    GPIO_InitStruct.Pin              = PTP_POWER_PIN;       \
-    GPIO_InitStruct.Mode             = GPIO_MODE_OUTPUT_PP; \
-    GPIO_InitStruct.Pull             = GPIO_PULLDOWN;       \
-    GPIO_InitStruct.Speed            = GPIO_SPEED_FREQ_LOW; \
-    HAL_GPIO_Init(PTP_POWER_PORT, &GPIO_InitStruct);        \
-    HAL_GPIO_WritePin(PTP_POWER_PORT, PTP_POWER_PIN, POWER_LEVEL);
+
+#if defined(PTP_CONFIG_A) || defined(PTP_CONFIG_B) || defined(PTP_CONFIG_C) || defined(PTP_CONFIG_D) || defined(PTP_CONFIG_UNKNOWN)
+    #define Init_Unused_Pin()                                           \
+    GPIO_InitTypeDef GPIO_InitStruct_UNUSED_3 = {0};                    \
+    GPIO_InitStruct_UNUSED_3.Pin              = PTP_UNUSED_3;           \
+    GPIO_InitStruct_UNUSED_3.Mode             = GPIO_MODE_INPUT;    \
+    GPIO_InitStruct_UNUSED_3.Pull             = GPIO_PULLDOWN;          \
+    GPIO_InitStruct_UNUSED_3.Speed            = GPIO_SPEED_FREQ_LOW;    \
+    HAL_GPIO_Init(PTP_UNUSED_PORT_3, &GPIO_InitStruct_UNUSED_3);        \
+    HAL_GPIO_WritePin(PTP_UNUSED_PORT_3, PTP_UNUSED_3, GPIO_PIN_RESET);
+#else
+    #define Init_Unused_Pin()
+#endif
+
+
+#define HAL_Platform_Init()                                             \
+    /* Unused PTP Pins are set to Low level */                          \
+    uint32_t tickstart      = 0;                                        \
+    GPIO_InitTypeDef GPIO_InitStruct_UNUSED_1 = {0};                    \
+    GPIO_InitTypeDef GPIO_InitStruct_UNUSED_2 = {0};                    \
+    GPIO_InitStruct_UNUSED_1.Pin              = PTP_UNUSED_1;           \
+    GPIO_InitStruct_UNUSED_2.Pin              = PTP_UNUSED_2;           \
+    GPIO_InitStruct_UNUSED_1.Mode             = GPIO_MODE_INPUT;    \
+    GPIO_InitStruct_UNUSED_2.Mode             = GPIO_MODE_INPUT;    \
+    GPIO_InitStruct_UNUSED_1.Pull             = GPIO_PULLDOWN;          \
+    GPIO_InitStruct_UNUSED_2.Pull             = GPIO_PULLDOWN;          \
+    GPIO_InitStruct_UNUSED_1.Speed            = GPIO_SPEED_FREQ_LOW;    \
+    GPIO_InitStruct_UNUSED_2.Speed            = GPIO_SPEED_FREQ_LOW;    \
+    HAL_GPIO_Init(PTP_UNUSED_PORT_1, &GPIO_InitStruct_UNUSED_1);        \
+    HAL_GPIO_Init(PTP_UNUSED_PORT_2, &GPIO_InitStruct_UNUSED_2);        \
+    HAL_GPIO_WritePin(PTP_UNUSED_PORT_1, PTP_UNUSED_1, GPIO_PIN_RESET); \
+    HAL_GPIO_WritePin(PTP_UNUSED_PORT_2, PTP_UNUSED_2, GPIO_PIN_RESET); \
+    Init_Unused_Pin();                                                  \
+    GPIO_InitTypeDef GPIO_InitStruct = {0};                             \
+    GPIO_InitStruct.Pin              = PTP_POWER_PIN;                   \
+    GPIO_InitStruct.Mode             = GPIO_MODE_OUTPUT_PP;             \
+    GPIO_InitStruct.Pull             = GPIO_PULLDOWN;                   \
+    GPIO_InitStruct.Speed            = GPIO_SPEED_FREQ_LOW;             \
+    HAL_GPIO_Init(PTP_POWER_PORT, &GPIO_InitStruct);                    \
+    HAL_GPIO_WritePin(PTP_POWER_PORT, PTP_POWER_PIN, POWER_LEVEL);      \
+    tickstart = Luos_GetSystick();                                   \
+    while ((Luos_GetSystick() - tickstart) < INIT_TIME);
+
 
 #endif /* _NODE_CONFIG_H_ */

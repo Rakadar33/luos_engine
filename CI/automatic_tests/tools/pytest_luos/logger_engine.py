@@ -87,7 +87,7 @@ class loggerEngine(loggerSingleton):
     def step_log(self, message, title=""):
         tag = chr(664)
         message = str(message)
-        if ("\n" in message) or (len(message) > 32):
+        if ("\n" in message) or (len(message) > 48):
             if title != "":
                 self.logger.info(colored(f"\t{tag} {title}:\n{message}","blue"))
             else:

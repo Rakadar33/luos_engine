@@ -46,7 +46,7 @@ class HubControl:
             #print(f"Power OFF MCU on HUB port {port}")
             location, port = self._get_location(port)            
             stop_command = f"echo 0 > sudo tee /sys/bus/usb/devices/{location}.{port}/authorized;"        
-            stop_command += f"sudo uhubctl -a off -r 100 -l {location} -p {port};"
+            stop_command += f"sudo uhubctl -a off -r 300 -l {location} -p {port};"
             run_command(stop_command, timeout=40)
 
     def _enable_capable_robot(self, port):

@@ -54,6 +54,7 @@
  ******************************************************************************/
 #define MAX_SERVICE_NUMBER 5
 #define MAX_MSG_NB         40
+#define MSG_BUFFER_SIZE    2048
 //#define NODETECTION
 
 /*******************************************************************************
@@ -103,6 +104,7 @@
 #define PTP_B         6
 #define PTP_C         1
 #define PTP_D         4
+#define PTP_DUMMY     2 //TODO : VERIFY
 
 // PTP_CONFIG_UNKNOWN below is modified by Luos CI python tool :
 #define PTP_CONFIG_UNKNOWN // DO NOT EDIT THIS LINE !!!!!!!!!!!!!!!!!!!!!!!
@@ -112,8 +114,8 @@
 // -------------------------------------------------------------------------------------
 #ifdef PTP_CONFIG_UNKNOWN
 // Node is not connected to the network
-#define ARDUINO_PTPA_PIN 2 //TODO : VERIFY
-#define ARDUINO_PTPB_PIN 2 //TODO : VERIFY
+#define ARDUINO_PTPA_DUMMY
+#define ARDUINO_PTPB_PIN DUMMY
 #define PTP_DISABLED
 #define POWER_LEVEL LOW
 #else
@@ -208,6 +210,8 @@
     digitalWrite(PTP_UNUSED_1, LOW);                        \
     pinMode(PTP_UNUSED_2, OUTPUT);                          \
     digitalWrite(PTP_UNUSED_2, LOW);                        \
+    pinMode(PTP_DUMMY, OUTPUT);                             \
+    digitalWrite(PTP_DUMMY, LOW);                           \
     /* Init Power Pin */                                    \
     pinMode(PTP_POWER_PIN, OUTPUT);                         \
     digitalWrite(PTP_POWER_PIN, HIGH);                      \

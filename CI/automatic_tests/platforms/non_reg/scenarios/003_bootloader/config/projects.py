@@ -19,7 +19,7 @@ def product_config_bootloader(gate_node, tested_version = "main"):
     ci_log.step_log(f"Clone Luos engine", "Step")
     if os.path.isdir('luos_engine'):
         try:
-            ci_log.logger.warning(f"Remove Luos Engine directory")
+            #ci_log.logger.warning(f"Remove Luos Engine directory")
             for root, dirs, files in os.walk("luos_engine", topdown=False):
                 for name in files:
                     os.remove(os.path.join(root, name))
@@ -91,7 +91,7 @@ def product_config_bootloader(gate_node, tested_version = "main"):
     copyfile(source_IT_N5, dest_IT_N5)
 
     def set_upload_command(config):
-        ci_log.step_log(f"PlatformIO projects", "Step")
+        ci_log.step_log(f"Setup PlatformIO bootloader projects", "Step")
         project_config_file= eval(f"config_{config}[\"path\"]") +  "/platformio.ini"
         replacetext(project_config_file, "upload_protocol", ";upload_protocol") 
         replacetext(project_config_file, "upload_flags", ";upload_flags") 
@@ -173,7 +173,7 @@ def product_config_apps(gate_node, tested_version= "main"):
     ci_log.step_log(f"Clone Luos engine", "Step")
     if os.path.isdir('luos_engine'):
         try:
-            ci_log.logger.warning(f"Remove Luos Engine directory")
+            #ci_log.logger.warning(f"Remove Luos Engine directory")
             for root, dirs, files in os.walk("luos_engine", topdown=False):
                 for name in files:
                     os.remove(os.path.join(root, name))
@@ -243,7 +243,6 @@ def product_config_apps(gate_node, tested_version= "main"):
     copyfile(source_IT_N4, dest_IT_N4)
     copyfile(source_IT_N5, dest_IT_N5)
 
-    ci_log.step_log(f"PlatformIO projects", "Step")
     # Update platformio.ini Upload parameters)
     def set_upload_command(config):
         project_config_file= eval(f"config_{config}[\"path\"]") + "/platformio.ini"
@@ -326,29 +325,29 @@ def getFirmwarePath(node):
         path['firmware_3'] = config_N4["path_app"] + "/.pio/build/" + config_N4["target"] + "/firmware.bin"
         path['firmware_4'] = config_N5["path_app"] + "/.pio/build/" + config_N5["target"] + "/firmware.bin"
         path['node_2'] = 2 #TODO 2/3/4
-        path['node_3'] = 0 #TODO 2/3/4
-        path['node_4'] = 0 #TODO 2/3/4
+        path['node_3'] = 3 #TODO 2/3/4
+        path['node_4'] = 4 #TODO 2/3/4
     elif node == '3':
         path['firmware_2'] = config_N2["path_app"] + "/.pio/build/" + config_N2["target"] + "/firmware.bin"
         path['firmware_3'] = config_N4["path_app"] + "/.pio/build/" + config_N4["target"] + "/firmware.bin"
         path['firmware_4'] = config_N5["path_app"] + "/.pio/build/" + config_N5["target"] + "/firmware.bin"
-        path['node_2'] = 0 #TODO 2/3/4
-        path['node_3'] = 0 #TODO 2/3/4
-        path['node_4'] = 0 #TODO 2/3/4
+        path['node_2'] = 2 #TODO 2/3/4
+        path['node_3'] = 3 #TODO 2/3/4
+        path['node_4'] = 4 #TODO 2/3/4
     elif node == '4':
         path['firmware_2'] = config_N2["path_app"] + "/.pio/build/" + config_N2["target"] + "/firmware.bin"
         path['firmware_3'] = config_N3["path_app"] + "/.pio/build/" + config_N3["target"] + "/firmware.bin"
         path['firmware_4'] = config_N5["path_app"] + "/.pio/build/" + config_N5["target"] + "/firmware.bin"
-        path['node_2'] = 0 #TODO 2/3/4
-        path['node_3'] = 0 #TODO 2/3/4
-        path['node_4'] = 0 #TODO 2/3/4
+        path['node_2'] = 2 #TODO 2/3/4
+        path['node_3'] = 3 #TODO 2/3/4
+        path['node_4'] = 4 #TODO 2/3/4
     elif node == '5':
         path['firmware_2'] = config_N2["path_app"] + "/.pio/build/" + config_N2["target"] + "/firmware.bin"
         path['firmware_3'] = config_N3["path_app"] + "/.pio/build/" + config_N3["target"] + "/firmware.bin"
         path['firmware_4'] = config_N4["path_app"] + "/.pio/build/" + config_N4["target"] + "/firmware.bin"
-        path['node_2'] = 0 #TODO 2/3/4
-        path['node_3'] = 0 #TODO 2/3/4
-        path['node_4'] = 0 #TODO 2/3/4
+        path['node_2'] = 2 #TODO 2/3/4
+        path['node_3'] = 3 #TODO 2/3/4
+        path['node_4'] = 4 #TODO 2/3/4
     else:
         path['firmware_2'] = 'Unknown'
         path['firmware_3'] = 'Unknown'

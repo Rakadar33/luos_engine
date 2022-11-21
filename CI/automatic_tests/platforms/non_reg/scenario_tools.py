@@ -79,8 +79,6 @@ def setup_nodes(scenario, config, upload="OFF"):
             mcu = eval(f"config_{mcu}")
             assert(platform.mcu.compile_Node(mcu))
 
-    # Power OFF nodes
-    #ci_log.step_log(f"[Power OFF] Nodes", "Step")
     for mcu in nodes:
         number= int(mcu[1])
         if number < 5:
@@ -90,17 +88,19 @@ def setup_nodes(scenario, config, upload="OFF"):
             platform.basic_hub.disable(number)
     time.sleep(2)
 
-    gate_node = nodes.pop(1) 
+    gate_node = nodes.pop(0) 
     # Power ON all nodes (except Gate)
     for mcu in nodes:
         number = int(mcu[1])
+        ci_log.step_log(f"[Restart] Node {number}", "Step")
         if number < 5:
             platform.mcu.powerUp_Node(number)
         elif number == 5:
             platform.basic_hub.enable(number)
         time.sleep(1)
     # Power ON the Gate
-    number = int(gate_node[1])
+    number = int(gate_node[-1])
+    ci_log.step_log(f"[Restart] Gate (Node {number})", "Step")
     if number < 5:
         platform.mcu.powerUp_Node(number)
     elif number == 5:
@@ -114,7 +114,6 @@ def setup_nodes(scenario, config, upload="OFF"):
         raise Exception("No serial port")
 
     ci_log.step_log(f"Search a Gate", "Step")
-    time.sleep(1)
     gate_max_try = 5
     while gate_max_try:  
         gate_port = platform.luos.search_gate()

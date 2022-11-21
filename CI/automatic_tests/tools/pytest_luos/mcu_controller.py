@@ -69,18 +69,18 @@ class McuControl:
         pf = PlatformIOApi(config, verbose=False)
         ci_log.logger.info("Stop Node")
         pf.halt()
-    
+
     def powerUp_Node(self, nodeNumber):
         #run_command(f"/usr/bin/python3 {os.path.dirname(os.getcwd())}/scripts/capable-robot-driver.py --port {nodeNumber} --power ON")
-        run_command(f"export PYTHONPATH=/home/luos_adm/Luos_tests/Docker/Quality_assurance/CI/automatic_tests:$PYTHONPATH;\
+        run_command(f"export PYTHONPATH={os.path.dirname(os.getcwd())}/../../..:$PYTHONPATH;\
                       /usr/bin/python3 \
-                      /home/luos_adm/Luos_tests/Docker/Quality_assurance/CI/automatic_tests/tools/scripts/capable-robot-driver.py --port {nodeNumber} --power ON", timeout=5)
+                      {os.path.dirname(os.getcwd())}/../../../tools/scripts/capable-robot-driver.py --port {nodeNumber} --power ON", timeout=5)
     
     def powerDown_Node(self, nodeNumber):    
         #run_command(f"/usr/bin/python3 {os.path.dirname(os.getcwd())}/scripts/capable-robot-driver.py --port {nodeNumber} --power OFF")
-        run_command(f"export PYTHONPATH=/home/luos_adm/Luos_tests/Docker/Quality_assurance/CI/automatic_tests:$PYTHONPATH;\
+        run_command(f"export PYTHONPATH={os.path.dirname(os.getcwd())}/../../..:$PYTHONPATH;\
                       /usr/bin/python3 \
-                      /home/luos_adm/Luos_tests/Docker/Quality_assurance/CI/automatic_tests/tools/scripts/capable-robot-driver.py --port {nodeNumber} --power OFF", timeout=5)
+                      {os.path.dirname(os.getcwd())}/../../../tools/scripts/capable-robot-driver.py --port {nodeNumber} --power OFF", timeout=5)
 
     def compile_Node(self, config):
         pf = PlatformIOApi(config, verbose=False)
@@ -243,5 +243,5 @@ def power_down_platform():
     pf.powerDown_Node(2)
     pf.powerDown_Node(3)
     pf.powerDown_Node(4)
-    run_command(f'sudo uhubctl -a off -r 150 -p 3 -l 4-1.4', verbose=False, timeout=30)
+    run_command(f'sudo uhubctl -a off -r 300 -p 3 -l 4-1.4', verbose=False, timeout=30)
 

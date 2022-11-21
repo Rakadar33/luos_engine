@@ -29,27 +29,6 @@ def product_config(network_conf, tested_version= "main"):
     cmd = "git clone https://github.com/Luos-io/Get_started.git"
     assert(run_command(cmd, verbose=False, timeout=20) != "ERROR")
 
-    # DEBUG HACK !!!!!!!!!!!!!!!!!!!!!!!!!!
-    # DEBUG HACK !!!!!!!!!!!!!!!!!!!!!!!!!!
-    # DEBUG HACK !!!!!!!!!!!!!!!!!!!!!!!!!!
-    # Local libraries
-    '''libs = glob.glob("./luos_engine/**/library.json", recursive = True)
-    for lib in libs:
-        replacetext(lib, "luos/luos_engine", "luos_engine")
-
-    filter_scripts = glob.glob("./**/source_filter_script.py", recursive = True)
-    for script in filter_scripts:
-        replacetext(script, "\$PYTHONEXE -m pip install", "echo")
-
-    cmd = "pip3 uninstall pyluos -y"
-    run_command(cmd, verbose=True, timeout=20)
-    cmd = "pip3 install -e /var/www/PF/Workspace/Pyluos"
-    assert(run_command(cmd, verbose=True, timeout=20) != "ERROR")'''
-    # DEBUG HACK !!!!!!!!!!!!!!!!!!!!!!!!!!
-    # DEBUG HACK !!!!!!!!!!!!!!!!!!!!!!!!!!
-    # DEBUG HACK !!!!!!!!!!!!!!!!!!!!!!!!!!
-
-
     ci_log.step_log(f"Interruptions configuration", "Step")
     SOURCES = "/src/"
     source_IT_N2 = "../../network_config/" + config_N2["interruption"]
@@ -72,9 +51,6 @@ def product_config(network_conf, tested_version= "main"):
     gate_sourcecode = eval(f"config_{gate_node}[\"path\"]") + SOURCES + eval(f"config_{gate_node}[\"source\"]")
 
     # Update platformio.ini Build Flags
-    print("11111111111111111111111111111111111")
-    print(eval(f"config_{gate_node}[\"path\"]") + "/platformio.ini")
-    print("11111111111111111111111111111111111")    
     replacetext(eval(f"config_{gate_node}[\"path\"]") + "/platformio.ini",\
                       "node_config.h", f"{gate_node}_node_config.h \n    -I ../../config/")
 
@@ -96,7 +72,7 @@ def product_config(network_conf, tested_version= "main"):
                                   "\[env\]", f"[env]\n{flashing_port}\n")
             else: #STM32
                 f.write('\n')
-                f.write('urpload_protocol = custom\n')
+                f.write('upload_protocol = custom\n')
                 f.write('upload_command = openocd -s $PROJECT_PACKAGES_DIR/tool-openocd/scripts -f interface/stlink.cfg -c "transport select hla_swd" $UPLOAD_FLAGS -c "program {$SOURCE} 0x08000000 verify reset; shutdown;"\n')
                 f.write('upload_flags =\n')
                 f.write('\t-c\n')
