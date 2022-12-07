@@ -1,0 +1,22 @@
+mainmenu "HAL STM32"
+
+mainmenu "HAL STM32"
+
+config WITH_STM32
+  default y
+  bool
+  select USE_STM32_HAL_GPIO
+  select USE_STM32_LL_GPIO
+  select USE_STM32_HAL_CORTEX
+  select USE_STM32_HAL_FLASH
+  select USE_STM32_HAL_FLASH_EX
+  select USE_STM32_HAL_CRC
+  select USE_STM32_HAL_CRC_EX
+  select USE_STM32_LL_USART
+  select USE_STM32_LL_TIM
+  select USE_STM32_LL_RCC
+  select USE_STM32_LL_LPUART
+  select USE_STM32_HAL_EXTI
+  select USE_STM32_LL_EXTI
+  
+source "Kconfig.zephyr"

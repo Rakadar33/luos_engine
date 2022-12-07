@@ -1,0 +1,98 @@
+#include <zephyr.h>
+#include <device.h>
+#include <devicetree.h>
+#include <drivers/gpio.h>
+#include <string.h>
+#include "main.h"
+#include "gpio_l4xx.h"
+
+// 1000 msec = 1 sec
+#define SLEEP_TIME_MS 1000
+
+// The devicetree node identifier for the "led0" alias.
+#define LED0_NODE DT_ALIAS(led0)
+
+// size of stack area used by each thread
+#define INIT_STACKSIZE 128
+#define TASK_STACKSIZE 1024
+
+// scheduling priority used by each thread
+#define INIT_PRIORITY 10
+#define TASK_PRIORITY 7
+
+#if DT_NODE_HAS_STATUS(LED0_NODE, okay)
+    #define LED0  DT_GPIO_LABEL(LED0_NODE, gpios)
+    #define PIN   DT_GPIO_PIN(LED0_NODE, gpios)
+    #define FLAGS DT_GPIO_FLAGS(LED0_NODE, gpios)
+#else
+    /* A build error here means your board isn't set up to blink an LED. */
+    #error "Unsupported board: led0 devicetree alias is not defined"
+    #define LED0  ""
+    #define PIN   0
+    #define FLAGS 0
+#endif
+
+static bool thread_run    = false;
+static struct device *dev = NULL;
+static bool led_state     = true;
+static bool led_toggle    = true;
+
+void init(void)
+{
+    int ret;
+
+    //Luos_Init();
+    //Button_Init();
+
+    dev = device_get_binding(LED0);
+
+    if (dev == NULL)
+    {
+        return;
+    }
+
+    ret = gpio_pin_configure(dev, PIN, GPIO_OUTPUT_ACTIVE | FLAGS);
+    if (ret < 0)
+    {
+        return;
+    }
+    thread_run = true;
+}
+
+void change_led_state(void)
+{
+    k_msleep(1000);
+    if (!thread_run)
+    {
+        return;
+    }
+
+    while (1)
+    {
+        if (led_toggle)
+        {
+            gpio_pin_set(dev, PIN, (int)led_state);
+            led_state = !led_state;
+        }
+        k_msleep(1000);
+    }
+}
+
+void lock_led(void)
+{
+    k_msleep(1000);
+    if (!thread_run)
+    {
+        return;
+    }
+
+    while (1)
+    {
+        led_toggle = !led_toggle;
+        k_msleep(6000);
+    }
+}
+
+K_THREAD_DEFINE(init_id, INIT_STACKSIZE, init, NULL, NULL, NULL, INIT_PRIORITY, 0, 0);
+K_THREAD_DEFINE(change_led_state_id, TASK_STACKSIZE, change_led_state, NULL, NULL, NULL, TASK_PRIORITY, 0, 0);
+K_THREAD_DEFINE(lock_led_id, TASK_STACKSIZE, lock_led, NULL, NULL, NULL, TASK_PRIORITY, 0, 0);

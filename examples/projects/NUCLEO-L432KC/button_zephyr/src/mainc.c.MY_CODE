@@ -1,0 +1,174 @@
+/* Includes ------------------------------------------------------------------*/
+#include <zephyr.h>
+#include <device.h>
+#include <devicetree.h>
+#include <drivers/gpio.h>
+#include "main.h"
+#include "gpio_l4xx.h"
+
+/* 1000 msec = 1 sec */
+#define SLEEP_TIME_MS 1000
+
+/* The devicetree node identifier for the "led0" alias. */
+#define LED0_NODE DT_ALIAS(led0)
+
+#if DT_NODE_HAS_STATUS(LED0_NODE, okay)
+    #define LED0  DT_GPIO_LABEL(LED0_NODE, gpios)
+    #define PIN   DT_GPIO_PIN(LED0_NODE, gpios)
+    #define FLAGS DT_GPIO_FLAGS(LED0_NODE, gpios)
+#else
+    /* A build error here means your board isn't set up to blink an LED. */
+    #error "Unsupported board: led0 devicetree alias is not defined"
+    #define LED0  ""
+    #define PIN   0
+    #define FLAGS 0
+#endif
+
+// ----------------------------------------------------
+// PROJ 1 OK : Led 1 sec
+// ----------------------------------------------------
+/*
+void main(void)
+{
+    const struct device *dev;
+    bool led_is_on = true;
+    int ret;
+
+    dev = device_get_binding(LED0);
+    if (dev == NULL)
+    {
+        return;
+    }
+
+    ret = gpio_pin_configure(dev, PIN, GPIO_OUTPUT_ACTIVE | FLAGS);
+    if (ret < 0)
+    {
+        return;
+    }
+
+    while (1)
+    {
+        gpio_pin_set(dev, PIN, (int)led_is_on);
+        led_is_on = !led_is_on;
+        k_msleep(SLEEP_TIME_MS);
+        //k_sleep(K_MSEC(10));
+    }
+}
+*/
+
+// ----------------------------------------------------
+// PROJ 2 : Thread
+// ----------------------------------------------------
+// Define thread enty point functions
+void Thread_1(struct device *dev, int *count_thread_1);
+void Thread_2(struct device *dev, int *count_thread_2);
+
+#define THREAD_1_PRIORITY 3
+#define THREAD_2_PRIORITY 2
+#define THREAD_1_SIZE     128
+#define THREAD_2_SIZE     128
+
+K_THREAD_STACK_DEFINE(stack_thread_1, THREAD_1_SIZE);
+K_THREAD_STACK_DEFINE(stack_thread_2, THREAD_2_SIZE);
+
+struct k_thread thread_1_data;
+struct k_thread thread_2_data;
+
+bool stop_thread_1 = false;
+bool stop_thread_2 = false;
+
+void Thread_1(struct device *dev, int *count_thread_1)
+{
+    while (1)
+    {
+        gpio_pin_set(dev, PIN, false);
+        k_msleep(500);
+        gpio_pin_set(dev, PIN, true);
+        k_msleep(500);
+
+        if (stop_thread_1)
+        {
+            return;
+        }
+    }
+    k_yield();
+}
+
+void Thread_2(struct device *dev, int *count_thread_2)
+{
+    while (1)
+    {
+        gpio_pin_set(dev, PIN, true); // false !!!!!!!!!!!!!!!
+        k_msleep(2500);
+
+        if (stop_thread_2)
+        {
+            return;
+        }
+    }
+    k_yield();
+}
+void main(void)
+{
+    const struct device *dev;
+    //bool led_is_on = true;
+    int ret;
+    static int count_thread_1 = 0;
+    static int count_thread_2 = 0;
+    k_tid_t tid_thread_1, tid_thread_2;
+
+    //Luos_Init();
+    //Button_Init();
+
+    dev = device_get_binding(LED0);
+
+    if (dev == NULL)
+    {
+        return;
+    }
+
+    ret = gpio_pin_configure(dev, PIN, GPIO_OUTPUT_ACTIVE | FLAGS);
+    if (ret < 0)
+    {
+        return;
+    }
+
+    tid_thread_1 = k_thread_create(&thread_1_data,
+                                   stack_thread_1,
+                                   K_THREAD_STACK_SIZEOF(stack_thread_1),
+                                   (k_thread_entry_t)Thread_1, &dev, &count_thread_1, NULL,
+                                   THREAD_1_PRIORITY, 0, K_NO_WAIT);
+
+    tid_thread_2 = k_thread_create(&thread_2_data,
+                                   stack_thread_2,
+                                   K_THREAD_STACK_SIZEOF(stack_thread_2),
+                                   (k_thread_entry_t)Thread_2, &dev, &count_thread_2, NULL,
+                                   THREAD_2_PRIORITY, 0, K_NO_WAIT);
+
+    k_thread_start(tid_thread_1);
+    k_thread_start(tid_thread_2);
+
+    /*static int p1_val;
+    static int p2_val;
+    p1_val = k_thread_priority_get(tid_thread_1);
+    p2_val = k_thread_priority_get(tid_thread_2);
+
+    int p1_set_error;
+    int p2_set_error;
+    char name_1[8] = "Thread_1";
+    char name_2[8] = "Thread_2";
+
+    p1_set_error = k_thread_name_set(tid_thread_1, (const char *)name_1);
+    p2_set_error = k_thread_name_set(tid_thread_2, name_2);*/
+
+    while (1)
+    {
+        k_msleep(100000);
+    }
+}
+
+// ----------------------------------------------------
+// PROJ 3 : Integration Luos
+// ----------------------------------------------------
+//#include "luos_engine.h"
+//#include "button.h"
