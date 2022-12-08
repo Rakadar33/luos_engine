@@ -146,7 +146,7 @@
 #ifndef LUOS_TIMER_IRQ
     #define LUOS_TIMER_IRQ TIM7_IRQn
 #endif
-#ifndef LUOS_TIMER_IRQHANDLER
-    #define LUOS_TIMER_IRQHANDLER() TIM7_IRQHandler()
-#endif
+//#ifndef LUOS_TIMER_IRQHANDLER
+//  #define LUOS_TIMER_IRQHANDLER() TIM7_IRQHandler()
+//#endif
 #endif /* _RobusHAL_CONFIG_H_ */

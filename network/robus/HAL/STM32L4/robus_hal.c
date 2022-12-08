@@ -368,6 +368,10 @@ static void RobusHAL_TimeoutInit(void)
     TimerInit.RepetitionCounter = 0;
     while (LL_TIM_Init(LUOS_TIMER, &TimerInit) != SUCCESS)
         ;
+
+    NVIC_ClearPendingIRQ(LUOS_TIMER_IRQ); // Clear IT pending NVIC
+    LL_TIM_ClearFlag_UPDATE(LUOS_TIMER);
+
     LL_TIM_EnableIT_UPDATE(LUOS_TIMER);
     HAL_NVIC_SetPriority(LUOS_TIMER_IRQ, 0, 2);
     HAL_NVIC_EnableIRQ(LUOS_TIMER_IRQ);
@@ -464,6 +468,7 @@ static void RobusHAL_GPIOInit(void)
         GPIO_InitStruct.Mode  = GPIO_MODE_IT_FALLING;
         GPIO_InitStruct.Pull  = GPIO_PULLDOWN;
         GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+        //DEBUG JGA---HAL_GPIO_DeInit(PTP[i].Port, &GPIO_InitStruct);
         HAL_GPIO_Init(PTP[i].Port, &GPIO_InitStruct);
         // Setup PTP lines
         RobusHAL_SetPTPDefaultState(i);
@@ -557,6 +562,7 @@ _CRITICAL void RobusHAL_SetPTPDefaultState(uint8_t PTPNbr)
     GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
     GPIO_InitStruct.Pull = GPIO_PULLDOWN;
     GPIO_InitStruct.Pin  = PTP[PTPNbr].Pin;
+    //DEBUG JGA---HAL_GPIO_DeInit(PTP[PTPNbr].Port, &GPIO_InitStruct);
     HAL_GPIO_Init(PTP[PTPNbr].Port, &GPIO_InitStruct);
 }
 /******************************************************************************

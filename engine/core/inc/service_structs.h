@@ -77,7 +77,7 @@ typedef enum
     READ_WRITE_ACCESS,
     READ_ONLY_ACCESS,
     WRITE_ONLY_ACCESS,
-    NO_ACCESS
+    //NO_ACCESS
 } access_t;
 
 /* This structure is used to manage packages
