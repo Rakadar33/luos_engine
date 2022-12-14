@@ -1,3 +1,10 @@
+/******************************************************************************
+ * @file Test Zephyr with Luos
+ * @brief the first test
+ * @MCU Family ESP32
+ * @author Luos
+ * @version 0.0.0
+ ******************************************************************************/
 #include <zephyr.h>
 #include <device.h>
 #include <devicetree.h>
@@ -9,46 +16,157 @@
 #include "button.h"
 #include "robus_hal.h"
 
-//-------------------------------
-// Test threads
-//#define BLINK_THREAD // uncomment to add 2 blinking threads
-//-------------------------------
+/*---------------------------------------------------------------------
+ *    Configuration : (for DEBUG)
+ *       - BLINK_THREAD : 2 threads => First Thread to blink the LED
+ *                                  => Second Thread to stop blinking
+ *       - GO_LUOS :  To add Luos
+ *---------------------------------------------------------------------*/
+#define BLINK_THREAD // uncomment to add 2 blinking threads
+// #define GO_LUOS  // uncomment to use Luos
 
-// 1000 msec = 1 sec
-#define SLEEP_TIME_MS 1000
-
-// The devicetree node identifier for the "led0" alias.
-#define LED0_NODE DT_ALIAS(led0)
-
+/*---------------------------------------------------------------------
+ *    Definitions
+ *---------------------------------------------------------------------*/
 // size of stack area used by each thread
 #define LUOS_STACKSIZE 2048
 #define APP_STACKSIZE  512
 
 // scheduling priority used by each thread (1 = minimum priority, 2 = higher priority than 1, ...)
-#define LUOS_APP_TASK_PRIORITY 4
-#define APP_TASK_PRIORITY      5
+#define LUOS_APP_TASK_PRIORITY 5
+#define APP_TASK_PRIORITY      4
 
-// functions
-void isr_config(void);
+// timings definitions (in ms)
+#define SLEEP_TIME_MS   1000
+#define LED_PERIOD      500
+#define LED_STOP_PERIOD 2000
 
-#ifdef BLINK_THREAD
-    #if DT_NODE_HAS_STATUS(LED0_NODE, okay)
-        #define LED0  DT_GPIO_LABEL(LED0_NODE, gpios)
-        #define PIN   DT_GPIO_PIN(LED0_NODE, gpios)
-        #define FLAGS DT_GPIO_FLAGS(LED0_NODE, gpios)
-    #else
-        // A build error here means your board isn't set up to blink an LED.
-        #error "Unsupported board: led0 devicetree alias is not defined"
-        #define LED0  ""
-        #define PIN   0
-        #define FLAGS 0
-    #endif
+// led definitions
+#define LED0_NODE DT_ALIAS(led0) // the devicetree node identifier for the "led0" alias.
+#if DT_NODE_HAS_STATUS(LED0_NODE, okay)
+    #define LED0  DT_GPIO_LABEL(LED0_NODE, gpios)
+    #define PIN   DT_GPIO_PIN(LED0_NODE, gpios)
+    #define FLAGS DT_GPIO_FLAGS(LED0_NODE, gpios)
+#else
+    // A build error here means your board isn't set up to blink an LED.
+    #error "Unsupported board: led0 devicetree alias is not defined"
+    #define LED0  ""
+    #define PIN   0
+    #define FLAGS 0
+#endif
+
+// variables
 static bool thread_run    = false;
 static struct device *dev = NULL;
 static bool led_state     = true;
 static bool led_toggle    = true;
+
+// functions
+void isr_config(void);
+bool led_config(void);
+void THREAD_init(void);
+void THREAD_change_led_state(void);
+void THREAD_lock_led(void);
+
+// ------------------------------------------------------------------------------------
+// START THE THREADS HERE
+// ------------------------------------------------------------------------------------
+K_THREAD_DEFINE(init_id, LUOS_STACKSIZE, THREAD_init, NULL, NULL, NULL, LUOS_APP_TASK_PRIORITY, 0, 0);
+K_THREAD_DEFINE(THREAD_change_led_state_id, APP_STACKSIZE, THREAD_change_led_state, NULL, NULL, NULL, APP_TASK_PRIORITY, 0, 0);
+K_THREAD_DEFINE(THREAD_lock_led_id, APP_STACKSIZE, THREAD_lock_led, NULL, NULL, NULL, APP_TASK_PRIORITY, 0, 0);
+
+/*************************************************************************************
+ * @brief Luos Thread with highest priority : Confiuration (luos + led) and Luos Loop
+ * @param : None
+ * @return None
+ *************************************************************************************/
+void THREAD_init(void)
+{
+#ifdef GO_LUOS
+    isr_config(); // Very ugly : connect IT callbacks
+    Luos_Init();
+    Button_Init();
 #endif
 
+#ifdef BLINK_THREAD
+    if (led_config())
+    {
+        thread_run = true;
+    }
+#endif
+
+    while (thread_run)
+    {
+#ifdef GO_LUOS
+        Luos_Loop();
+        Button_Loop();
+#endif
+#ifdef BLINK_THREAD
+        k_msleep(1);
+        //k_yield();
+#endif
+    }
+}
+
+/******************************************************************************
+ * @brief Blink Led every LED_PERIOD seconds
+ * @param : None
+ * @return None
+ ******************************************************************************/
+void THREAD_change_led_state(void)
+{
+#ifdef BLINK_THREAD
+    thread_run = false;
+#endif
+
+    k_msleep(2000);
+    if (!thread_run)
+    {
+        return;
+    }
+
+    while (1)
+    {
+        if (led_toggle)
+        {
+            gpio_pin_set(dev, PIN, (int)led_state);
+            led_state = !led_state;
+        }
+        //k_yield();
+        k_msleep(LED_PERIOD);
+    }
+}
+
+/******************************************************************************
+ * @brief Stop led blinking every LED_STOP_PERIOD seconds
+ * @param : None
+ * @return None
+ ******************************************************************************/
+void THREAD_lock_led(void)
+{
+#ifdef BLINK_THREAD
+    thread_run = false;
+#endif
+
+    k_msleep(2000);
+    if (!thread_run)
+    {
+        return;
+    }
+
+    while (1)
+    {
+        led_toggle = !led_toggle;
+        //k_yield();
+        k_msleep(LED_STOP_PERIOD);
+    }
+}
+
+/******************************************************************************
+ * @brief Luos config ISR
+ * @param : None
+ * @return None
+ ******************************************************************************/
 void isr_config(void)
 {
     HAL_NVIC_DisableIRQ(LUOS_TIMER_IRQ);
@@ -82,84 +200,27 @@ void isr_config(void)
     // Register r3 is not loaded with the handler for LUOS_TIMER_IRQ
 }
 
-void Luos_thread(void)
+/******************************************************************************
+ * @brief Config Led
+ * @param : None
+ * @return : configuration state (True if OK)
+ ******************************************************************************/
+bool led_config(void)
 {
     int ret;
-    isr_config(); // Very ugly : connect IT callbacks
-    Luos_Init();
-    Button_Init();
-
-#ifdef BLINK_THREAD
     // To test 2 others thread to blink a LED
     dev = device_get_binding(LED0);
 
     if (dev == NULL)
     {
-        return;
+        return false;
     }
 
     ret = gpio_pin_configure(dev, PIN, GPIO_OUTPUT_ACTIVE | FLAGS);
     if (ret < 0)
     {
-        return;
+        return false;
     }
-    thread_run = true;
-#endif
 
-    while (1)
-    {
-        Luos_Loop();
-        Button_Loop();
-#ifdef BLINK_THREAD
-        k_msleep(1);
-        //k_yield();
-#endif
-    }
+    return true;
 }
-
-#ifdef BLINK_THREAD
-// Blink led every seconds
-void change_led_state(void)
-{
-    k_msleep(2000);
-    if (!thread_run)
-    {
-        return;
-    }
-
-    while (1)
-    {
-        if (led_toggle)
-        {
-            gpio_pin_set(dev, PIN, (int)led_state);
-            led_state = !led_state;
-        }
-        //k_yield();
-        k_msleep(1000);
-    }
-}
-
-// Stop led blinking every 5 seconds
-void lock_led(void)
-{
-    k_msleep(2000);
-    if (!thread_run)
-    {
-        return;
-    }
-
-    while (1)
-    {
-        led_toggle = !led_toggle;
-        //k_yield();
-        k_msleep(5000);
-    }
-}
-#endif
-
-K_THREAD_DEFINE(init_id, LUOS_STACKSIZE, Luos_thread, NULL, NULL, NULL, LUOS_APP_TASK_PRIORITY, 0, 0);
-
-#ifdef BLINK_THREAD
-K_THREAD_DEFINE(change_led_state_id, APP_STACKSIZE, change_led_state, NULL, NULL, NULL, APP_TASK_PRIORITY, 0, 0);
-K_THREAD_DEFINE(lock_led_id, APP_STACKSIZE, lock_led, NULL, NULL, NULL, APP_TASK_PRIORITY, 0, 0);
-#endif

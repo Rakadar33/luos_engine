@@ -8,6 +8,7 @@ project(get_started)
 
 # Get Started
 target_sources(app PRIVATE ../src/main.c)
-target_sources(app PRIVATE ../src/stm32l4xx_hal_msp.c)
-target_sources(app PRIVATE ../src/stm32l4xx_it.c)
-target_sources(app PRIVATE ../lib/Button/button.c)
+
+# target_sources(app PRIVATE ../src/stm32l4xx_hal_msp.c)
+# target_sources(app PRIVATE ../src/stm32l4xx_it.c)
+# target_sources(app PRIVATE ../lib/Button/button.c)
