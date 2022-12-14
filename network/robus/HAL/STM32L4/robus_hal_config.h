@@ -110,15 +110,22 @@
 #ifndef LUOS_COM_CLOCK_ENABLE
     #define LUOS_COM_CLOCK_ENABLE() __HAL_RCC_USART1_CLK_ENABLE()
 #endif
+
 #ifndef LUOS_COM
     #define LUOS_COM USART1
 #endif
 #ifndef LUOS_COM_IRQ
     #define LUOS_COM_IRQ USART1_IRQn
 #endif
-#ifndef LUOS_COM_IRQHANDLER
+/* HACK!!!*/
+/* HACK!!!*/
+/* HACK!!!*/
+// --------------------------------------------
+// TODO: PATCH FOR ZEPHYR - TO BE MODIFIED
+// --------------------------------------------
+/*#ifndef LUOS_COM_IRQHANDLER
     #define LUOS_COM_IRQHANDLER() USART1_IRQHandler()
-#endif
+#endif*/
 /*******************************************************************************
  * DMA CONFIG
  ******************************************************************************/
@@ -146,7 +153,14 @@
 #ifndef LUOS_TIMER_IRQ
     #define LUOS_TIMER_IRQ TIM7_IRQn
 #endif
-//#ifndef LUOS_TIMER_IRQHANDLER
-//  #define LUOS_TIMER_IRQHANDLER() TIM7_IRQHandler()
-//#endif
+
+/* HACK!!!*/
+/* HACK!!!*/
+/* HACK!!!*/
+// --------------------------------------------
+// TODO: PATCH FOR ZEPHYR - TO BE MODIFIED
+// --------------------------------------------
+/*#ifndef LUOS_TIMER_IRQHANDLER
+    #define LUOS_TIMER_IRQHANDLER() TIM7_IRQHandler()
+#endif*/
 #endif /* _RobusHAL_CONFIG_H_ */
