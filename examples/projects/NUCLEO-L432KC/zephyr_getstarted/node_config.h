@@ -81,6 +81,7 @@
  *    LUOS_TIMER_IRQ          | Timer IRQ number
  *    LUOS_TIMER_IRQHANDLER   | Callback function for Timer IRQ handler
 ******************************************************************************/
+#define LUOS_TIMER_IRQ 55 //TIM7_IRQn
 
 /*******************************************************************************
  * FLASH CONFIGURATION FOR APP WITH BOOTLOADER
