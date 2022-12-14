@@ -23,7 +23,7 @@
  *       - GO_LUOS :  To add Luos
  *---------------------------------------------------------------------*/
 #define BLINK_THREAD // uncomment to add 2 blinking threads
-// #define GO_LUOS  // uncomment to use Luos
+#define GO_LUOS      // uncomment to use Luos
 
 /*---------------------------------------------------------------------
  *    Definitions
