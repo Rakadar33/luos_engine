@@ -71,16 +71,10 @@ class McuControl:
         pf.halt()
 
     def powerUp_Node(self, nodeNumber):
-        #run_command(f"/usr/bin/python3 {os.path.dirname(os.getcwd())}/scripts/capable-robot-driver.py --port {nodeNumber} --power ON")
-        run_command(f"export PYTHONPATH={os.path.dirname(os.getcwd())}/../../..:$PYTHONPATH;\
-                      /usr/bin/python3 \
-                      {os.path.dirname(os.getcwd())}/../../../tools/scripts/capable-robot-driver.py --port {nodeNumber} --power ON", timeout=5)
+        _power_node(nodeNumber, "ON")
     
-    def powerDown_Node(self, nodeNumber):    
-        #run_command(f"/usr/bin/python3 {os.path.dirname(os.getcwd())}/scripts/capable-robot-driver.py --port {nodeNumber} --power OFF")
-        run_command(f"export PYTHONPATH={os.path.dirname(os.getcwd())}/../../..:$PYTHONPATH;\
-                      /usr/bin/python3 \
-                      {os.path.dirname(os.getcwd())}/../../../tools/scripts/capable-robot-driver.py --port {nodeNumber} --power OFF", timeout=5)
+    def powerDown_Node(self, nodeNumber):
+        _power_node(nodeNumber, "OFF")
 
     def compile_Node(self, config):
         pf = PlatformIOApi(config, verbose=False)
@@ -158,7 +152,7 @@ class PlatformIOApi:
 
     def clean(self, name):
         ci_log.logger.info(f"Clean project {name}")
-        clean_process = run_command(f'platformio run -t clean -d {self.code_path}', verbose=False, timeout=5)
+        clean_process = run_command(f'platformio run -t clean -d {self.code_path}', verbose=True, timeout=5)
         pio_dir= self.code_path + "/.pio/"
         if os.path.isdir(pio_dir):
             try:
@@ -244,4 +238,82 @@ def power_down_platform():
     pf.powerDown_Node(3)
     pf.powerDown_Node(4)
     run_command(f'sudo uhubctl -a off -r 300 -p 3 -l 4-1.4', verbose=False, timeout=30)
+
+def _power_node(nodeNumber, power):
+    '''
+    run_command(f"export PYTHONPATH={os.path.dirname(os.getcwd())}/../../..:$PYTHONPATH; \
+        source usbhub_env/bin/activate; \
+        /usr/bin/python3 {Path(__file__).parent.resolve()} \
+        /../scripts/capable-robot-driver.py --port {nodeNumber} --power {power}; \
+        deactivate")
+    '''
+    
+    command_ON= f"export PYTHONPATH={os.path.dirname(os.getcwd())}/../../..:$PYTHONPATH;\
+            virtualenv usbhub;\
+            source usbhub/bin/activate;\
+            pip3 install capablerobot-usbhub;\
+            /usr/bin/python3 {Path(__file__).parent.resolve()}/../scripts/capable-robot-driver.py --port {nodeNumber} --power {power};\
+            deactivate"
+    run_command(command_ON, timeout=20);
+
+
+
+
+
+    '''
+    def powerUp_Node(self, nodeNumber):
+        timeout = 60 #20 !!!!!!!!!!!!!!!!!!!
+        #run_command(f"/usr/bin/python3 {os.path.dirname(os.getcwd())}/scripts/capable-robot-driver.py --port {nodeNumber} --power ON")
+        run_command(f"export PYTHONPATH={os.path.dirname(os.getcwd())}/../../..:$PYTHONPATH;\
+            pip3 install capablerobot_usbhub;\
+            /usr/bin/python3 {Path(__file__).parent.resolve()}/../scripts/capable-robot-driver.py --port {nodeNumber} --power ON;\
+            echo pip3 install platformio", timeout=timeout);\
+            #/usr/bin/python3 ./Quality_assurance/CI/automatic_tests/tools/scripts/capable-robot-driver.py --port {nodeNumber} --power ON", timeout=5)
+            #/usr/bin/python3 {os.path.dirname(os.getcwd())}/../../../tools/scripts/capable-robot-driver.py --port {nodeNumber} --power ON", timeout=5)
+    def powerDown_Node(self, nodeNumber):
+        timeout = 60 #20 !!!!!!!!!!!!!!!!!!!
+        #run_command(f"/usr/bin/python3 {os.path.dirname(os.getcwd())}/scripts/capable-robot-driver.py --port {nodeNumber} --power OFF")
+        run_command(f"export PYTHONPATH={os.path.dirname(os.getcwd())}/../../..:$PYTHONPATH;\
+            pip3 install capablerobot_usbhub;\
+            /usr/bin/python3 {Path(__file__).parent.resolve()}/../scripts/capable-robot-driver.py --port {nodeNumber} --power OFF;\
+            echo pip3 install platformio", timeout=timeout);\
+            #/usr/bin/python3 ./Quality_assurance/CI/automatic_tests/tools/scripts/capable-robot-driver.py --port {nodeNumber} --power OFF", timeout=5)
+            #/usr/bin/python3 {os.path.dirname(os.getcwd())}/../../../tools/scripts/capable-robot-driver.py --port {nodeNumber} --power OFF", timeout=5)
+    '''
+
+    '''
+    def powerUp_Node(self, nodeNumber):
+        command_ON= f"export PYTHONPATH={os.path.dirname(os.getcwd())}/../../..:$PYTHONPATH;\
+                virtualenv usbhub;\
+                source usbhub/bin/activate;\
+                pip3 install capablerobot-usbhub;\
+                /usr/bin/python3 {Path(__file__).parent.resolve()}/../scripts/capable-robot-driver.py --port {nodeNumber} --power ON;\
+                deactivate"
+        run_command(command_ON, timeout=20);
+    
+    def powerDown_Node(self, nodeNumber):
+        command_OFF= f"export PYTHONPATH={os.path.dirname(os.getcwd())}/../../..:$PYTHONPATH;\
+                virtualenv usbhub;\
+                source usbhub/bin/activate;\
+                pip3 install capablerobot-usbhub;\
+                /usr/bin/python3 {Path(__file__).parent.resolve()}/../scripts/capable-robot-driver.py --port {nodeNumber} --power OFF;\
+                deactivate"
+        run_command(command_OFF, timeout=20);
+    '''
+
+    '''    
+    def powerUp_Node(self, nodeNumber):
+        timeout = 60 #20 !!!!!!!!!!!!!!!!!!!
+        run_command(f"export PYTHONPATH={os.path.dirname(os.getcwd())}/../../..:$PYTHONPATH;\
+            source usbhub/bin/activate;\
+            /usr/bin/python3 {Path(__file__).parent.resolve()}/../scripts/capable-robot-driver.py --port {nodeNumber} --power ON;\
+            deactivate;", timeout=timeout);
+
+    def powerDown_Node(self, nodeNumber):
+        timeout = 60 #20 !!!!!!!!!!!!!!!!!!!
+        run_command(f"export PYTHONPATH={os.path.dirname(os.getcwd())}/../../..:$PYTHONPATH;\
+            source usbhub/bin/activate;\
+            /usr/bin/python3 {Path(__file__).parent.resolve()}/../scripts/capable-robot-driver.py --port {nodeNumber} --power OFF;\
+            deactivate;", timeout=timeout);
+    '''
 

@@ -78,7 +78,7 @@ def setup_nodes(scenario, config, upload="OFF"):
             ci_log.phase_log(f"[Compile] {mcu}")
             mcu = eval(f"config_{mcu}")
             assert(platform.mcu.compile_Node(mcu))
-
+    
     for mcu in nodes:
         number= int(mcu[1])
         if number < 5:

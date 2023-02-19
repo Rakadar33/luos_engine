@@ -31,10 +31,10 @@ def product_config(network_conf, tested_version= "main"):
 
     ci_log.step_log(f"Interruptions configuration", "Step")
     SOURCES = "/src/"
-    source_IT_N2 = "../../network_config/" + config_N2["interruption"]
-    source_IT_N3 = "../../network_config/" + config_N3["interruption"]
-    source_IT_N4 = "../../network_config/" + config_N4["interruption"]
-    source_IT_N5 = "../../network_config/" + config_N5["interruption"]
+    source_IT_N2 = f"{Path(__file__).parent.resolve()}/../../network_config/" + config_N2["interruption"]
+    source_IT_N3 = f"{Path(__file__).parent.resolve()}/../../network_config/" + config_N3["interruption"]
+    source_IT_N4 = f"{Path(__file__).parent.resolve()}/../../network_config/" + config_N4["interruption"]
+    source_IT_N5 = f"{Path(__file__).parent.resolve()}/../../network_config/" + config_N5["interruption"]
     dest_IT_N2 = config_N2["path"] + SOURCES + config_N2["interruption"]
     dest_IT_N3 = config_N3["path"] + SOURCES + config_N3["interruption"]
     dest_IT_N4 = config_N4["path"] + SOURCES + config_N4["interruption"]
@@ -89,6 +89,8 @@ def product_config(network_conf, tested_version= "main"):
     replacetext(eval(f"config_{node_2}[\"path\"]") + "/platformio.ini", "luos_engine", luos_engine_version)
 
 
+
+
     # Remove "Led" from GATE project
     replacetext(gate_sourcecode, "Led_Init", "//Led_Init")
     replacetext(gate_sourcecode, "Led_Loop", "//Led_Loop")
@@ -113,9 +115,11 @@ def run_scenario(network_conf, tested_version= "main"):
     # Setup project
     ci_log.phase_log(f'Test Luos Engine \"{tested_version}\" version with config {network_conf}')
     
+
     if upload == "ON":
         ci_log.phase_log('Config all projects')
-        product_config(network_conf, tested_version= "main")
+        product_config(network_conf, tested_version)
+    
     platform= setup_nodes(__file__, network_conf, upload)   
 
     # Verify Get started projects
@@ -155,7 +159,7 @@ def run_scenario(network_conf, tested_version= "main"):
 if __name__ == '__main__':
     upload, version = get_arguments()
     platform_handler = None
-
+    
     try:
         for conf in network_conf:
             platform_handler = run_scenario(conf, version)

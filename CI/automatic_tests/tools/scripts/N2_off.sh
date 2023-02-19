@@ -4,4 +4,4 @@ CURRENT_PATH=$(pwd)
 AUTO_TEST_PATH=${CURRENT_PATH}"/../../"
 export PYTHONPATH=$AUTO_TEST_PATH:$PYTHONPATH
 clear
-python3 N5_power_off.py
+python3 capable-robot-driver.py  --port 2 --power OFF

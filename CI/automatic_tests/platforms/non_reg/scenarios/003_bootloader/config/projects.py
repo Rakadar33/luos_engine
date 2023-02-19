@@ -76,10 +76,10 @@ def product_config_bootloader(gate_node, tested_version = "main"):
 
     ci_log.step_log(f"Interruptions configuration", "Step")
     SOURCES = "/src/"
-    source_IT_N2 = "../../network_config/" + config_N2["interruption"]
-    source_IT_N3 = "../../network_config/" + config_N3["interruption"]
-    source_IT_N4 = "../../network_config/" + config_N4["interruption"]
-    source_IT_N5 = "../../network_config/" + config_N5["interruption"]
+    source_IT_N2 = f"{Path(__file__).parent.resolve()}/../../network_config/" + config_N2["interruption"]
+    source_IT_N3 = f"{Path(__file__).parent.resolve()}/../../network_config/" + config_N3["interruption"]
+    source_IT_N4 = f"{Path(__file__).parent.resolve()}/../../network_config/" + config_N4["interruption"]
+    source_IT_N5 = f"{Path(__file__).parent.resolve()}/../../network_config/" + config_N5["interruption"]
     dest_IT_N2 = config_N2["path"] + SOURCES + config_N2["interruption"]
     dest_IT_N3 = config_N3["path"] + SOURCES + config_N3["interruption"]
     dest_IT_N4 = config_N4["path"] + SOURCES + config_N4["interruption"]
@@ -230,10 +230,10 @@ def product_config_apps(gate_node, tested_version= "main"):
  
     ci_log.step_log(f"Interruptions configuration", "Step")
     SOURCES = "/src/"
-    source_IT_N2 = "../../network_config/" + config_N2["interruption"]
-    source_IT_N3 = "../../network_config/" + config_N3["interruption"]
-    source_IT_N4 = "../../network_config/" + config_N4["interruption"]
-    source_IT_N5 = "../../network_config/" + config_N5["interruption"]
+    source_IT_N2 = f"{Path(__file__).parent.resolve()}/../../network_config/" + config_N2["interruption"]
+    source_IT_N3 = f"{Path(__file__).parent.resolve()}/../../network_config/" + config_N3["interruption"]
+    source_IT_N4 = f"{Path(__file__).parent.resolve()}/../../network_config/" + config_N4["interruption"]
+    source_IT_N5 = f"{Path(__file__).parent.resolve()}/../../network_config/" + config_N5["interruption"]
     dest_IT_N2 = config_N2["path"] + SOURCES + config_N2["interruption"]
     dest_IT_N3 = config_N3["path"] + SOURCES + config_N3["interruption"]
     dest_IT_N4 = config_N4["path"] + SOURCES + config_N4["interruption"]

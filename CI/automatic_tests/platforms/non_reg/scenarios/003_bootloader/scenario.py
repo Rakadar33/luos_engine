@@ -75,7 +75,7 @@ def run_scenario(tested_version= "main", upload = "ON"):
         time.sleep(2)
 
         run_command(flash_node_A, timeout=40, verbose=True)
-        assert(run_command("pyluos-bootloader reset", timeout=10, verbose=True) != "ERROR")
+        assert(run_command("pyluos-bootloader reset", timeout=10, verbose=True) != "ERROR") 
         # Detection
         platform.luos.device.connect()
         ci_log.phase_log('Verify that Gate detects all nodes in App mode')

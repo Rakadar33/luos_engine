@@ -45,10 +45,10 @@ def run_scenario():
         run_command(cmd, verbose=True, timeout=20)
 
         ci_log.step_log(f"Interruptions configuration", "Step")
-        source_IT_N2 = "../../network_config/" + config_N2["interruption"]
-        source_IT_N3 = "../../network_config/" + config_N3["interruption"]
-        source_IT_N4 = "../../network_config/" + config_N4["interruption"]
-        source_IT_N5 = "../../network_config/" + config_N5["interruption"]
+        source_IT_N2 = f"{Path(__file__).parent.resolve()}/../../network_config/" + config_N2["interruption"]
+        source_IT_N3 = f"{Path(__file__).parent.resolve()}/../../network_config/" + config_N3["interruption"]
+        source_IT_N4 = f"{Path(__file__).parent.resolve()}/../../network_config/" + config_N4["interruption"]
+        source_IT_N5 = f"{Path(__file__).parent.resolve()}/../../network_config/" + config_N5["interruption"]
         dest_IT_N2 = config_N2["path"] + "src"
         dest_IT_N3 = config_N3["path"] + "src"
         dest_IT_N4 = config_N4["path"] + "src"
